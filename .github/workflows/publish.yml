@@ -1,6 +1,7 @@
-name: Publish package (disabled until naming decision)
+name: Publish package
 on:
-  workflow_dispatch:
+  push:
+    tags: ['v*']
 permissions: {}
 jobs:
   publish:
@@ -21,8 +22,13 @@ jobs:
         with:
           node-version: '24'
           registry-url: https://registry.npmjs.org
+          package-manager-cache: false
       - run: bun install --frozen-lockfile
       - run: bun run check && bun test
       - run: python3 -m unittest discover -s scripts -p 'test_*.py'
       - run: bun run export && git diff --exit-code -- schema/json
+      - name: Require a version tag matching the reviewed package
+        env:
+          RELEASE_TAG: ${{ github.ref_name }}
+        run: node -e 'if (process.env.RELEASE_TAG !== "v" + require("./package.json").version) process.exit(1)'
       - run: npm publish --provenance --access public

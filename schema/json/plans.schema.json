@@ -173,5 +173,6 @@
     "carriers"
   ],
   "additionalProperties": false,
+  "$id": "https://raw.githubusercontent.com/irl-commons/irl-commons/main/schema/json/plans.schema.json",
   "title": "plans.json"
 }

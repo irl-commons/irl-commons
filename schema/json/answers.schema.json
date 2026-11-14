@@ -115,5 +115,6 @@
     "answers"
   ],
   "additionalProperties": false,
+  "$id": "https://raw.githubusercontent.com/irl-commons/irl-commons/main/schema/json/answers.schema.json",
   "title": "answers.json"
 }

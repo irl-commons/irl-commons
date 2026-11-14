@@ -134,5 +134,6 @@
     "guides"
   ],
   "additionalProperties": false,
+  "$id": "https://raw.githubusercontent.com/irl-commons/irl-commons/main/schema/json/guides.schema.json",
   "title": "guides.json"
 }

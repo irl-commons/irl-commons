@@ -29,3 +29,5 @@ date; hide stale plan prices/caps/fair-use figures and service status while
 keeping the carrier/service and source visible. Nested plans use their own date.
 Run `bun scripts/stale.ts [YYYY-MM-DD]` for a Markdown report. Weekly automation
 checks links and updates one freshness issue; it never edits data.
+
+Schema `$id` values use the public `irl-commons/irl-commons` repository. The npm package is `@irl-commons/data`.

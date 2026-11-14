@@ -1,16 +1,16 @@
 {
-  "name": "@openstreambox/irl-commons",
+  "name": "@irl-commons/data",
   "version": "0.1.0",
   "description": "Small curated datasets and schemas for IRL streaming.",
   "type": "module",
   "license": "(MIT AND CC-BY-4.0)",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/openstreambox/irl-commons.git"
+    "url": "git+https://github.com/irl-commons/irl-commons.git"
   },
-  "homepage": "https://github.com/openstreambox/irl-commons#readme",
+  "homepage": "https://github.com/irl-commons/irl-commons#readme",
   "bugs": {
-    "url": "https://github.com/openstreambox/irl-commons/issues"
+    "url": "https://github.com/irl-commons/irl-commons/issues"
   },
   "packageManager": "bun@1.4.3",
   "files": [
@@ -23,7 +23,10 @@
     "LICENSE",
     "LICENSE-DATA",
     "README.md",
-    "schema/fixtures/*.json"
+    "schema/fixtures/*.json",
+    "NPM-PUBLISHING.md",
+    "GOVERNANCE.md",
+    "CONTRIBUTING.md"
   ],
   "exports": {
     "./data/*.json": "./data/*.json",
@@ -38,5 +41,8 @@
   },
   "dependencies": {
     "zod": "4.6.7"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

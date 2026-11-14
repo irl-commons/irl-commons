@@ -216,5 +216,6 @@
     "services"
   ],
   "additionalProperties": false,
+  "$id": "https://raw.githubusercontent.com/irl-commons/irl-commons/main/schema/json/services.schema.json",
   "title": "services.json"
 }

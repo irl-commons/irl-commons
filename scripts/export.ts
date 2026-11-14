@@ -5,7 +5,7 @@ import { files, Part, PartTask, Role, RolesByKind } from "../schema/src/schema.t
 
 export function exported(name: keyof typeof files): string {
   const schema = z.toJSONSchema(files[name], { target: "draft-2020-12" });
-  return JSON.stringify({ ...schema, title: `${name}.json` }, null, 2) + "\n";
+  return JSON.stringify({ ...schema, $id: `https://raw.githubusercontent.com/irl-commons/irl-commons/main/schema/json/${name}.schema.json`, title: `${name}.json` }, null, 2) + "\n";
 }
 
 /** The chain parts and their tasks, for validators in other languages that rebuild `title_display`. */

@@ -73,8 +73,9 @@ drift watch makes live ruleset changes visible in one issue, without fixing them
 automatically. Protecting the workflow files themselves still requires independent
 human review and responsible administrators.
 
-The publish workflow is manual-only and guarded to a different owner, so it is
-disabled here pending the naming decision. It uses npm trusted publishing with
-OIDC and provenance, without an npm token secret. Configure the npm trusted
-publisher for the final repository/workflow before enabling it. This does not
-move the organization or rename the package.
+The publish workflow runs only for `v*` tag pushes under `irl-commons`. Releases
+use GitHub-hosted Actions, npm trusted publishing, OIDC and provenance, with no
+npm token secret. Tags and the first release require prior review. A one-time
+human package-name bootstrap may create an npm placeholder before trusted
+publishing is configured; it must not approve a data release. See
+NPM-PUBLISHING.md for the npm settings and bootstrap route.

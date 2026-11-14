@@ -11,12 +11,12 @@ with a real team before relying on owner review; placeholders grant no access.
 From the repository root, an authorized administrator applies it once with:
 
 ```sh
-gh api --method POST repos/openstreambox/irl-commons/rulesets --input .github/rulesets/main.json
+gh api --method POST repos/irl-commons/irl-commons/rulesets --input .github/rulesets/main.json
 ```
 
 For an existing ruleset, read its id with `gh api
-repos/openstreambox/irl-commons/rulesets`, review it, then use `--method PUT` at
-`repos/openstreambox/irl-commons/rulesets/RULESET_ID` with the same input. Do not
+repos/irl-commons/irl-commons/rulesets`, review it, then use `--method PUT` at
+`repos/irl-commons/irl-commons/rulesets/RULESET_ID` with the same input. Do not
 create duplicates. Read back the saved ruleset and confirm no bypass actors,
 main targeting, both check names and all review flags. The weekly drift job
 compares the live named ruleset with the committed configuration and updates one
