@@ -17,9 +17,11 @@ and direct competitors may submit evidence but cannot approve or merge their
 own or a competitor's entry. A non-conflicted steward must approve a conflicted
 author's edit, or it waits. An independent person presses merge.
 
-There are currently **zero named stewards** in `stewards.json`; both seats are
-pending and grant no access. Launch needs two stewards; until the second is
-listed the project is in bootstrap. Prices need three, one seat per company.
+There is currently **one named steward** in `stewards.json`, `pjeweb`
+(affiliation: openstreambox); the second seat is pending and grants no access.
+Launch needs two stewards; until the second is listed the project is in
+bootstrap: data and rule paths need zero approvals unless the author is
+conflicted, and rule paths still wait seven days. Prices need three, one seat per company.
 The GitHub org and npm org each require **at least two org owners now**, and
 three before prices, one seat per company. This is a setup requirement, not a
 claim that the accounts or seats have already been filled. Owners administer

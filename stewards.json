@@ -6,9 +6,11 @@
   },
   "stewards": [
     {
-      "github": null,
-      "name": "First steward — pending",
-      "affiliations": []
+      "github": "pjeweb",
+      "name": "pjeweb",
+      "affiliations": [
+        "openstreambox"
+      ]
     },
     {
       "github": null,

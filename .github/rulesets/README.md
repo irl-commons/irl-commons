@@ -2,8 +2,8 @@
 
 These files are API request bodies, not live settings. No workflow applies them.
 Review and merge the installation first so main contains the trusted evaluator
-and both required checks have run. Consentingly list the first steward and their
-affiliations before relying on bootstrap; null seats grant no review authority.
+and both required checks have run. The first steward, with their consent, and
+their affiliations are listed in `stewards.json`; null seats grant no review authority.
 
 An org owner installs bootstrap from the repository root:
 
