@@ -1,0 +1,34 @@
+{
+  "about": "Synthetic validation fixture, not carrier research.",
+  "carriers": [
+    {
+      "id": "sample-network",
+      "name": "Sample Network",
+      "country": "DE",
+      "network_type": "MNO",
+      "host_network_id": null,
+      "esim": false,
+      "official_url": "https://example.org/",
+      "coverage_map_url": "https://example.org/coverage",
+      "sources": [
+        {
+          "label": "Details",
+          "url": "https://example.org/details"
+        }
+      ],
+      "checked_on": "2026-11-14",
+      "plans": [
+        {
+          "id": "sample-plan",
+          "name": "Sample Plan",
+          "data_cap_gb": -1,
+          "throttle_after_cap_kbps": null,
+          "tethering_allowed": null,
+          "roaming_routing": "unknown",
+          "source_url": "https://example.org/plan",
+          "checked_on": "2026-11-14"
+        }
+      ]
+    }
+  ]
+}

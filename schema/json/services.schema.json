@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "about": {
+      "type": "string"
+    },
+    "services": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "app",
+              "relay",
+              "hub",
+              "hardware",
+              "production",
+              "community"
+            ]
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "streaming-app",
+              "extra-connections",
+              "camera-capture",
+              "remote-control",
+              "chat-overlays",
+              "other-app",
+              "relay",
+              "hub",
+              "production",
+              "hardware",
+              "community"
+            ]
+          },
+          "maker": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "url": {
+            "type": "string",
+            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "pattern": "\\S"
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "open_source": {
+            "type": [
+              "boolean",
+              "null"
+            ]
+          },
+          "licence": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "status": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "platforms": {
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "android",
+                "ios",
+                "windows",
+                "macos",
+                "linux",
+                "web",
+                "hardware",
+                "service"
+              ]
+            }
+          },
+          "part": {
+            "maxItems": 3,
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "camera",
+                "sender",
+                "connections",
+                "receiver",
+                "obs",
+                "platform"
+              ]
+            }
+          },
+          "covers": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          "support": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "pattern": "\\S"
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          "words": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          "checked": {
+            "type": "string",
+            "pattern": "^\\d{4}-\\d{2}-\\d{2}$"
+          }
+        },
+        "required": [
+          "id",
+          "name",
+          "kind",
+          "role",
+          "maker",
+          "url",
+          "links",
+          "open_source",
+          "licence",
+          "status",
+          "description",
+          "platforms",
+          "part",
+          "covers",
+          "support",
+          "tags",
+          "words",
+          "checked"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "about",
+    "services"
+  ],
+  "additionalProperties": false,
+  "title": "services.json"
+}

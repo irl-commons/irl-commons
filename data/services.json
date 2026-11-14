@@ -1,0 +1,1836 @@
+{
+  "about": "A catalogue of apps, relays and receivers, hosted hubs, hardware, production tools and communities for IRL streaming. One entry per product; ids are permanent. Descriptions are our own words; url is the maker's own page; support lists official public channels from the maker's own pages (help centres, docs, issue trackers, contact pages; no chat invites). role says what it is for (streaming-app, extra-connections, camera-capture, remote-control, chat-overlays, other-app, relay, hub, production, hardware, community; allowed roles depend on kind, see ../schema). part says where along the chain (camera, sender, connections, receiver, obs, platform) the product sits, first the main one; community entries (docs, wikis) have no part and instead name the products they document in covers. Validated by the zod schema in ../schema.",
+  "services": [
+    {
+      "id": "bond-bunny",
+      "name": "Bond Bunny",
+      "kind": "app",
+      "role": "extra-connections",
+      "maker": "dimadesu",
+      "url": "https://github.com/dimadesu/bond-bunny",
+      "links": [],
+      "open_source": true,
+      "licence": "AGPL-3.0",
+      "status": null,
+      "description": "Android app that takes an SRT stream from another app on the phone and sends it to an SRTLA receiver over several connections; from LifeStreamer's developer.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "connections",
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/dimadesu/bond-bunny/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srtla",
+        "srt"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlplus-cast",
+      "name": "IRL+ Cast",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "IRL+",
+      "url": "https://www.irlplus.uk/cast/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": "open testing",
+      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras, over SRT, RTMP, SRTLA or IRL+'s own BOND, with bonding across cellular and Wi-Fi and Moblink relays. Free.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "sender",
+        "camera"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srt",
+        "srtla"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlplus-chat",
+      "name": "IRL+ Chat",
+      "kind": "app",
+      "role": "chat-overlays",
+      "maker": "IRL+",
+      "url": "https://www.irlplus.uk/chat/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "Android chat manager for Twitch, Kick and YouTube, with text-to-speech, OBS control and the encoder's live bitrate. Free.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irl-pro",
+      "name": "IRL Pro",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "IRL Pro",
+      "url": "https://irlpro.app/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "Android app for IRL streaming, with SRTLA bonding and a free bonding service.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srtla"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "larix-broadcaster",
+      "name": "Larix Broadcaster",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "Softvelum",
+      "url": "https://softvelum.com/larix/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "Streaming apps for Android and iOS, by Softvelum.",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Larix help",
+          "url": "https://softvelum.com/mobile/help/"
+        },
+        {
+          "label": "Larix docs",
+          "url": "https://softvelum.com/larix/docs/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srt"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "lifestreamer",
+      "name": "LifeStreamer",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "dimadesu",
+      "url": "https://github.com/dimadesu/LifeStreamer",
+      "links": [],
+      "open_source": true,
+      "licence": "GPL-3.0",
+      "status": null,
+      "description": "Android app with USB video in, SRTLA bonding and a Moblink server.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "sender",
+        "camera"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/dimadesu/LifeStreamer/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srtla",
+        "local-ingest"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "mediasrvr",
+      "name": "MediaSrvr",
+      "kind": "app",
+      "role": "camera-capture",
+      "maker": "dimadesu",
+      "url": "https://github.com/dimadesu/MediaSrvr",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "Runs an RTMP server on an Android phone, so an action camera can send its picture to the phone; made mainly for use with LifeStreamer.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "camera"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/dimadesu/MediaSrvr/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "local-ingest"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "moblin",
+      "name": "Moblin",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "eerimoq",
+      "url": "https://github.com/eerimoq/moblin",
+      "links": [
+        {
+          "label": "site",
+          "url": "https://moblin.app/"
+        },
+        {
+          "label": "sponsor",
+          "url": "https://github.com/sponsors/eerimoq"
+        }
+      ],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "\"A free iOS app for IRL streaming.\"",
+      "platforms": [
+        "ios"
+      ],
+      "part": [
+        "sender",
+        "camera"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/eerimoq/moblin/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srtla",
+        "adaptive-bitrate"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "moblink",
+      "name": "Moblink",
+      "kind": "app",
+      "role": "extra-connections",
+      "maker": "eerimoq",
+      "url": "https://github.com/eerimoq/moblink",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": "alpha",
+      "description": "Uses spare Android phones as extra bonding connections; the same works from iPhones running Moblin.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/eerimoq/moblink/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "obs-blade",
+      "name": "OBS Blade",
+      "kind": "app",
+      "role": "remote-control",
+      "maker": "Kounex",
+      "url": "https://github.com/Kounex/obs_blade",
+      "links": [],
+      "open_source": true,
+      "licence": "GPL-3.0",
+      "status": null,
+      "description": "\"The open source remote for OBS Studio, on iPhone, iPad and Android.\" Free, with a paid Pro tier.",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/Kounex/obs_blade/issues"
+        },
+        {
+          "label": "GitHub discussions",
+          "url": "https://github.com/Kounex/obs_blade/discussions"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "scene"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "realtimeirl",
+      "name": "RealtimeIRL",
+      "kind": "app",
+      "role": "chat-overlays",
+      "maker": "Muxable",
+      "url": "https://apps.apple.com/us/app/id1558493719",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "iPhone and Android apps that share your live location to rtirl.com; the iPhone app has privacy zones for places you don't want published. Needs an rtirl.com account; in-app purchases for extra features. By Muxable.",
+      "platforms": [
+        "ios",
+        "android"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "tvu-go",
+      "name": "TVU Go",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "TVU Networks",
+      "url": "https://tvugo.app/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "One phone app combining cellular, Wi-Fi and tethered phones, by subscription.",
+      "platforms": [
+        "android",
+        "ios"
+      ],
+      "part": [
+        "sender",
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "TVU support contact",
+          "url": "https://www.tvunetworks.com/contact-us/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "belabox-cloud",
+      "name": "BELABOX Cloud",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "BELABOX",
+      "url": "https://belabox.net/cloud",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Hosted receivers (relays) for BELABOX users, as a sponsor perk.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "relay",
+        "srtla"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "doink-tv",
+      "name": "doink.tv",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "doink.tv",
+      "url": "https://doink.tv/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "A free service with drop protection and connection bonding.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "bonding",
+        "drop-protection"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlplus-bond",
+      "name": "IRL+ BOND",
+      "kind": "relay",
+      "role": "extra-connections",
+      "maker": "IRL+",
+      "url": "https://bond.irlplus.cloud/protocol",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA, sent with IRL+'s bond-send app or the IRL+ phone app to a relay run by IRL+ or a relay host. Free trials.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "connections",
+        "receiver"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "bonding",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irl-srt-server",
+      "name": "irl-srt-server",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "irlserver",
+      "url": "https://github.com/irlserver/irl-srt-server",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "The IRL-focused fork of SRT Live Server, with SRTLA bonding support and a stats page.",
+      "platforms": [
+        "linux"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "srt",
+        "srtla",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "mediamtx",
+      "name": "MediaMTX",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "bluenviron",
+      "url": "https://github.com/bluenviron/mediamtx",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "A ready-to-use live media server and proxy for SRT, RTMP, WebRTC, RTSP and more; it takes plain SRT, not SRTLA, so in a bonded setup it sits behind an SRTLA receiver.",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/bluenviron/mediamtx/issues"
+        },
+        {
+          "label": "GitHub discussions",
+          "url": "https://github.com/bluenviron/mediamtx/discussions"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srt",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "openirl-srtla-receiver",
+      "name": "OpenIRL srtla-receiver",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "OpenIRL",
+      "url": "https://github.com/OpenIRL/srtla-receiver",
+      "links": [],
+      "open_source": true,
+      "licence": "GPL-3.0",
+      "status": null,
+      "description": "A self-hosted SRTLA receiver with several streams, authentication and statistics, by the OpenIRL organisation (a different project from Halveknots' OpenIRL under Production).",
+      "platforms": [
+        "linux"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/OpenIRL/srtla-receiver/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srtla",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "speedify",
+      "name": "Speedify",
+      "kind": "relay",
+      "role": "extra-connections",
+      "maker": "Speedify",
+      "url": "https://speedify.com/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "An app that combines several internet connections (Wi-Fi, cellular, Ethernet, satellite) for any traffic, by subscription.",
+      "platforms": [
+        "android",
+        "ios",
+        "macos",
+        "windows",
+        "linux"
+      ],
+      "part": [
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Speedify support",
+          "url": "https://speedify.com/support/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "srt-protocol",
+      "name": "SRT",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "Haivision (SRT Alliance)",
+      "url": "https://github.com/Haivision/srt",
+      "links": [],
+      "open_source": true,
+      "licence": "MPL-2.0",
+      "status": null,
+      "description": "Secure Reliable Transport, the open protocol underneath.",
+      "platforms": [
+        "linux",
+        "macos",
+        "windows"
+      ],
+      "part": [
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/Haivision/srt/issues"
+        },
+        {
+          "label": "GitHub discussions",
+          "url": "https://github.com/Haivision/srt/discussions"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srt"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "srtla",
+      "name": "srtla",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "BELABOX",
+      "url": "https://github.com/BELABOX/srtla",
+      "links": [],
+      "open_source": true,
+      "licence": "AGPL-3.0",
+      "status": null,
+      "description": "The original SRT link-aggregation sender and receiver; its README marks the receiver as unsupported and no longer developed.",
+      "platforms": [
+        "linux"
+      ],
+      "part": [
+        "connections",
+        "receiver"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/BELABOX/srtla/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srtla",
+        "bonding",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "belabox",
+      "name": "BELABOX",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "BELABOX",
+      "url": "https://belabox.net/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/BELABOX"
+        },
+        {
+          "label": "wiki",
+          "url": "https://github.com/BELABOX/tutorial/wiki"
+        }
+      ],
+      "open_source": true,
+      "licence": "GPL-3.0",
+      "status": null,
+      "description": "An IRL encoder on small boards with modems; its control screen, belaUI, is GPL-3.0.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "backpack",
+        "encoder",
+        "bonding"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "ceralive",
+      "name": "CeraLive",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "CeraLive",
+      "url": "https://ceralive.tv/",
+      "links": [
+        {
+          "label": "docs",
+          "url": "https://docs.ceralive.tv/"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/CERALIVE"
+        }
+      ],
+      "open_source": null,
+      "licence": null,
+      "status": "pre-release",
+      "description": "\"a live-streaming system you build yourself\", built on open source; its control panel, bonding sender and receivers are public on GitHub, the streaming engine on the device isn't.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "CeraLive docs",
+          "url": "https://docs.ceralive.tv/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "backpack",
+        "encoder"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "dejero-engo",
+      "name": "Dejero EnGo",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "Dejero",
+      "url": "https://www.dejero.com/products/engo/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Professional mobile transmitters that blend all available connections, for broadcast.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender",
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Dejero technical support",
+          "url": "https://www.dejero.com/technical-support/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "encoder"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "haivision-pro",
+      "name": "Haivision Pro",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "Haivision",
+      "url": "https://www.haivision.com/products/pro-mobile-transmitter/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Mobile video transmitters over bonded cellular and IP, for broadcast.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender",
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Haivision support",
+          "url": "https://www.haivision.com/support/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "encoder"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlplus-store",
+      "name": "IRL+ store",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "IRL+",
+      "url": "https://www.irlplus.uk/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "3D-printed cases for ROCK 5B+ and Orange Pi 5+ boards, modem cooling and bag mods, made to order in the UK.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "IRL+ contact",
+          "url": "https://www.irlplus.uk/contact-us/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "backpack"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlbox",
+      "name": "IRLbox",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "IRLbox",
+      "url": "https://irlbox.com/",
+      "links": [
+        {
+          "label": "docs on GitHub",
+          "url": "https://github.com/IRLtools/IRLbox"
+        }
+      ],
+      "open_source": null,
+      "licence": null,
+      "status": "open beta",
+      "description": "A ready-made encoder system for Orange Pi and Radxa boards, on Ubuntu, with SRT, RTMP and RIST and a web dashboard. Free download in open beta; no source code or licence is published, only its docs on GitHub.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "encoder",
+        "backpack"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "liveu-solo",
+      "name": "LiveU Solo",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "LiveU",
+      "url": "https://www.liveu.tv/products/create/liveu-solo",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Bonded encoders for creators, on LiveU's LRT bonding, by subscription.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender",
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "LiveU Solo help centre",
+          "url": "https://solohelp.liveu.tv/hc/en-us"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "encoder"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "starlink",
+      "name": "Starlink",
+      "kind": "hardware",
+      "role": "extra-connections",
+      "maker": "SpaceX",
+      "url": "https://www.starlink.com/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Satellite internet; joins a backpack as one more link. Best with a clear view of the sky; in motion it needs the right plan and mount.",
+      "platforms": [
+        "hardware",
+        "service"
+      ],
+      "part": [
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Starlink support",
+          "url": "https://www.starlink.com/support"
+        }
+      ],
+      "tags": [],
+      "words": [],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "teradek-prism-mobile",
+      "name": "Teradek Prism Mobile",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "Teradek",
+      "url": "https://teradek.com/pages/prism-mobile",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "A camera-back encoder that bonds cellular and other connections; needs a Teradek subscription or licence.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender",
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Teradek support",
+          "url": "https://support.cs.inc/s/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "encoder"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "tvu-one",
+      "name": "TVU One",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "TVU Networks",
+      "url": "https://www.tvunetworks.com/products/tvu-one/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "A broadcast-grade 5G transmitter.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender",
+        "connections"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "TVU community",
+          "url": "https://community.tvunetworks.com/"
+        },
+        {
+          "label": "TVU support contact",
+          "url": "https://www.tvunetworks.com/contact-us/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "encoder"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "unlimitedirl",
+      "name": "UnlimitedIRL",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "UnlimitedIRL",
+      "url": "https://unlimitedirl.com/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Ready-built IRL backpacks and accessories, with expert help.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "UnlimitedIRL contact",
+          "url": "https://unlimitedirl.com/contact"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "backpack"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "yolobox-ultra",
+      "name": "YoloBox Ultra",
+      "kind": "hardware",
+      "role": "hardware",
+      "maker": "YoloLiv",
+      "url": "https://www.yololiv.com/yoloboxUltra",
+      "links": [
+        {
+          "label": "bonding plans",
+          "url": "https://www.yololiv.com/network-bonding"
+        }
+      ],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "An all-in-one camera encoder with a screen and HDMI inputs; bonding is a paid service.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "sender",
+        "camera"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "encoder",
+        "bonding"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlplus-video-mixer",
+      "name": "IRL+ Video Mixer",
+      "kind": "production",
+      "role": "production",
+      "maker": "IRL+",
+      "url": "https://video-mixer.irlplus.uk/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": "closed beta",
+      "description": "Mixes HDMI and USB cameras, a phone feed and overlays into one picture on the box itself, for BELABOX setups on a ROCK 5B+ or Orange Pi 5+. An independent add-on with its own support. Free, with paid remote access.",
+      "platforms": [
+        "hardware"
+      ],
+      "part": [
+        "camera"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "scene"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlhosting",
+      "name": "IRLhosting",
+      "kind": "hub",
+      "role": "hub",
+      "maker": "IRLhosting",
+      "url": "https://irlhosting.com/",
+      "links": [
+        {
+          "label": "guides",
+          "url": "https://irlhosting.com/guides/"
+        },
+        {
+          "label": "free tools",
+          "url": "https://irlhosting.com/tools/"
+        }
+      ],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Cloud OBS servers for IRL streamers, with SRTLA bonding and disconnect protection; its relays and SimpleStreamer are listed separately.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver",
+        "obs",
+        "platform"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "cloud-obs",
+        "drop-protection",
+        "srtla"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irltoolkit",
+      "name": "IRLToolkit",
+      "kind": "hub",
+      "role": "hub",
+      "maker": "IRLToolkit",
+      "url": "https://irltoolkit.com/",
+      "links": [
+        {
+          "label": "knowledge base",
+          "url": "https://kb.irltoolkit.com/"
+        }
+      ],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Cloud production with overlays and drop protection; several inputs on the bigger plan.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver",
+        "obs",
+        "platform"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "IRLToolkit knowledge base",
+          "url": "https://kb.irltoolkit.com/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "cloud-obs",
+        "drop-protection"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "noalbs-tool",
+      "name": "NOALBS",
+      "kind": "production",
+      "role": "production",
+      "maker": "NOALBS",
+      "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "Switches OBS scenes automatically when the bitrate drops.",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "noalbs",
+        "brb",
+        "scene"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "obs-irl-source",
+      "name": "OBS IRL Source",
+      "kind": "production",
+      "role": "production",
+      "maker": "irlserver",
+      "url": "https://github.com/irlserver/obs-irl-source",
+      "links": [],
+      "open_source": true,
+      "licence": "AGPL-3.0",
+      "status": null,
+      "description": "An OBS source for receiving IRL streams over SRT, RTMP or RIST that recovers on its own after a dropout and repairs audio gaps.",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/irlserver/obs-irl-source/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srt",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "obs-studio",
+      "name": "OBS Studio",
+      "kind": "production",
+      "role": "production",
+      "maker": "OBS Project",
+      "url": "https://obsproject.com/",
+      "links": [],
+      "open_source": true,
+      "licence": "GPL-2.0-or-later",
+      "status": null,
+      "description": "The open-source production software most of this plugs into.",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "OBS help",
+          "url": "https://obsproject.com/help"
+        },
+        {
+          "label": "OBS forum",
+          "url": "https://obsproject.com/forum/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "scene",
+        "browser-source"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "openirl-halveknots",
+      "name": "OpenIRL (Halveknots)",
+      "kind": "production",
+      "role": "production",
+      "maker": "Halveknots",
+      "url": "https://github.com/halveknots-llc/openirl",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT OR Apache-2.0",
+      "status": null,
+      "description": "\"Local-first Rust control plane for IRL streaming\": OBS automation, ingest, fallback and self-hosted relay workflows. A different project from the OpenIRL srtla-receiver under Bonding.",
+      "platforms": [
+        "linux"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/halveknots-llc/openirl/issues"
+        },
+        {
+          "label": "GitHub discussions",
+          "url": "https://github.com/halveknots-llc/openirl/discussions"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "scene",
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "streamer-bot",
+      "name": "Streamer.bot",
+      "kind": "production",
+      "role": "chat-overlays",
+      "maker": "Streamer.bot",
+      "url": "https://streamer.bot/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Automation for live streams on Twitch, YouTube and Kick, with first-class OBS Studio support and Stream Deck control.",
+      "platforms": [
+        "windows"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Streamer.bot docs",
+          "url": "https://docs.streamer.bot"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "scene"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "belabox-wiki",
+      "name": "BELABOX wiki",
+      "kind": "community",
+      "role": "community",
+      "maker": "BELABOX",
+      "url": "https://github.com/BELABOX/tutorial/wiki",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Modems, accessories, power banks.",
+      "platforms": [
+        "web"
+      ],
+      "part": [],
+      "covers": [
+        "belabox"
+      ],
+      "support": [],
+      "tags": [],
+      "words": [
+        "backpack"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "ceralive-docs",
+      "name": "CeraLive docs",
+      "kind": "community",
+      "role": "community",
+      "maker": "CeraLive",
+      "url": "https://docs.ceralive.tv/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Hardware lists, modems and audio devices.",
+      "platforms": [
+        "web"
+      ],
+      "part": [],
+      "covers": [
+        "ceralive"
+      ],
+      "support": [],
+      "tags": [],
+      "words": [
+        "backpack"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irltoolkit-kb",
+      "name": "IRLToolkit knowledge base",
+      "kind": "community",
+      "role": "community",
+      "maker": "IRLToolkit",
+      "url": "https://kb.irltoolkit.com/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Ingests, encoders, OBS WebSocket.",
+      "platforms": [
+        "web"
+      ],
+      "part": [],
+      "covers": [
+        "irltoolkit"
+      ],
+      "support": [],
+      "tags": [],
+      "words": [
+        "cloud-obs"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "moblin-readme",
+      "name": "Moblin README and features",
+      "kind": "community",
+      "role": "community",
+      "maker": "eerimoq",
+      "url": "https://github.com/eerimoq/moblin#features",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "The app's own feature list.",
+      "platforms": [
+        "web"
+      ],
+      "part": [],
+      "covers": [
+        "moblin"
+      ],
+      "support": [],
+      "tags": [],
+      "words": [],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlwhatever",
+      "name": "IRLwhatever",
+      "kind": "app",
+      "role": "streaming-app",
+      "maker": "IRLwhatever",
+      "url": "https://irlwhatever.com/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": "open beta",
+      "description": "An all-in-one Android app for streaming IRL from one phone: phone and USB cameras, scenes with picture-in-picture, SRTLA, RIST and SRT with adaptive bitrate, spare phones as extra paths through Moblink, Twitch and Kick chat with text-to-speech, overlays and alerts, OBS scene switching and a browser remote. Licence not stated.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "sender",
+        "camera"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srtla",
+        "srt",
+        "adaptive-bitrate",
+        "scene"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "irlrelays",
+      "name": "IRLrelays",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "IRLhosting",
+      "url": "https://irlrelays.com/",
+      "links": [
+        {
+          "label": "setup guides",
+          "url": "https://irlrelays.com/guides"
+        }
+      ],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "Hosted relays that carry your stream to your own OBS, over SRT, SRTLA, RIST or RTMP, with stats a scene switcher can read. The region can change and the relay ID stays. Paid.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "IRLrelays support",
+          "url": "https://irlrelays.com/support"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "relay",
+        "srtla",
+        "stats-url"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "simplestreamer",
+      "name": "SimpleStreamer",
+      "kind": "hub",
+      "role": "hub",
+      "maker": "IRLhosting",
+      "url": "https://irlhosting.com/plans/simplestreamer/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "A hosted server that passes your stream on to up to three platforms without re-encoding and shows a BRB screen when the signal drops. Takes SRTLA, SRT, RIST and RTMP; H.264 only. Paid.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver",
+        "platform"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [
+        "drop-protection",
+        "ingest-and-output",
+        "srtla"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "nodrop",
+      "name": "NoDrop",
+      "kind": "hub",
+      "role": "hub",
+      "maker": "IRLToolkit",
+      "url": "https://kb.irltoolkit.com/nodrop/0-QuickStart",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "IRLToolkit's hosted drop protection, controlled with commands in a chat channel: shows an image, a looping video or a second feed while yours is gone. Its output starts separately. Paid.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver",
+        "platform"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "IRLToolkit knowledge base",
+          "url": "https://kb.irltoolkit.com/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "drop-protection",
+        "ingest-and-output"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "noalbs-cloud",
+      "name": "NOALBS Cloud",
+      "kind": "production",
+      "role": "production",
+      "maker": "NOALBS",
+      "url": "https://docs.noalbs.com/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/NOALBS/noalbs-cloud"
+        }
+      ],
+      "open_source": true,
+      "licence": "AGPL-3.0",
+      "status": null,
+      "description": "The hosted NOALBS: reads your receiver's stats URL and switches OBS through one browser source, with a phone dashboard and chat commands. Paid plans; can also be self-hosted.",
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "NOALBS Cloud docs",
+          "url": "https://docs.noalbs.com/"
+        },
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/NOALBS/noalbs-cloud/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "noalbs",
+        "stats-url",
+        "server-type",
+        "fix-feed",
+        "brb"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "smooth-media-source",
+      "name": "Smooth Media Source",
+      "kind": "production",
+      "role": "production",
+      "maker": "sniffingpickles",
+      "url": "https://github.com/sniffingpickles/obs-smooth-media",
+      "links": [],
+      "open_source": true,
+      "licence": "GPL-2.0",
+      "status": "beta",
+      "description": "An OBS source for remote RTMP, SRT and RIST feeds that rebuilds its audio buffer after a dropout and reconnects when the feed drops. Windows, OBS 32.0 to 32.2.",
+      "platforms": [
+        "windows"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/sniffingpickles/obs-smooth-media/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "relay",
+        "fix-feed"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "moo-rist-receiver",
+      "name": "moo RIST receiver",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "moo-the-cow",
+      "url": "https://github.com/moo-the-cow/moo-rist-hosting-native",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "Self-hosted RIST receivers for IRL streaming, built for several machine types; its README names IRLbox and IRLwhatever as RIST senders.",
+      "platforms": [
+        "linux"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/moo-the-cow/moo-rist-hosting-native/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "relay"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "librtmp2-server",
+      "name": "librtmp2-server",
+      "kind": "relay",
+      "role": "relay",
+      "maker": "OpenRTMP",
+      "url": "https://github.com/OpenRTMP/librtmp2-server",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "A self-hosted RTMP, RTMPS and Enhanced RTMP server for OBS and FFmpeg, with live stats; NOALBS reads it as the OpenRTMP server type. A young project (since June 2026).",
+      "platforms": [
+        "linux"
+      ],
+      "part": [
+        "receiver"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/OpenRTMP/librtmp2-server/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "relay",
+        "stats-url"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "vdo-ninja",
+      "name": "VDO.Ninja",
+      "kind": "production",
+      "role": "production",
+      "maker": "Steve Seguin",
+      "url": "https://vdo.ninja/",
+      "links": [
+        {
+          "label": "docs",
+          "url": "https://docs.vdo.ninja/"
+        },
+        {
+          "label": "GitHub",
+          "url": "https://github.com/steveseguin/vdo.ninja"
+        }
+      ],
+      "open_source": true,
+      "licence": "AGPL-3.0",
+      "status": null,
+      "description": "Brings remote video feeds into OBS over WebRTC, for example a phone as a guest camera, from a browser.",
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "VDO.Ninja docs",
+          "url": "https://docs.vdo.ninja/"
+        },
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/steveseguin/vdo.ninja/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "scene"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "belabot",
+      "name": "BelaBot",
+      "kind": "production",
+      "role": "remote-control",
+      "maker": "NOALBS",
+      "url": "https://github.com/NOALBS/belabot",
+      "links": [],
+      "open_source": true,
+      "licence": "MIT",
+      "status": null,
+      "description": "A chat bot that controls a BELABOX's belaUI through BELABOX Cloud, from the NOALBS project. Last changed April 2025.",
+      "platforms": [
+        "windows",
+        "macos",
+        "linux"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "GitHub issues",
+          "url": "https://github.com/NOALBS/belabot/issues"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "backpack"
+      ],
+      "checked": "2026-11-14"
+    },
+    {
+      "id": "syncer-live",
+      "name": "Syncer.live",
+      "kind": "production",
+      "role": "production",
+      "maker": "Zusor",
+      "url": "https://syncer.live/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "A shared clock page to show on two or more feeds at once, to see how far apart they arrive and line them up.",
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "feedback form",
+          "url": "https://syncer.live/feedback"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "latency"
+      ],
+      "checked": "2026-11-14"
+    }
+  ]
+}

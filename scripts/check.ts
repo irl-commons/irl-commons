@@ -1,0 +1,167 @@
+// Validate ../data with zod, run the cross-reference checks, make sure the
+// committed JSON Schema matches the zod schemas, and invalid fixtures are rejected. Exit 1 on any problem.
+import { readFileSync, readdirSync } from "node:fs";
+import { files, guideTitle, RolesByKind, type FileName } from "../schema/src/schema.ts";
+import { exported, partsJson } from "./export.ts";
+
+const here = (p: string) => new URL(p, import.meta.url);
+const problems: string[] = [];
+const read = (p: URL) => JSON.parse(readFileSync(p, "utf8"));
+
+// Shared data must stay public and site-free: no chat invites, preview hosts,
+// private paths, tracking references or insecure URLs.
+const FORBIDDEN = new RegExp([
+  "disco" + "rd\\.(?:gg|com)|disco" + "rdapp", "preview" + "\\.openstreambox",
+  "\\.ts\\.net|tail" + "net|local" + "host|127\\.0\\.0\\.1",
+  "/ho" + "me/|/s" + "rv/|/Us" + "ers/",
+  "no" + "tes/|\\.lo" + "cal/|\\bT\\d+\\b|\\bA\\d{3}\\b",
+  "what" + "-fits",
+].join("|"), "i");
+const INSECURE = new RegExp("http" + "://", "i");
+
+export function hygiene(data: Record<FileName, any>): string[] {
+  const out: string[] = [];
+  const walk = (x: any, where: string) => {
+    if (Array.isArray(x)) x.forEach((v, i) => walk(v, `${where}[${i}]`));
+    else if (x && typeof x === "object") for (const [k, v] of Object.entries(x)) walk(v, `${where}.${k}`);
+    else if (typeof x === "string") { const m = x.match(FORBIDDEN) ?? x.match(INSECURE); if (m) out.push(`${where}: private or site-only reference '${m[0]}'`); }
+  };
+  for (const [name, doc] of Object.entries(data)) walk(doc, `data/${name}.json`);
+  return out;
+}
+
+/** A product name as a whole word, case-insensitive (the same rule as the site build). */
+export function productPattern(name: string): RegExp {
+  return new RegExp(`(?<![A-Za-z0-9])${name.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![A-Za-z0-9])`, "i");
+}
+
+const COUNTRY_CODES = "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW";
+
+export function semantic(data: Record<FileName, any>): string[] {
+  const out: string[] = hygiene(data);
+  const dupes = (where: string, ids: string[]) => {
+    for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) out.push(`${where}: duplicate id ${id}`);
+  };
+  const wordIds = new Set<string>(data.words.words.map((w: any) => w.id));
+  dupes("words", data.words.words.map((w: any) => w.id));
+  for (const w of data.words.words)
+    for (const r of w.related) if (!wordIds.has(r)) out.push(`words: ${w.id}: related '${r}' is not in the list`);
+  dupes("answers", data.answers.answers.map((a: any) => a.id));
+  for (const a of data.answers.answers)
+    for (const r of a.words) if (!wordIds.has(r)) out.push(`answers: ${a.id}: word '${r}' is not in words`);
+  dupes("services", data.services.services.map((s: any) => s.id));
+  for (const s of data.services.services)
+    for (const r of s.words) if (!wordIds.has(r)) out.push(`services: ${s.id}: word '${r}' is not in words`);
+  const serviceIds = new Set<string>(data.services.services.map((s: any) => s.id));
+  // Checks stay generic: no product names in a summary or a check; products are linked through services and guides.
+  const products = data.services.services.map((s: any) => ({ name: s.name, re: productPattern(s.name) }));
+  for (const a of data.answers.answers) {
+    for (const r of a.services) if (!serviceIds.has(r)) out.push(`answers: ${a.id}: service '${r}' is not in services`);
+    const texts: [string, string][] = [["summary", a.summary], ...a.checks.map((c: any, i: number): [string, string] => [`checks.${i}`, c.text])];
+    for (const [where, text] of texts)
+      for (const p of products) if (p.re.test(text)) out.push(`answers: ${a.id}: ${where} names the product '${p.name}'; link it through services or guides instead`);
+  }
+  // Every product sits somewhere on the chain; community entries point at the products they document instead.
+  const kindOf = new Map<string, string>(data.services.services.map((s: any) => [s.id, s.kind]));
+  for (const s of data.services.services) {
+    const allowed: string[] = (RolesByKind as any)[s.kind] ?? [];
+    if (!allowed.includes(s.role)) out.push(`services: ${s.id}: role '${s.role}' doesn't fit kind '${s.kind}' (allowed: ${allowed.join(", ")})`);
+    if (s.kind === "community") {
+      if (s.part.length) out.push(`services: ${s.id}: a community entry has no part; name the products it documents in covers`);
+      if (!s.covers.length) out.push(`services: ${s.id}: a community entry needs covers`);
+      for (const c of s.covers)
+        if (!kindOf.has(c) || kindOf.get(c) === "community") out.push(`services: ${s.id}: covers '${c}', which is not a product in services`);
+    } else {
+      if (!s.part.length) out.push(`services: ${s.id}: needs at least one part`);
+      if (s.covers.length) out.push(`services: ${s.id}: only community entries have covers`);
+    }
+  }
+  dupes("guides", data.guides.guides.map((g: any) => g.id));
+  const serviceName = new Map<string, string>(data.services.services.map((s: any) => [s.id, s.name]));
+  const answerById = new Map<string, any>(data.answers.answers.map((a: any) => [a.id, a]));
+  for (const g of data.guides.guides) {
+    for (const r of g.covers) if (!serviceIds.has(r)) out.push(`guides: ${g.id}: covers '${r}', which is not in services`);
+    if (g.publisher !== null && !g.covers.includes(g.publisher)) out.push(`guides: ${g.id}: publisher '${g.publisher}' must be one of covers, or null`);
+    for (const r of g.words) if (!wordIds.has(r)) out.push(`guides: ${g.id}: word '${r}' is not in words`);
+    for (const r of g.answers) {
+      const a = answerById.get(r);
+      if (!a) { out.push(`guides: ${g.id}: answer '${r}' is not in answers`); continue; }
+      const parts = new Set(a.checks.map((c: any) => c.part).filter(Boolean));
+      if (!g.covers.some((c: string) => a.services.includes(c)) && !g.part.some((p: string) => parts.has(p)))
+        out.push(`guides: ${g.id}: linked to answer '${r}' but shares no covered service or chain part with it`);
+    }
+    if (g.covers.every((c: string) => serviceIds.has(c))) {
+      const want = guideTitle(g, (id) => serviceName.get(id)!);
+      if (g.title_display !== want) out.push(`guides: ${g.id}: title_display is stale ('${g.title_display}', expected '${want}'): run bun titles`);
+    }
+  }
+  const carrierById = new Map<string, any>(data.plans.carriers.map((c: any) => [c.id, c]));
+  const countries = new Set(COUNTRY_CODES.split(" "));
+  dupes("plans.carriers", data.plans.carriers.map((c: any) => c.id));
+  for (const c of data.plans.carriers) {
+    if (!countries.has(c.country)) out.push(`plans: ${c.id}: unknown country code`);
+    const host = c.host_network_id === null ? null : carrierById.get(c.host_network_id);
+    if (c.network_type === "MNO" && c.host_network_id !== null) out.push(`plans: ${c.id}: MNO must have null host_network_id`);
+    if (c.network_type === "MVNO" && (!host || host.network_type !== "MNO" || host.country !== c.country))
+      out.push(`plans: ${c.id}: MVNO needs an MNO host in the same country`);
+    dupes(`plans.${c.id}.plans`, (c.plans ?? []).map((p: any) => p.id));
+  }
+  return out;
+}
+
+// Scan the distributable repository tree as well as the parsed datasets.
+function scanTree(dir: URL): void {
+  for (const entry of readdirSync(dir, {withFileTypes: true})) {
+    if ([".git", "node_modules"].includes(entry.name)) continue;
+    const path = new URL(entry.name + (entry.isDirectory() ? "/" : ""), dir);
+    if (entry.isDirectory()) scanTree(path);
+    else if (FORBIDDEN.test(readFileSync(path, "utf8"))) problems.push(`tree: ${entry.name}: private reference`);
+  }
+}
+scanTree(here("../"));
+
+const data = {} as Record<FileName, any>;
+for (const name of Object.keys(files) as FileName[]) {
+  const doc = read(here(`../data/${name}.json`));
+  const r = files[name].safeParse(doc);
+  if (!r.success) for (const i of r.error.issues) problems.push(`data/${name}.json: ${i.path.join(".")}: ${i.message}`);
+  data[name] = doc;
+  const committed = readFileSync(here(`../schema/json/${name}.schema.json`), "utf8");
+  if (committed !== exported(name)) problems.push(`json/${name}.schema.json is stale: run bun scripts/export.ts`);
+}
+if (readFileSync(here("../schema/json/parts.json"), "utf8") !== partsJson()) problems.push("json/parts.json is stale: run bun scripts/export.ts");
+if (!problems.length) problems.push(...semantic(data));
+
+// Fixtures: <file>--<what>.json, each must fail.
+let fixtures = 0;
+for (const f of readdirSync(here("../schema/fixtures/")).filter((f) => f.endsWith(".json")).sort()) {
+  const name = f.split("--")[0] as FileName;
+  if (!(name in files)) { problems.push(`fixtures/${f}: unknown file kind`); continue; }
+  fixtures++;
+  if (files[name].safeParse(read(here(`../schema/fixtures/${f}`))).success) problems.push(`fixtures/${f}: zod accepted an invalid file`);
+}
+
+const carrier = {id: "sample-network", name: "Sample Network", country: "DE", network_type: "MNO", host_network_id: null,
+  plans: [{id: "sample-plan", name: "Sample Plan", data_cap_gb: 50, throttle_after_cap_kbps: null, tethering_allowed: true, roaming_routing: "unknown", source_url: "https://example.org/plan", checked_on: "2026-11-14"}],
+  esim: false, official_url: "https://example.org/", coverage_map_url: "https://example.org/coverage",
+  sources: [{label: "Official details", url: "https://example.org/details"}], checked_on: "2026-11-14"};
+const candidate = structuredClone(data);
+candidate.plans.carriers = [carrier, {...carrier, id: "sample-virtual", network_type: "MVNO", host_network_id: carrier.id}];
+if (!files.plans.safeParse(candidate.plans).success || semantic(candidate).length) problems.push("valid carrier fixture rejected");
+for (const mutation of [
+  (d: any) => { d.plans.carriers[1].host_network_id = "missing"; },
+  (d: any) => { d.plans.carriers[1].country = "FR"; },
+  (d: any) => { d.plans.carriers[0].country = "ZZ"; },
+  (d: any) => { d.plans.carriers.push(d.plans.carriers[0]); },
+  (d: any) => { d.plans.carriers[0].host_network_id = carrier.id; },
+  (d: any) => { d.plans.carriers[0].plans.push(d.plans.carriers[0].plans[0]); },
+]) {
+  const bad = structuredClone(candidate); mutation(bad);
+  if (!semantic(bad).length) problems.push("invalid carrier reference accepted");
+}
+const chat = "https://disco" + "rd.gg/example";
+if (files.services.safeParse({...data.services, services: [{...data.services.services[0], url: chat}]}).success)
+  problems.push("chat URL accepted");
+for (const p of problems) console.error(p);
+if (problems.length) process.exit(1);
+console.log(`ok: zod accepts the ${Object.keys(files).length} data files and rejects ${fixtures} fixtures`);

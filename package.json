@@ -1,0 +1,42 @@
+{
+  "name": "@openstreambox/irl-commons",
+  "version": "0.1.0",
+  "description": "Small curated datasets and schemas for IRL streaming.",
+  "type": "module",
+  "license": "(MIT AND CC-BY-4.0)",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/openstreambox/irl-commons.git"
+  },
+  "homepage": "https://github.com/openstreambox/irl-commons#readme",
+  "bugs": {
+    "url": "https://github.com/openstreambox/irl-commons/issues"
+  },
+  "packageManager": "bun@1.4.3",
+  "files": [
+    "data/*.json",
+    "data/README.md",
+    "schema/src/*.ts",
+    "schema/json/*.json",
+    "schema/README.md",
+    "scripts/*.ts",
+    "LICENSE",
+    "LICENSE-DATA",
+    "README.md",
+    "schema/fixtures/*.json"
+  ],
+  "exports": {
+    "./data/*.json": "./data/*.json",
+    "./schema/json/*.json": "./schema/json/*.json",
+    "./schema": "./schema/src/schema.ts",
+    "./package.json": "./package.json"
+  },
+  "scripts": {
+    "check": "bun scripts/check.ts",
+    "export": "bun scripts/export.ts",
+    "titles": "bun scripts/titles.ts"
+  },
+  "dependencies": {
+    "zod": "4.6.7"
+  }
+}

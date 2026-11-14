@@ -1,0 +1,116 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "about": {
+      "type": "string"
+    },
+    "words": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "term": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          },
+          "tier": {
+            "type": "string",
+            "enum": [
+              "core",
+              "more"
+            ]
+          },
+          "who": {
+            "type": "string",
+            "enum": [
+              "streamer",
+              "helper",
+              "both"
+            ]
+          },
+          "heard_when": {
+            "type": "string"
+          },
+          "plain": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "related": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          "source": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "uncertain": {
+            "type": "boolean"
+          },
+          "l10n": {
+            "type": "object",
+            "propertyNames": {
+              "type": "string",
+              "pattern": "^[a-z]{2,3}(?:-(?:[A-Z]{2}|[0-9]{3}))?$"
+            },
+            "additionalProperties": {
+              "type": "object",
+              "properties": {
+                "term": {
+                  "type": "string",
+                  "pattern": "\\S"
+                },
+                "plain": {
+                  "type": "string",
+                  "pattern": "\\S"
+                },
+                "heard_when": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "term",
+                "plain"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "id",
+          "term",
+          "aliases",
+          "tier",
+          "who",
+          "heard_when",
+          "plain",
+          "related",
+          "source",
+          "uncertain"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "about",
+    "words"
+  ],
+  "additionalProperties": false,
+  "title": "words.json"
+}

@@ -1,0 +1,14 @@
+# IRL streaming data
+
+Five reviewed data files about streaming live from outside (IRL streaming):
+
+- `words.json`: a word list, one entry per term: a plain explanation, other names, who meets it, when it comes up, related terms, a public primary source, and an `uncertain` flag. Entries define; they don't give fix instructions. Optional `l10n` blocks hold translations by language tag (for example `es-419`, `pt-BR`); translations keep the scene's English terms as the term.
+- `answers.json`: quick checks for the questions that come up most, written along the chain a stream takes: camera and mic, sender, connections, receiver, OBS, platform. Each answer says which part most likely broke and gives 1 to 3 short checks in plain words, in the order worth trying, each optionally tagged with its part. Checks name no product and no product setting; products are linked as `services` (the makers' own docs and support) and through `guides.json`. Also related word ids and the public primary sources behind the checks.
+- `services.json`: a catalogue of apps, relays and receivers, hosted hubs, hardware, production tools and communities: the maker's own page, licence or open-source flag, status, platforms, official support channels (help centres, docs, issue trackers, contact pages), related words and the date each entry was last checked. `part` says where along the chain the product sits (camera, sender, connections, receiver, obs, platform; the main one first); community entries (docs, wikis) have no part and name the products they document in `covers` instead. Ids are permanent.
+- `guides.json`: public tutorials from the makers' own docs and channels, as links only. Each has the page's own `title`; the products it `covers` (service ids, at least one); the chain `part` it helps with; the `publisher` when the maker who wrote it is one of the covered products; creator, language, kind (article or video), published date when the page states one, the date it was checked, and the words and quick checks it helps with. `title_display` is generated from covers, publisher and part ("Moblin with IRLhosting: set up the sender", "OBS Studio: set up OBS and switching") by `../scripts/titles.ts`, so it never drifts from the data.
+
+Descriptions and definitions are written in our own words. Sources and links point to public primary pages only (makers' own pages, standards, platform help); no chat invites, private links or community posts. The schemas in `../schema` (zod, with exported JSON Schema) validate every file; see that folder's README.
+
+- `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. See the root README for field conventions and attribution.
+
+All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the attribution format in `../README.md`.

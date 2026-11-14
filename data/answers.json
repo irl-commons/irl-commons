@@ -1,0 +1,375 @@
+{
+  "about": "Quick checks for the questions that come up most about IRL streaming, written as checks along the chain: camera and mic, sender, connections, receiver, OBS, platform. Fields: id (an anchor), question, summary (which part most likely broke), checks (1 to 3; each has short plain text and optionally the part it looks at; no product names or product settings), words (ids in words.json), services (ids in services.json whose own docs and support channels help with the question), sources (the primary docs behind the checks; may be empty). Product specifics live in guides.json and services.json, never in the checks. Our own words only; no community posts quoted or linked. Validated by the zod schema in ../schema.",
+  "answers": [
+    {
+      "id": "live-not-on-platform",
+      "question": "My app says I'm live, but the platform shows me offline",
+      "summary": "Your app may send to a hub: a cloud OBS, a relay with drop protection or OBS at home. The hub goes live on the platform with its own Start.",
+      "checks": [
+        {
+          "part": "sender",
+          "text": "Check where your app sends. If it's a hub, live in the app only means the hub is receiving."
+        },
+        {
+          "part": "obs",
+          "text": "Start the hub's output: Start Streaming in OBS, or the start button or command of your cloud service."
+        },
+        {
+          "part": "platform",
+          "text": "Check that a destination is added and switched on, and watch the platform's dashboard during a test."
+        }
+      ],
+      "words": [
+        "ingest-and-output",
+        "cloud-obs",
+        "drop-protection",
+        "relay"
+      ],
+      "services": [
+        "irltoolkit",
+        "nodrop",
+        "irlhosting",
+        "simplestreamer"
+      ],
+      "sources": [
+        {
+          "label": "IRLToolkit: Cloud OBS quick start",
+          "url": "https://kb.irltoolkit.com/cloudobs/0-QuickStart"
+        },
+        {
+          "label": "IRLToolkit: NoDrop quick start",
+          "url": "https://kb.irltoolkit.com/nodrop/0-QuickStart"
+        }
+      ]
+    },
+    {
+      "id": "feed-into-obs",
+      "question": "How do I get a steady feed into OBS?",
+      "summary": "OBS takes one finished stream. With bonding, a receiver joins the connections back together first, and OBS reads from the receiver.",
+      "checks": [
+        {
+          "part": "receiver",
+          "text": "Put a receiver between your connections and OBS; OBS can't join bonded connections by itself."
+        },
+        {
+          "part": "obs",
+          "text": "Point the OBS source at the receiver's address, not at the phone or box."
+        },
+        {
+          "part": "obs",
+          "text": "Let a scene switcher show your BRB scene when the feed drops, and switch back when it returns."
+        }
+      ],
+      "words": [
+        "bonding",
+        "relay",
+        "srtla",
+        "brb",
+        "drop-protection",
+        "scene"
+      ],
+      "services": [
+        "openirl-srtla-receiver",
+        "irlhosting",
+        "obs-irl-source",
+        "noalbs-tool"
+      ],
+      "sources": [
+        {
+          "label": "srtla",
+          "url": "https://github.com/BELABOX/srtla"
+        },
+        {
+          "label": "OpenIRL srtla-receiver",
+          "url": "https://github.com/OpenIRL/srtla-receiver"
+        }
+      ]
+    },
+    {
+      "id": "switcher-no-stats",
+      "question": "OBS shows my video, but the scene switcher sees no numbers",
+      "summary": "The picture and the numbers take different roads. OBS plays the stream from one address; the switcher reads the receiver's stats from another.",
+      "checks": [
+        {
+          "part": "receiver",
+          "text": "Give the switcher the receiver's stats address, not the one OBS plays. A switcher in the cloud needs a public address."
+        },
+        {
+          "part": "receiver",
+          "text": "Set the server type to the software that runs your receiver, not to the app or box that sends."
+        },
+        {
+          "part": "obs",
+          "text": "Let one automatic switcher control each OBS; two switchers fight each other."
+        }
+      ],
+      "words": [
+        "stats-url",
+        "server-type",
+        "noalbs",
+        "relay"
+      ],
+      "services": [
+        "noalbs-cloud",
+        "noalbs-tool",
+        "irlrelays"
+      ],
+      "sources": [
+        {
+          "label": "NOALBS Cloud: stream servers",
+          "url": "https://docs.noalbs.com/guides/stream-servers/"
+        },
+        {
+          "label": "NOALBS Cloud: stream server kinds",
+          "url": "https://docs.noalbs.com/reference/stream-server-kinds/"
+        }
+      ]
+    },
+    {
+      "id": "frozen-after-live",
+      "question": "The switcher went back to LIVE, but the picture is frozen",
+      "summary": "A scene switcher only changes scenes. The OBS source that plays your feed has to reconnect too, and not every source does that by itself.",
+      "checks": [
+        {
+          "part": "receiver",
+          "text": "Look at the receiver's numbers. If the feed arrives, the source in OBS is what's stuck."
+        },
+        {
+          "part": "obs",
+          "text": "Reconnect the source: refresh it in OBS, or use your switcher's fix-feed command if it has one."
+        },
+        {
+          "part": "obs",
+          "text": "Use a source made for live feeds over weak networks; it reconnects by itself after a dropout."
+        }
+      ],
+      "words": [
+        "fix-feed",
+        "noalbs",
+        "scene"
+      ],
+      "services": [
+        "obs-irl-source",
+        "smooth-media-source",
+        "noalbs-cloud",
+        "noalbs-tool"
+      ],
+      "sources": [
+        {
+          "label": "NOALBS Cloud: troubleshooting",
+          "url": "https://docs.noalbs.com/guides/troubleshooting/"
+        },
+        {
+          "label": "OBS IRL Source README",
+          "url": "https://github.com/irlserver/obs-irl-source"
+        },
+        {
+          "label": "Smooth Media Source README",
+          "url": "https://github.com/sniffingpickles/obs-smooth-media"
+        }
+      ]
+    },
+    {
+      "id": "second-link-idle",
+      "question": "My second connection is connected, but the stream doesn't use it",
+      "summary": "Connected isn't the same as carrying. Either the sender isn't bonding over it, or that connection can't reach the receiver.",
+      "checks": [
+        {
+          "part": "sender",
+          "text": "Check that bonding is on in the sender and that it lists every connection."
+        },
+        {
+          "part": "connections",
+          "text": "Run a short test and watch each connection's traffic. Zero on one means it isn't helping yet."
+        },
+        {
+          "part": "connections",
+          "text": "Check that the receiver can be reached over that connection: turn any VPN off, and keep a spare phone awake."
+        }
+      ],
+      "words": [
+        "bonding",
+        "relay"
+      ],
+      "services": [
+        "moblin",
+        "moblink",
+        "irl-pro",
+        "irlplus-cast",
+        "lifestreamer",
+        "irlwhatever",
+        "belabox",
+        "ceralive"
+      ],
+      "sources": [
+        {
+          "label": "srtla",
+          "url": "https://github.com/BELABOX/srtla"
+        }
+      ]
+    },
+    {
+      "id": "picture-frozen",
+      "question": "The camera picture froze or stutters, but I'm still live",
+      "summary": "Find where it starts. If the preview on your phone or box already freezes, the break is between the camera and the sender, not the internet.",
+      "checks": [
+        {
+          "part": "camera",
+          "text": "Look at the preview on your phone or box. If it already freezes or stutters there, the camera's link is the cause."
+        },
+        {
+          "part": "camera",
+          "text": "Check that link: cable and capture card seated, or Wi-Fi close by and on 5 GHz if it can."
+        },
+        {
+          "part": "connections",
+          "text": "Preview smooth? Look at the bitrate going out. If that drops, the connections are the cause."
+        }
+      ],
+      "words": [
+        "bitrate",
+        "local-ingest"
+      ],
+      "services": [
+        "moblin",
+        "irlwhatever",
+        "mediasrvr",
+        "belabox",
+        "ceralive"
+      ],
+      "sources": []
+    },
+    {
+      "id": "camera-black-preview",
+      "question": "My Wi-Fi camera connects, but the app's preview stays black",
+      "summary": "Two causes look the same: the camera sends to the wrong address, or the app isn't allowed to use the camera or microphone. Check one at a time.",
+      "checks": [
+        {
+          "part": "camera",
+          "text": "Compare the address the camera sends to with the one your app shows. It must be the phone's own address, never 0.0.0.0."
+        },
+        {
+          "part": "sender",
+          "text": "Allow the app to use the camera and microphone in the phone's settings, even for a Wi-Fi camera."
+        },
+        {
+          "part": "camera",
+          "text": "Restart the camera's live mode after each change."
+        }
+      ],
+      "words": [
+        "local-ingest"
+      ],
+      "services": [
+        "irlwhatever",
+        "moblin",
+        "mediasrvr"
+      ],
+      "sources": [
+        {
+          "label": "Android: change app permissions",
+          "url": "https://support.google.com/android/answer/9431959"
+        }
+      ]
+    },
+    {
+      "id": "sound-missing",
+      "question": "The sound is missing, on the wrong mic or drifting",
+      "summary": "If the picture is fine but the sound isn't, follow the sound from the mic: the input, then the sender, then OBS.",
+      "checks": [
+        {
+          "part": "camera",
+          "text": "Check the mic is plugged in and chosen as the input, and that its level moves when you speak."
+        },
+        {
+          "part": "sender",
+          "text": "Check which mic the sender uses in each scene; some senders change the mic when the scene changes."
+        },
+        {
+          "part": "obs",
+          "text": "Crackles or drifts after a dropout? Look at the OBS source taking the feed; a source made for IRL recovers by itself."
+        }
+      ],
+      "words": [
+        "scene",
+        "relay"
+      ],
+      "services": [
+        "moblin",
+        "obs-irl-source",
+        "obs-studio"
+      ],
+      "sources": [
+        {
+          "label": "OBS IRL Source README",
+          "url": "https://github.com/irlserver/obs-irl-source"
+        }
+      ]
+    },
+    {
+      "id": "camera-switch-drop",
+      "question": "Switching cameras drops the stream, or the platform shows black",
+      "summary": "The platform is refusing what arrives after the switch. Find out whether it's one camera or every switch, then compare with what the platform asks for.",
+      "checks": [
+        {
+          "part": "camera",
+          "text": "Switch to each camera on its own. If only one causes it, compare its resolution and frame rate with the others."
+        },
+        {
+          "part": "platform",
+          "text": "Compare your encoder settings with the platform's own recommended settings page."
+        },
+        {
+          "text": "Change one thing at a time, and test each change with a short stream."
+        }
+      ],
+      "words": [
+        "encoder",
+        "bitrate"
+      ],
+      "services": [],
+      "sources": [
+        {
+          "label": "YouTube: live encoder settings",
+          "url": "https://support.google.com/youtube/answer/2853702"
+        },
+        {
+          "label": "Kick: how to stream on Kick",
+          "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+        }
+      ]
+    },
+    {
+      "id": "destination-turns-off",
+      "question": "My cloud destination keeps switching itself off",
+      "summary": "When the platform refuses the connection, a cloud OBS stops retrying and switches the destination off. Fix the reason, then switch it back on.",
+      "checks": [
+        {
+          "part": "platform",
+          "text": "Changed your stream key or password? Link the platform account again, or paste the new key."
+        },
+        {
+          "part": "platform",
+          "text": "Stop any other device that streams with the same key."
+        },
+        {
+          "part": "obs",
+          "text": "On a custom destination, turn authentication off unless the platform asks for it. Then switch it back on."
+        }
+      ],
+      "words": [
+        "cloud-obs",
+        "ingest-and-output"
+      ],
+      "services": [
+        "irltoolkit"
+      ],
+      "sources": [
+        {
+          "label": "IRLToolkit: No Dest Enabled",
+          "url": "https://kb.irltoolkit.com/cloudobs/1-Troubleshooting/NoDestEnabled"
+        }
+      ]
+    }
+  ]
+}

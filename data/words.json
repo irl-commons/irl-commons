@@ -1,0 +1,574 @@
+{
+  "about": "A word list for IRL streaming, one entry per term. Fields: id (an anchor), term, aliases, tier (core | more), who (streamer | helper | both), heard_when, plain, related (ids), source, uncertain, and optional l10n: {<language tag>: {term, plain, heard_when}} such as es-419 or pt-BR. Translations keep the scene's English terms as the term and explain in the language, and are read by a native speaker before publishing. Validated by the zod schema in ../schema.",
+  "words": [
+    {
+      "id": "irl",
+      "term": "IRL",
+      "aliases": [
+        "in real life",
+        "IRL streaming"
+      ],
+      "tier": "core",
+      "who": "both",
+      "heard_when": "Streamers talk about going live from outside instead of from their desk.",
+      "plain": "Short for \"in real life\". It means streaming while you're out and about, not sitting at a desk.",
+      "related": [
+        "backpack",
+        "bonding"
+      ],
+      "source": "https://belabox.net/",
+      "uncertain": true
+    },
+    {
+      "id": "backpack",
+      "term": "Backpack",
+      "aliases": [
+        "streaming backpack",
+        "IRL backpack",
+        "encoder box"
+      ],
+      "tier": "core",
+      "who": "both",
+      "heard_when": "A phone isn't enough any more and someone suggests a bag with modems.",
+      "plain": "A bag with a small computer, a big battery and several mobile internet connections inside. It turns your camera's picture into a live stream.",
+      "related": [
+        "encoder",
+        "bonding"
+      ],
+      "source": "https://www.liveu.tv/products/create/liveu-solo",
+      "uncertain": true
+    },
+    {
+      "id": "bonding",
+      "term": "Bonding",
+      "aliases": [
+        "bonded stream",
+        "link aggregation"
+      ],
+      "tier": "core",
+      "who": "both",
+      "heard_when": "Setting up a second network, or choosing an app or backpack.",
+      "plain": "Using several internet connections at the same time for one stream, like two phones' data and Wi-Fi. If one gets weak, the others keep it going.",
+      "related": [
+        "srtla",
+        "relay"
+      ],
+      "source": "https://github.com/BELABOX/srtla",
+      "uncertain": false
+    },
+    {
+      "id": "relay",
+      "term": "Relay or receiver",
+      "aliases": [
+        "Relay",
+        "Receiver",
+        "SRTLA receiver",
+        "Bonding server",
+        "Ingest relay"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Every bonded setup; relay services, srtla-receiver and other self-hosted receiver guides",
+      "plain": "A computer on the internet that collects your stream's pieces from every connection. It joins them back into one stream for OBS or the platform.",
+      "related": [
+        "srtla",
+        "srt",
+        "bonding",
+        "cloud-obs",
+        "noalbs"
+      ],
+      "source": "https://github.com/OpenIRL/srtla-receiver",
+      "uncertain": false
+    },
+    {
+      "id": "srt",
+      "term": "SRT",
+      "aliases": [
+        "Secure Reliable Transport",
+        "srt://"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Output settings in Moblin, Larix or BELABOX; an srt:// address from a relay or cloud OBS; OBS Media Source receiving SRT",
+      "plain": "A way of sending live video over the internet. When a piece gets lost on the way, it is sent again quickly, so the picture glitches less.",
+      "related": [
+        "srtla",
+        "srt-latency",
+        "big-packets"
+      ],
+      "source": "https://github.com/Haivision/srt",
+      "uncertain": false
+    },
+    {
+      "id": "srtla",
+      "term": "SRTLA",
+      "aliases": [
+        "SRT link aggregation",
+        "srtla2",
+        "srtla://"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Bonding settings in BELABOX and Moblin; a relay or receiver service gives you an SRTLA host and port",
+      "plain": "A way of splitting one live video across several internet connections at once. A computer at the other end joins the pieces up again.",
+      "related": [
+        "srt",
+        "bonding",
+        "relay"
+      ],
+      "source": "https://github.com/BELABOX/srtla",
+      "uncertain": false
+    },
+    {
+      "id": "encoder",
+      "term": "Encoder",
+      "aliases": [
+        "Video encoder",
+        "Streaming encoder"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "OBS output settings; backpacks and apps described as encoders",
+      "plain": "The app or box that shrinks your camera's picture and sound so they fit through an internet connection. It works a bit like zipping a big file before sending it.",
+      "related": [
+        "bitrate",
+        "backpack"
+      ],
+      "source": "https://belabox.net/",
+      "uncertain": false
+    },
+    {
+      "id": "cloud-obs",
+      "term": "Cloud OBS",
+      "aliases": [
+        "OBS in the cloud",
+        "Cloud production",
+        "Hosted OBS"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Relay and hosting services that include OBS; IRL setups with nothing running at home",
+      "plain": "OBS, the free program that builds what viewers see, running on a rented computer in a data centre. Nothing at home has to stay switched on.",
+      "related": [
+        "relay",
+        "drop-protection",
+        "scene"
+      ],
+      "source": "https://irlhosting.com/",
+      "uncertain": true
+    },
+    {
+      "id": "brb",
+      "term": "BRB",
+      "aliases": [
+        "Be right back",
+        "BRB screen",
+        "BRB scene"
+      ],
+      "tier": "core",
+      "who": "both",
+      "heard_when": "'Switch to BRB'; stepping away for a moment; the stream jumping to a BRB screen when the signal drops",
+      "plain": "Short for \"be right back\". It's the screen viewers see while you take a break or your signal is gone.",
+      "related": [
+        "drop-protection",
+        "scene",
+        "noalbs"
+      ],
+      "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
+      "uncertain": false
+    },
+    {
+      "id": "drop-protection",
+      "term": "Drop protection",
+      "aliases": [
+        "Disconnect protection",
+        "Fallback scene"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Choosing cloud production or a hosted relay; NOALBS switching to a BRB scene when the feed drops",
+      "plain": "When your connection drops, viewers see a holding screen instead of the stream ending. It switches back by itself when you return.",
+      "related": [
+        "brb",
+        "cloud-obs",
+        "relay"
+      ],
+      "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
+      "uncertain": false
+    },
+    {
+      "id": "data-cap",
+      "term": "Data cap",
+      "aliases": [
+        "Data allowance",
+        "Fair use limit",
+        "Unlimited data"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Mobile plan terms, carrier texts when you near the limit, 'unlimited' plans with small print",
+      "plain": "How much mobile data your phone plan includes. Using more can cost extra. One hour of a typical stream (6 megabits each second) uses about 2.7 GB.",
+      "related": [
+        "bitrate"
+      ],
+      "source": "https://digital-strategy.ec.europa.eu/en/faqs/roaming-questions-answers",
+      "uncertain": false
+    },
+    {
+      "id": "upload-speed",
+      "term": "Upload speed",
+      "aliases": [
+        "Upload",
+        "Upstream",
+        "Speed test"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Speed-test apps; OBS and platform advice to keep bitrate well below it",
+      "plain": "How fast your connection can send things out, not bring them in. Streaming is all sending, so this is the number that matters.",
+      "related": [
+        "bitrate",
+        "bonding"
+      ],
+      "source": "https://obsproject.com/kb/stream-connection-troubleshooting",
+      "uncertain": false
+    },
+    {
+      "id": "bitrate",
+      "term": "Bitrate",
+      "aliases": [
+        "kbps",
+        "Mbps",
+        "Video bitrate"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "OBS output settings, every IRL app's stats line, a relay's stats page, chat asking why the picture went blocky",
+      "plain": "How much data your stream sends every second. More data means a sharper picture, but it needs a stronger connection.",
+      "related": [
+        "upload-speed",
+        "adaptive-bitrate",
+        "data-cap",
+        "b-frames"
+      ],
+      "source": "https://support.google.com/youtube/answer/2853702",
+      "uncertain": false
+    },
+    {
+      "id": "adaptive-bitrate",
+      "term": "Adaptive bitrate",
+      "aliases": [
+        "Dynamic bitrate",
+        "Auto bitrate"
+      ],
+      "tier": "more",
+      "who": "streamer",
+      "heard_when": "Moblin and IRL Pro bitrate settings; OBS Advanced → Network 'dynamically change bitrate'; bonding encoders",
+      "plain": "The app makes the picture a bit blurrier by itself when your connection gets weak, so the stream keeps going. It sharpens again when the signal improves.",
+      "related": [
+        "bitrate",
+        "bonding"
+      ],
+      "source": "https://github.com/eerimoq/moblin",
+      "uncertain": false
+    },
+    {
+      "id": "packet-loss",
+      "term": "Packet loss",
+      "aliases": [
+        "Loss",
+        "Lost packets",
+        "Retransmits"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Stats in BELABOX, Moblin, relays and SRT receivers; 'the link is fine but loss is high'; often confused with OBS's dropped frames",
+      "plain": "Little pieces of your stream that go missing on the way. A few can be sent again in time; too many cause glitches or a drop.",
+      "related": [
+        "srt-latency"
+      ],
+      "source": "https://www.rfc-editor.org/rfc/rfc7680",
+      "uncertain": false
+    },
+    {
+      "id": "srt-latency",
+      "term": "SRT latency",
+      "aliases": [
+        "Latency (SRT)",
+        "SRT buffer",
+        "Receive buffer",
+        "Buffer",
+        "Latency (ms)",
+        "latency= in an SRT address"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "The latency setting in BELABOX, Moblin, IRL Pro and relays, in milliseconds; 'raise the latency on bad networks'",
+      "plain": "How long the receiving end waits for late or missing pieces before showing the picture. Waiting longer means fewer glitches, but viewers see things later.",
+      "related": [
+        "srt",
+        "packet-loss",
+        "latency"
+      ],
+      "source": "https://github.com/Haivision/srt/blob/master/docs/API/API-socket-options.md",
+      "uncertain": false
+    },
+    {
+      "id": "latency",
+      "term": "Latency",
+      "aliases": [
+        "Delay",
+        "Viewer delay",
+        "Low-latency mode",
+        "Glass-to-glass"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "YouTube's latency choice, Twitch's low-latency option, chat answering a moment late",
+      "plain": "The time between something happening in front of your camera and viewers seeing it. Shorter feels more live, but the video can stop to load more often.",
+      "related": [
+        "srt-latency"
+      ],
+      "source": "https://support.google.com/youtube/answer/7444635",
+      "uncertain": false
+    },
+    {
+      "id": "scene",
+      "term": "Scene",
+      "aliases": [
+        "Scenes",
+        "Scene collection",
+        "Live scene"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "OBS Scenes dock, Moblin's scene buttons, a helper saying 'switch to BRB' or 'go to the starting scene'",
+      "plain": "One saved layout of what viewers see, such as your camera, a break screen or \"starting soon\". Switching changes the whole picture at once.",
+      "related": [
+        "brb",
+        "browser-source",
+        "mic-override"
+      ],
+      "source": "https://obsproject.com/kb/obs-studio-overview",
+      "uncertain": false
+    },
+    {
+      "id": "big-packets",
+      "term": "Big packets",
+      "aliases": [
+        "Big SRT packets"
+      ],
+      "tier": "more",
+      "who": "helper",
+      "heard_when": "Moblin's SRT settings; a bond that works on one network but not over an Android phone's hotspot",
+      "plain": "A Moblin setting that puts slightly more video into each little piece it sends. It's on by default; Moblin says some Android phone hotspots don't work with it.",
+      "related": [
+        "srt"
+      ],
+      "source": "https://github.com/eerimoq/moblin/blob/main/Moblin/View/Settings/Streams/Stream/Srt/StreamSrtSettingsView.swift",
+      "uncertain": false
+    },
+    {
+      "id": "dns-lookup-strategy",
+      "term": "DNS lookup strategy",
+      "aliases": [
+        "DNS lookup",
+        "IPv4 or IPv6 lookup"
+      ],
+      "tier": "more",
+      "who": "helper",
+      "heard_when": "Moblin's SRT settings; a connection that connects but sends nothing on one mobile network",
+      "plain": "A Moblin setting for how the app looks up the internet address of the computer it sends to. On some networks, another choice connects better.",
+      "related": [
+        "srt",
+        "relay"
+      ],
+      "source": "https://github.com/eerimoq/moblin/blob/main/Moblin/View/Settings/Streams/Stream/Srt/StreamSrtSettingsView.swift",
+      "uncertain": false
+    },
+    {
+      "id": "maximize-compatibility",
+      "term": "Maximize Compatibility",
+      "aliases": [
+        "Maximise Compatibility",
+        "2.4 GHz hotspot"
+      ],
+      "tier": "more",
+      "who": "streamer",
+      "heard_when": "iPhone Settings → Personal Hotspot; connecting a camera to a phone's hotspot",
+      "plain": "An iPhone hotspot setting that switches to an older Wi-Fi band, so older devices can join. Apple says it can lower performance.",
+      "related": [
+        "local-ingest"
+      ],
+      "source": "https://support.apple.com/guide/platform-support/sup025284ac0/web",
+      "uncertain": false
+    },
+    {
+      "id": "mic-override",
+      "term": "Mic override",
+      "aliases": [
+        "Per-scene mic"
+      ],
+      "tier": "more",
+      "who": "streamer",
+      "heard_when": "Moblin scene settings with all settings shown; the sound jumping to another mic after a scene change",
+      "plain": "A Moblin setting that ties one microphone to one screen layout. When that layout comes on, the sound switches to that mic.",
+      "related": [
+        "scene"
+      ],
+      "source": "https://github.com/eerimoq/moblin/blob/main/Moblin/View/Settings/Scenes/Scene/SceneSettingsView.swift",
+      "uncertain": false
+    },
+    {
+      "id": "browser-source",
+      "term": "Browser source",
+      "aliases": [
+        "Browser widget",
+        "Alert box URL"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "OBS Sources → Browser; adding alerts, chat or a map from a web address",
+      "plain": "A part of an OBS layout that shows a web page, like alerts, chat or a map. If it's hidden, it may not play at all.",
+      "related": [
+        "scene"
+      ],
+      "source": "https://obsproject.com/kb/browser-source",
+      "uncertain": false
+    },
+    {
+      "id": "local-ingest",
+      "term": "Local ingest",
+      "aliases": [
+        "RTMP server on the phone",
+        "Network ingest",
+        "Local RTMP server"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Feeding a camera into Moblin, MediaSrvr or a backpack over Wi-Fi",
+      "plain": "A small receiving point inside your app or box. A camera sends its picture to it over Wi-Fi or a cable, so the app can use it.",
+      "related": [
+        "srt",
+        "maximize-compatibility"
+      ],
+      "source": "https://github.com/eerimoq/moblin",
+      "uncertain": false
+    },
+    {
+      "id": "noalbs",
+      "term": "NOALBS",
+      "aliases": [
+        "nginx-obs-automatic-low-bitrate-switching"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Setting up OBS for IRL; 'use NOALBS for your BRB'",
+      "plain": "A free tool that watches how much video is arriving. It switches OBS to your low-signal or break screen by itself, and back again.",
+      "related": [
+        "brb",
+        "relay",
+        "bitrate",
+        "fix-feed",
+        "stats-url"
+      ],
+      "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
+      "uncertain": false
+    },
+    {
+      "id": "b-frames",
+      "term": "B-frames",
+      "aliases": [
+        "Bidirectional frames",
+        "B-frame count"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Encoder advanced settings; a platform's recommended settings list",
+      "plain": "Some pictures in a video are saved as just the changes from the pictures before and after them. That saves data, and streaming sites say how many to use.",
+      "related": [
+        "encoder",
+        "bitrate"
+      ],
+      "source": "https://support.google.com/youtube/answer/2853702",
+      "uncertain": false
+    },
+    {
+      "id": "ingest-and-output",
+      "term": "Ingest and output",
+      "aliases": [
+        "Ingest",
+        "Output",
+        "Destination"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Cloud OBS and relay dashboards; the app says live but the platform says offline",
+      "plain": "With an online streaming service, your stream arrives there first, then the service sends it on to Twitch or YouTube. Each half starts on its own.",
+      "related": [
+        "cloud-obs",
+        "drop-protection",
+        "relay"
+      ],
+      "source": "https://kb.irltoolkit.com/cloudobs/0-QuickStart",
+      "uncertain": false
+    },
+    {
+      "id": "stats-url",
+      "term": "Stats URL",
+      "aliases": [
+        "Stats address",
+        "Stats page",
+        "Stats API"
+      ],
+      "tier": "more",
+      "who": "helper",
+      "heard_when": "Scene switcher settings; a bitrate overlay; OBS has video but the switcher shows nothing",
+      "plain": "A web address where the receiving computer shows how much video is coming in. Switching tools read it. It isn't where the picture itself comes from.",
+      "related": [
+        "server-type",
+        "relay",
+        "bitrate",
+        "noalbs"
+      ],
+      "source": "https://docs.noalbs.com/guides/stream-servers/",
+      "uncertain": false
+    },
+    {
+      "id": "server-type",
+      "term": "Server type",
+      "aliases": [
+        "Stream server kind",
+        "Kind"
+      ],
+      "tier": "more",
+      "who": "helper",
+      "heard_when": "Scene switcher settings; good bitrate but the switcher keeps going to BRB",
+      "plain": "A switching tool's setting that names the software on your receiving computer. Each program reports its numbers differently.",
+      "related": [
+        "stats-url",
+        "relay",
+        "noalbs"
+      ],
+      "source": "https://docs.noalbs.com/reference/stream-server-kinds/",
+      "uncertain": false
+    },
+    {
+      "id": "fix-feed",
+      "term": "Fix feed",
+      "aliases": [
+        "!fix"
+      ],
+      "tier": "more",
+      "who": "helper",
+      "heard_when": "NOALBS's Live page and chat commands; back on LIVE but the picture is frozen",
+      "plain": "A NOALBS button and chat command (!fix) that reconnects the video in what viewers are watching right now.",
+      "related": [
+        "noalbs",
+        "scene"
+      ],
+      "source": "https://docs.noalbs.com/guides/troubleshooting/",
+      "uncertain": false
+    }
+  ]
+}

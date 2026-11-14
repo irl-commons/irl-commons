@@ -1,0 +1,17 @@
+{
+  "about": "Synthetic validation fixture, not carrier research.",
+  "carriers": [
+    {
+      "id": "sample-network",
+      "name": "Sample Network",
+      "country": "DE",
+      "network_type": "MNO",
+      "host_network_id": null,
+      "esim": false,
+      "official_url": "https://example.org/",
+      "coverage_map_url": "https://example.org/coverage",
+      "sources": [],
+      "checked_on": "2026-11-14"
+    }
+  ]
+}

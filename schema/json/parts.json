@@ -1,0 +1,61 @@
+{
+  "parts": [
+    "camera",
+    "sender",
+    "connections",
+    "receiver",
+    "obs",
+    "platform"
+  ],
+  "task": {
+    "camera": "connect the camera",
+    "sender": "set up the sender",
+    "connections": "bond the connections",
+    "receiver": "run the receiver",
+    "obs": "set up OBS and switching",
+    "platform": "go out to the platform"
+  },
+  "roles": [
+    "streaming-app",
+    "extra-connections",
+    "camera-capture",
+    "remote-control",
+    "chat-overlays",
+    "other-app",
+    "relay",
+    "hub",
+    "production",
+    "hardware",
+    "community"
+  ],
+  "roles_by_kind": {
+    "app": [
+      "streaming-app",
+      "extra-connections",
+      "camera-capture",
+      "remote-control",
+      "chat-overlays",
+      "other-app"
+    ],
+    "relay": [
+      "relay",
+      "extra-connections"
+    ],
+    "hub": [
+      "hub"
+    ],
+    "production": [
+      "production",
+      "chat-overlays",
+      "remote-control",
+      "camera-capture"
+    ],
+    "hardware": [
+      "hardware",
+      "extra-connections"
+    ],
+    "community": [
+      "community"
+    ]
+  }
+}
