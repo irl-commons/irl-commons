@@ -9,6 +9,8 @@ Do not copy community posts, private material or credentials.
 A confirmation must say what you actually checked and whether each claim still
 matches. Set `checked_on` to that source-check date, never just the day a link
 returned success. Preserve uncertainty; do not invent historical check dates.
+For standards, credit the maker, link products through `service_ids`, and add
+an app's own format only once a named second product writes or reads it.
 For plans, cite the carrier's country-specific page and its cap, price or
 fair-use terms. Prices require three stewards first (see GOVERNANCE.md).
 

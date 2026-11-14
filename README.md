@@ -6,6 +6,7 @@ Small, reusable datasets about streaming live from outside (IRL streaming), main
 - `data/answers.json`: short troubleshooting checks, with related words, services and sources.
 - `data/services.json`: apps, receivers, hubs, hardware, production tools and documentation, with official links and review dates.
 - `data/guides.json`: links to public tutorials, covered services, chain parts and review dates.
+- `data/standards.json`: shared formats and protocols (SRT, SRTLA, WHIP and others), who makes them and which products write or read them, in three groups: shared, app formats, and the stewards' own projects.
 - `data/plans.json`: carrier records and optional data plans. Currently empty: no coverage or plan claims are implied. The name leaves room for plans under each carrier without a separate lookup table.
 - `schema/src/schema.ts`: Zod schemas and shared rules; the source of truth.
 - `schema/json/`: exported JSON Schema draft 2020-12, plus chain-part and role metadata in `parts.json`.
@@ -21,7 +22,7 @@ bun run export
 git diff --exit-code -- schema/json
 ```
 
-The check validates all five files, cross-references, generated titles, privacy rules, schema drift and rejection fixtures. Carrier checks also exercise a valid synthetic network and virtual operator, missing hosts, country mismatches and duplicates. Run `bun run titles` after changing the service names or relationships used by guide titles.
+The check validates all six files, cross-references, generated titles, privacy rules, schema drift and rejection fixtures. Carrier checks also exercise a valid synthetic network and virtual operator, missing hosts, country mismatches and duplicates. Run `bun run titles` after changing the service names or relationships used by guide titles.
 
 The package is prepared as `@irl-commons/data`; it has not been published to npm. You can clone this repository and use the JSON files directly. After the first reviewed release, install with `npm install @irl-commons/data`. The exported paths are:
 
@@ -42,7 +43,7 @@ Propose additions or corrections through issues or pull requests. Include public
 
 ## Freshness
 
-Services, guides, carriers and nested plans require a `checked_on` ISO date; words
+Services, guides, standards, carriers and nested plans require a `checked_on` ISO date; words
 and answers may omit it when no content review is recorded. When present it is:
 the day its content was checked against its public primary source. A successful
 link request alone is not a content check. Preserve actual dates; never infer one from link health or a bulk import.
@@ -54,6 +55,7 @@ See [data provenance](data/README.md) for the recorded 2026-11-14 content review
 | Answers | 12 calendar months |
 | Guides | 9 calendar months |
 | Services | 6 calendar months |
+| Standards | 6 calendar months |
 | Carrier records | 6 calendar months |
 | Plan prices, caps and fair-use rules; service `status` | 90 days |
 

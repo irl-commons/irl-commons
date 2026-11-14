@@ -1,0 +1,167 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "properties": {
+    "about": {
+      "type": "string",
+      "pattern": "\\S"
+    },
+    "standards": {
+      "minItems": 1,
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
+          "checked_on": {
+            "type": "string",
+            "format": "date",
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+          },
+          "name": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "group": {
+            "type": "string",
+            "enum": [
+              "shared",
+              "app-formats",
+              "steward-projects"
+            ]
+          },
+          "kind": {
+            "type": "string",
+            "enum": [
+              "protocol",
+              "format",
+              "settings",
+              "data"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "in-use",
+              "proposed"
+            ]
+          },
+          "openness": {
+            "type": "string",
+            "enum": [
+              "open",
+              "documented-closed",
+              "undocumented",
+              "not-public"
+            ]
+          },
+          "licence": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "maker": {
+            "type": "string",
+            "pattern": "\\S"
+          },
+          "url": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "description": {
+            "type": "string",
+            "maxLength": 200,
+            "pattern": "\\S"
+          },
+          "service_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            }
+          },
+          "other_users": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          },
+          "sources": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "pattern": "\\S"
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                }
+              },
+              "required": [
+                "label",
+                "url"
+              ],
+              "additionalProperties": false
+            }
+          },
+          "notes": {
+            "anyOf": [
+              {
+                "type": "string",
+                "pattern": "\\S"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "required": [
+          "id",
+          "checked_on",
+          "name",
+          "group",
+          "kind",
+          "status",
+          "openness",
+          "licence",
+          "maker",
+          "url",
+          "description",
+          "service_ids",
+          "other_users",
+          "sources",
+          "notes"
+        ],
+        "additionalProperties": false
+      }
+    }
+  },
+  "required": [
+    "about",
+    "standards"
+  ],
+  "additionalProperties": false,
+  "$id": "https://raw.githubusercontent.com/irl-commons/irl-commons/main/schema/json/standards.schema.json",
+  "title": "standards.json"
+}

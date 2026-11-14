@@ -205,11 +205,56 @@ export const PlansFile = z.strictObject({
   carriers: z.array(Carrier),
 });
 
+// ---------- Standards (shared formats and protocols) ----------
+
+/** Which list an entry sits in. shared: several makers' products write or read it;
+ *  app-formats: one app's own format that a named second product also writes or reads;
+ *  steward-projects: made by people who steward this repository, listed apart so
+ *  they are never mistaken for established standards. */
+export const StandardGroup = z.enum(["shared", "app-formats", "steward-projects"]);
+/** protocol: something two programs speak over a network or link; format: a file, URL
+ *  or message shape; settings: a setup link or settings file one app imports; data: a dataset. */
+export const StandardKind = z.enum(["protocol", "format", "settings", "data"]);
+/** open: a public spec, or open-licensed reference code whose docs describe it;
+ *  documented-closed: the maker describes it publicly, but the spec is partial or the product closed;
+ *  undocumented: no written description, the code (if public) is the only reference;
+ *  not-public: not published yet. */
+export const Openness = z.enum(["open", "documented-closed", "undocumented", "not-public"]);
+
+export const Standard = z.strictObject({
+  id: Id,
+  checked_on: Day,
+  name: Text,
+  group: StandardGroup,
+  kind: StandardKind,
+  status: z.enum(["in-use", "proposed"]),
+  openness: Openness,
+  licence: Text.nullable(),
+  /** Who makes or maintains it; the credit belongs to them, not to this catalogue. */
+  maker: Text,
+  /** The page that best describes it, the maker's own where one exists. Null only when not public. */
+  url: HttpsUrl.nullable(),
+  description: Text.max(200),
+  /** Catalogued products that write or read it, as service ids. */
+  service_ids: z.array(Id),
+  /** Named products that write or read it but are not in services.json. */
+  other_users: z.array(Text),
+  /** Public primary sources for the claims. Empty only when not public. */
+  sources: z.array(Link),
+  notes: Text.nullable(),
+});
+
+export const StandardsFile = z.strictObject({
+  about: Text,
+  standards: z.array(Standard).min(1),
+});
+
 export const files = {
   plans: PlansFile,
   words: WordsFile,
   answers: AnswersFile,
   services: ServicesFile,
   guides: GuidesFile,
+  standards: StandardsFile,
 } as const;
 export type FileName = keyof typeof files;

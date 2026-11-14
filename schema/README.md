@@ -2,13 +2,13 @@
 
 Run validation from the repository root using the commands in the main README. Zod in `src/schema.ts` is authoritative; `json/*.schema.json` is generated. `json/parts.json` supplies chain tasks and roles for other validators. `fixtures/*.json` must be rejected.
 
-Beyond schema validation, `scripts/check.ts` checks unique ids and existing word, answer and service references. Answers keep product names out of checks and link products instead. Service roles must fit their kind; products have chain parts, while documentation entries cover products. Guides name covered publishers, share a product or chain part with linked answers, and carry a generated display title. Carrier ids and plan ids within a carrier are unique. Country codes must be assigned ISO alpha-2 codes. An MNO has no host; an MVNO references an MNO in the same country. The carrier dataset may be empty. Synthetic runtime cases exercise these relationships without asserting real-world facts.
+Beyond schema validation, `scripts/check.ts` checks unique ids and existing word, answer and service references. Answers keep product names out of checks and link products instead. Service roles must fit their kind; products have chain parts, while documentation entries cover products. Guides name covered publishers, share a product or chain part with linked answers, and carry a generated display title. Carrier ids and plan ids within a carrier are unique. Country codes must be assigned ISO alpha-2 codes. An MNO has no host; an MVNO references an MNO in the same country. The carrier dataset may be empty. Standards reference existing services by `service_ids` (no duplicates), and `other_users` may not name a catalogued product. An entry may lack a `url` or sources only when its openness is `not-public`. An app format needs a named second product, and a shared item in use needs two named products. Synthetic runtime cases exercise these relationships without asserting real-world facts.
 
 The privacy scan checks repository files and every dataset string. Standard metadata URLs in generated schemas and the unmodified official licence text are permitted; insecure source URLs are rejected in datasets. Do not add private references to fixtures.
 
 ## Freshness
 
-Services, guides, carriers and nested plans require `checked_on`; words and
+Services, guides, standards, carriers and nested plans require `checked_on`; words and
 answers may omit it for an unrecorded content check (unknown freshness). When
 present, `checked_on` is an ISO date:
 the day its content was checked against its public primary source. A successful
@@ -22,6 +22,7 @@ See data/README.md for recorded source-check provenance.
 | Answers | 12 calendar months |
 | Guides | 9 calendar months |
 | Services | 6 calendar months |
+| Standards | 6 calendar months |
 | Carrier records | 6 calendar months |
 | Plan prices, caps and fair-use rules; service `status` | 90 days |
 

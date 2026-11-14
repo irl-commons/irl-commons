@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 import { Day } from "../schema/src/schema.ts";
 
-export const months = { words: 18, answers: 12, guides: 9, services: 6, plans: 6 } as const;
+export const months = { words: 18, answers: 12, guides: 9, services: 6, plans: 6, standards: 6 } as const;
 export function due(checked: string, window: { months: number } | { days: number }): string {
   Day.parse(checked);
   const date = new Date(checked);

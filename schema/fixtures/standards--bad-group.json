@@ -1,0 +1,30 @@
+{
+  "about": "Synthetic invalid standards file.",
+  "standards": [
+    {
+      "id": "sample-format",
+      "checked_on": "2026-11-14",
+      "name": "Sample format",
+      "group": "ours",
+      "kind": "format",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "Sample maker",
+      "url": "https://example.org/format",
+      "description": "A synthetic format.",
+      "service_ids": [
+        "sample-app",
+        "sample-relay"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "Format page",
+          "url": "https://example.org/format"
+        }
+      ],
+      "notes": null
+    }
+  ]
+}

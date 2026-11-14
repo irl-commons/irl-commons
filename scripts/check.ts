@@ -103,6 +103,24 @@ export function semantic(data: Record<FileName, any>): string[] {
       if (g.title_display !== want) out.push(`guides: ${g.id}: title_display is stale ('${g.title_display}', expected '${want}'): run bun titles`);
     }
   }
+  // Standards link catalogued products by id; other_users is only for products that aren't catalogued.
+  dupes("standards", data.standards.standards.map((x: any) => x.id));
+  const catalogued = new Map<string, string>(data.services.services.map((s: any) => [s.name.toLowerCase(), s.id]));
+  for (const x of data.standards.standards) {
+    for (const r of x.service_ids) if (!serviceIds.has(r)) out.push(`standards: ${x.id}: service '${r}' is not in services`);
+    dupes(`standards.${x.id}.service_ids`, x.service_ids);
+    for (const name of x.other_users) {
+      const id = catalogued.get(name.toLowerCase());
+      if (id) out.push(`standards: ${x.id}: '${name}' is catalogued; list it in service_ids as '${id}'`);
+    }
+    const hidden = x.openness === "not-public";
+    if (x.url === null && !hidden) out.push(`standards: ${x.id}: url may be null only when openness is not-public`);
+    if (!x.sources.length && !hidden) out.push(`standards: ${x.id}: needs at least one public source`);
+    // A format only counts as shared, or as an app format, once a second named product writes or reads it.
+    const named = x.service_ids.length + x.other_users.length;
+    if (x.group === "app-formats" && named < 2) out.push(`standards: ${x.id}: an app format needs a named second product that writes or reads it`);
+    if (x.group === "shared" && x.status === "in-use" && named < 2) out.push(`standards: ${x.id}: a shared item in use needs at least two named products`);
+  }
   const carrierById = new Map<string, any>(data.plans.carriers.map((c: any) => [c.id, c]));
   const countries = new Set(COUNTRY_CODES.split(" "));
   dupes("plans.carriers", data.plans.carriers.map((c: any) => c.id));
@@ -166,6 +184,26 @@ for (const mutation of [
 ]) {
   const bad = structuredClone(candidate); mutation(bad);
   if (!semantic(bad).length) problems.push("invalid carrier reference accepted");
+}
+const standard = {id: "sample-format", checked_on: "2026-11-14", name: "Sample format", group: "app-formats", kind: "settings",
+  status: "in-use", openness: "open", licence: null, maker: "Sample maker", url: "https://example.org/format",
+  description: "A synthetic format.", service_ids: [data.services.services[0].id, data.services.services[1].id], other_users: [],
+  sources: [{label: "Format page", url: "https://example.org/format"}], notes: null};
+const withStandard = structuredClone(data);
+withStandard.standards.standards = [standard];
+if (!files.standards.safeParse(withStandard.standards).success || semantic(withStandard).length) problems.push("valid standard fixture rejected");
+for (const mutation of [
+  (d: any) => { d.standards.standards[0].service_ids.push("missing-service"); },
+  (d: any) => { d.standards.standards[0].service_ids.push(d.standards.standards[0].service_ids[0]); },
+  (d: any) => { d.standards.standards[0].other_users.push(data.services.services[0].name); },
+  (d: any) => { d.standards.standards[0].service_ids.pop(); },
+  (d: any) => { d.standards.standards[0].group = "shared"; d.standards.standards[0].service_ids.pop(); },
+  (d: any) => { d.standards.standards[0].url = null; },
+  (d: any) => { d.standards.standards[0].sources = []; },
+  (d: any) => { d.standards.standards.push(d.standards.standards[0]); },
+]) {
+  const bad = structuredClone(withStandard); mutation(bad);
+  if (!semantic(bad).length) problems.push("invalid standard reference accepted");
 }
 const chat = "https://disco" + "rd.gg/example";
 if (files.services.safeParse({...data.services, services: [{...data.services.services[0], url: chat}]}).success)

@@ -1,6 +1,6 @@
 # IRL streaming data
 
-Five reviewed data files about streaming live from outside (IRL streaming):
+Six reviewed data files about streaming live from outside (IRL streaming):
 
 - `words.json`: a word list, one entry per term: a plain explanation, other names, who meets it, when it comes up, related terms, a public primary source, and an `uncertain` flag. Entries define; they don't give fix instructions. Optional `l10n` blocks hold translations by language tag (for example `es-419`, `pt-BR`); translations keep the scene's English terms as the term.
 - `answers.json`: quick checks for the questions that come up most, written along the chain a stream takes: camera and mic, sender, connections, receiver, OBS, platform. Each answer says which part most likely broke and gives 1 to 3 short checks in plain words, in the order worth trying, each optionally tagged with its part. Checks name no product and no product setting; products are linked as `services` (the makers' own docs and support) and through `guides.json`. Also related word ids and the public primary sources behind the checks.
@@ -10,6 +10,7 @@ Five reviewed data files about streaming live from outside (IRL streaming):
 Descriptions and definitions are written in our own words. Sources and links point to public primary pages only (makers' own pages, standards, platform help); no chat invites, private links or community posts. The schemas in `../schema` (zod, with exported JSON Schema) validate every file; see that folder's README.
 
 - `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. See the root README for field conventions and attribution.
+- `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, Moblink, RIST, WHIP and OBS WebSocket. Each entry credits its maker, says how open it is (a public spec, documented by a closed product, code only, or not public yet), and names the products that write or read it: catalogued ones by `service_ids`, the rest in `other_users`. Entries sit in one of three groups. `shared` is for items several makers' products use. `app-formats` is for one app's own export or setup format, listed only when a named second product writes or reads it. `steward-projects` holds items made by people who steward this repository, kept apart so they're never mistaken for established standards. Listing an item doesn't mean this project makes, runs or endorses it.
 
 All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the attribution format in `../README.md`.
 
@@ -31,6 +32,11 @@ selecting a capture device and supported resolution/frame rate;
 backs reducing bitrate when OBS reports dropped network frames. The answer is
 limited to those checks; neither page is evidence for phone-preview, cable
 seating or 5 GHz advice.
+
+Every `standards.json` entry was compared with its listed sources on
+**2026-11-14**. Where a note says support "follows the services.json entries",
+the per-product claim rests on those catalogue entries (checked the same day)
+rather than a separate read of each product's page.
 
 Other words and answers omit `checked_on`: a source link without a recorded
 content check is insufficient. Omission means unknown freshness, not a fresh or

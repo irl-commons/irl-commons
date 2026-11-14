@@ -6,7 +6,7 @@ function walk(value: unknown) {
   } else if (Array.isArray(value)) value.forEach(walk);
   else if (value && typeof value === "object") Object.values(value).forEach(walk);
 }
-for (const name of ["words", "answers", "services", "guides", "plans"])
+for (const name of ["words", "answers", "services", "guides", "plans", "standards"])
   walk(JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), "utf8")));
 let failed = false;
 for (const url of [...urls].sort()) {
