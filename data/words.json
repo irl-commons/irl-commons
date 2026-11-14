@@ -261,7 +261,8 @@
         "upload-speed",
         "adaptive-bitrate",
         "data-cap",
-        "b-frames"
+        "b-frames",
+        "codec"
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
       "uncertain": false,
