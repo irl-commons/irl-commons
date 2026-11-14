@@ -15,15 +15,18 @@ Inspect existing rulesets first; use PUT for an existing id instead of creating
 duplicates. Bootstrap has no bypass, no native approvals, no code-owner or
 last-push requirement, and pins `validate` and `governance` to Actions app 15368.
 PRs, resolved threads, stale-review dismissal, no deletion and no force-push remain.
-The check enforces conflicts even at N=0 and seven days on rule paths.
+While fewer than two stewards are listed, the governance check reports the
+review counts and the seven-day window as "not active (bootstrap)" and passes;
+it shows conflicts without blocking, and objections still fail it on rule paths.
+Listing a second steward switches enforcement on (see GOVERNANCE.md).
 
 ## Adding the second steward
 
 One reviewed rule-path PR adds the consenting steward in `stewards.json`, sets
 CODEOWNERS to `* @irl-commons/stewards` (a real team with write access), copies
 `main.steady.json` over `main.json`, and updates the bootstrap status in
-GOVERNANCE.md. Wait seven days; the new steward should approve. Main's previous
-policy evaluates that addition, so a PR cannot appoint its own reviewers.
+GOVERNANCE.md. The new steward should approve it. Main's previous policy
+(bootstrap) evaluates that addition, so a PR's own steward list never judges it.
 
 After it lands, the check automatically requires one independent approval. It
 also reads `GET /repos/irl-commons/irl-commons/rules/branches/main` and fails

@@ -18,10 +18,13 @@ Declare employment, payment, ownership and competing-product affiliations.
 Makers should use an edit request; an unconnected reviewer verifies the evidence
 and merges. Nobody merges their own or a competitor's entry. One independent
 steward review is normally required for data; two for rule paths (including
-schema, licence and stewards). Bootstrap requires zero, and two listed stewards
-require one on rule paths. A conflicted author always needs an independent
-steward approval. See GOVERNANCE.md for the exact counts.
-Rule changes also follow the seven-day process in GOVERNANCE.md.
+schema, licence and stewards); with exactly two listed stewards, rule paths need
+one. A conflicted author needs an independent steward approval, and rule changes
+wait seven days for objections. While fewer than two stewards are listed
+(bootstrap), those counts and the seven-day window don't apply: still declare any
+conflict in the PR, and the governance check shows it without blocking. They
+switch on automatically once a second steward is listed in `stewards.json`.
+See GOVERNANCE.md for the exact rules.
 
 Run `bun install --frozen-lockfile`, `bun run check`, `bun run export` and
 `git diff --exit-code -- schema/json`. For intentional schema changes, regenerate

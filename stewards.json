@@ -1,6 +1,5 @@
 {
   "approval_policy": {
-    "solo": 0,
     "data": 1,
     "rules": 2
   },
@@ -18,5 +17,15 @@
       "affiliations": []
     }
   ],
-  "entries": {}
+  "entries": {
+    "standards/stream-status": {
+      "maker": "openstreambox"
+    },
+    "standards/stream-session": {
+      "maker": "openstreambox"
+    },
+    "standards/irl-commons": {
+      "maker": "openstreambox"
+    }
+  }
 }

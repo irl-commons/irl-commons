@@ -55,7 +55,7 @@ class GovernanceTests(unittest.TestCase):
         self.f['reviews'] = []
         self.f['config']['stewards'] = self.f['config']['stewards'][:1]
         self.assertEqual(self.check(paths=['data/words.json'])['state'], 'success')
-        self.assertIn('N=0', self.check()['summary'])
+        self.assertIn('Review count: not active (bootstrap)', self.check()['summary'])
         self.f['config']['stewards'].append({'github': 'other', 'affiliations': []})
         self.assertIn('N=1', self.check()['summary'])
         self.f['config']['stewards'].append({'github': 'third', 'affiliations': []})
@@ -77,10 +77,63 @@ class GovernanceTests(unittest.TestCase):
             self.f['pr']['user']['login'] = 'steward-one'
             changes = [('services', {'id': 'sample-entry', 'maker': 'Example'})]
             result = self.check(paths=['data/services.json'], changes=changes)
-            self.assertEqual(result['state'], 'failure')
-            self.assertIn('author is conflicted', result['summary'])
+            # Bootstrap shows the conflict but does not block on it.
+            self.assertEqual(result['state'], 'success')
+            self.assertIn('author is conflicted; shown, not blocking (bootstrap)', result['summary'])
             self.f['config']['stewards'].append({'github': 'steward-two', 'affiliations': []})
             self.assertEqual(self.check(paths=['data/services.json'], changes=changes)['state'], 'success')
+            self.f['reviews'] = []
+            result = self.check(paths=['data/services.json'], changes=changes)
+            self.assertEqual(result['state'], 'failure')
+            self.assertIn('an independent steward must approve', result['summary'])
+
+    def test_bootstrap_switch_turns_counts_and_window_on(self):
+        self.f['reviews'] = []
+        self.f['config']['stewards'] = self.f['config']['stewards'][:1]
+        early = '2026-01-04T12:00:00+00:00'  # one day into the seven-day window
+        for draft in [False, True]:
+            self.f['pr']['draft'] = draft
+            result = self.check(now=early)
+            self.assertEqual(result['state'], 'success')
+            self.assertIn('Review count: not active (bootstrap)', result['summary'])
+            self.assertIn('Seven-day window: not active (bootstrap)', result['summary'])
+            self.assertEqual(result['title'], 'Bootstrap: review counts and window not active')
+        self.assertNotIn('Seven-day window', self.check(paths=['data/words.json'], now=early)['summary'])
+        self.f['pr']['draft'] = False
+        self.f['config']['stewards'].append({'github': 'steward-two', 'affiliations': []})
+        result = self.check(now=early)
+        self.assertEqual(result['state'], 'failure')
+        self.assertIn('N=1 (rules)', result['summary'])
+        self.assertIn('Window ends 2026-01-10T12:00:00+00:00', result['summary'])
+        self.assertNotIn('bootstrap', result['summary'])
+        self.assertEqual(result['title'], 'Steward review and consensus window')
+        self.f['reviews'] = [{'id': 1, 'user': {'login': 'steward-two'}, 'state': 'APPROVED', 'commit_id': 'current'}]
+        self.assertEqual(self.check(now=early)['state'], 'pending')
+        self.assertEqual(self.check()['state'], 'success')
+
+    def test_bootstrap_keeps_blocks_on_rule_paths(self):
+        self.f['reviews'] = []
+        self.f['config']['stewards'] = self.f['config']['stewards'][:1]
+        self.f['pr']['labels'] = [{'name': 'objection'}]
+        self.assertEqual(self.check()['state'], 'failure')
+        self.assertEqual(self.check(paths=['data/words.json'])['state'], 'success')
+
+    def test_standards_conflicts_use_mapping_and_linked_services(self):
+        self.f['config']['entries']['standards/sample-draft'] = {'maker': 'sample-project'}
+        self.f['config']['stewards'] = [{'github': 'steward-one', 'affiliations': ['sample-project']}]
+        self.f['pr']['user']['login'] = 'steward-one'
+        self.f['reviews'] = []
+        changes = [('standards', {'id': 'sample-draft', 'service_ids': []})]
+        result = self.check(paths=['data/standards.json'], changes=changes)
+        self.assertEqual(result['state'], 'success')
+        self.assertIn('author is conflicted; shown, not blocking (bootstrap)', result['summary'])
+        self.f['config']['stewards'].append({'github': 'steward-two', 'affiliations': ['sample-app']})
+        self.f['reviews'] = [{'id': 1, 'user': {'login': 'steward-two'}, 'state': 'APPROVED', 'commit_id': 'current'}]
+        self.assertEqual(self.check(paths=['data/standards.json'], changes=changes)['state'], 'success')
+        linked = [('standards', {'id': 'sample-format', 'service_ids': ['sample-app']})]
+        result = self.check(paths=['data/standards.json'], changes=linked)
+        self.assertEqual(result['state'], 'failure')
+        self.assertIn('Conflicted approving steward ignored: steward-two', result['summary'])
 
     def test_conflicted_approval_cannot_veto_independent_review(self):
         self.f['reviews'].append({'id': 3, 'user': {'login': 'steward-one'}, 'state': 'APPROVED', 'commit_id': 'current'})

@@ -23,6 +23,14 @@ test("fork reviews signal a default-branch reporter without executing fork code"
   expect(report.jobs.report.steps.every((s: any) => !s.uses)).toBe(true);
 });
 
+test("the reported check carries the evaluator's title, so bootstrap is visible on the PR", () => {
+  const script = workflow("governance").jobs.report.steps[0].run as string;
+  expect(script).toContain("title: report.title || 'Steward review and consensus window'");
+  expect(script).toContain("state: 'failure', title: 'Governance evidence unavailable'");
+  // Pending stays in progress; every other state, including a bootstrap success, completes with its conclusion.
+  expect(script).toContain("status: report.state === 'pending' ? 'in_progress' : 'completed'");
+});
+
 test("only verified main tags reach the OIDC staging job", () => {
   const w = workflow("publish");
   expect(w.on).toEqual({push: {tags: ["v*"]}});

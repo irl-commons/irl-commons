@@ -1,7 +1,6 @@
 {
   "config": {
     "approval_policy": {
-      "solo": 0,
       "data": 1,
       "rules": 2
     },

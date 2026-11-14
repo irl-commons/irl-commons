@@ -26,7 +26,11 @@ def evaluate(config, pr, reviews, paths, events, changes, services, now, live_ru
     policy = config['approval_policy']
     rules = any(rule_path(p) for p in paths)
     count = len(stewards)
-    needed = policy['solo'] if count < 2 else policy['rules'] if rules and count >= 3 else policy['data']
+    # Bootstrap: with fewer than two listed stewards, review counts and the
+    # seven-day window are reported as not active. They switch on by themselves
+    # once a second steward is listed.
+    bootstrap = count < 2
+    needed = 0 if bootstrap else policy['rules'] if rules and count >= 3 else policy['data']
     errors = []
     notes = []
     if count >= 2 and not any(
@@ -60,11 +64,14 @@ def evaluate(config, pr, reviews, paths, events, changes, services, now, live_ru
             # Maker text only derives same-maker affiliations; never infer competitors.
             forbidden.update(s['id'] for s in services if s['maker'].casefold() == entry['maker'].casefold())
         else:
-            forbidden.update(entry.get('services', entry.get('covers', [])))
+            forbidden.update(entry.get('services', entry.get('covers', entry.get('service_ids', []))))
     author = pr['user']['login'].lower()
     if stewards.get(author, set()) & forbidden:
-        needed = max(needed, 1)
-        notes.append('PR author is conflicted; an independent steward must approve or this PR waits.')
+        if bootstrap:
+            notes.append('PR author is conflicted; shown, not blocking (bootstrap). Declare it in the PR.')
+        else:
+            needed = max(needed, 1)
+            notes.append('PR author is conflicted; an independent steward must approve or this PR waits.')
     approvals = []
     for who, review in latest.items():
         if review['state'] != 'APPROVED':
@@ -80,7 +87,7 @@ def evaluate(config, pr, reviews, paths, events, changes, services, now, live_ru
         errors.append(f'Need {needed} independent steward approvals; found {len(approvals)}.')
     pending = False
     due = None
-    if rules:
+    if rules and not bootstrap:
         ready = [e['created_at'] for e in events if e.get('event') in {'ready_for_review', 'head_ref_force_pushed'}]
         was_draft = pr.get('draft') or any(e.get('event') == 'convert_to_draft' for e in events)
         start = max(ready) if ready else None if was_draft else pr['created_at']
@@ -89,11 +96,19 @@ def evaluate(config, pr, reviews, paths, events, changes, services, now, live_ru
         else:
             due = timestamp(start) + dt.timedelta(days=7)
             pending = now < due
+    kind = 'rules' if rules else 'data'
+    if bootstrap:
+        head = (f'{count} listed stewards; bootstrap ({kind}). Review count: not active (bootstrap). '
+                + ('Seven-day window: not active (bootstrap). ' if rules else '')
+                + f'{len(approvals)} current-head approvals. ')
+    else:
+        head = (f'{count} listed stewards; N={needed} ({kind}); {len(approvals)} current-head approvals. '
+                + ('Waiting for ready-for-review and seven days. ' if pending else '')
+                + (f'Window ends {due.isoformat()}. ' if due else ''))
     return {'state': 'failure' if errors else 'pending' if pending else 'success',
-            'summary': f'{count} listed stewards; N={needed} ({"rules" if rules else "data"}); '
-                       f'{len(approvals)} current-head approvals. '
-                       + ('Waiting for ready-for-review and seven days. ' if pending else '')
-                       + (f'Window ends {due.isoformat()}. ' if due else '') + ' '.join(notes + errors)}
+            'title': ('Bootstrap: review counts and window not active' if bootstrap
+                      else 'Steward review and consensus window'),
+            'summary': head + ' '.join(notes + errors)}
 
 
 def api(path):
@@ -141,7 +156,7 @@ def run():
             changes = []
             services = content(repo, 'data/services.json', base)['services']
             for f in files:
-                if f['filename'] not in {f'data/{n}.json' for n in ['words', 'answers', 'guides', 'services', 'plans']}:
+                if f['filename'] not in {f'data/{n}.json' for n in ['words', 'answers', 'guides', 'services', 'plans', 'standards']}:
                     continue
                 dataset = Path(f['filename']).stem
                 key = 'carriers' if dataset == 'plans' else dataset
@@ -156,7 +171,7 @@ def run():
                               pages(root + '/timeline'), changes, services, dt.datetime.now(dt.timezone.utc),
                               api(f'repos/{repo}/rules/branches/main') if sum(bool(s.get('github')) for s in config['stewards']) >= 2 else [])
         except Exception:
-            result = {'state': 'failure', 'summary': 'Governance evidence unavailable; resolve API or policy errors and re-run.'}
+            result = {'state': 'failure', 'title': 'Governance evidence unavailable', 'summary': 'Governance evidence unavailable; resolve API or policy errors and re-run.'}
         reports.append({'number': pr['number'], 'sha': pr['head']['sha'], **result})
         print(f'PR #{pr["number"]}: {result["state"]}: {result["summary"]}')
     with open(os.environ['GITHUB_OUTPUT'], 'a') as output:

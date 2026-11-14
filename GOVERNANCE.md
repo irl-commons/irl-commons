@@ -3,8 +3,9 @@
 Sources settle facts: public primary evidence decides data corrections, not votes.
 Data normally needs one independent, unconflicted steward approval. Rule paths
 need two and seven days of lazy consensus; with exactly two listed stewards they
-need one approval, and with zero or one they need zero. An author conflict always
-requires at least one independent steward approval, even during bootstrap.
+need one approval. An author conflict requires at least one independent steward
+approval. While fewer than two stewards are listed, the bootstrap clause below
+applies instead.
 
 A block applies only to rules, must cite a written rule and explain a remedy,
 and lapses after 14 days. Two thirds of unconflicted stewards can override it.
@@ -14,14 +15,14 @@ rule paths. On data paths, sources decide; people resolve review disagreements.
 
 Declare employment, payment and product affiliations in every proposal. Makers
 and direct competitors may submit evidence but cannot approve or merge their
-own or a competitor's entry. A non-conflicted steward must approve a conflicted
-author's edit, or it waits. An independent person presses merge.
+own or a competitor's entry. Outside bootstrap, a non-conflicted steward must
+approve a conflicted author's edit, or it waits, and an independent person
+presses merge.
 
 There is currently **one named steward** in `stewards.json`, `pjeweb`
 (affiliation: openstreambox); the second seat is pending and grants no access.
-Launch needs two stewards; until the second is listed the project is in
-bootstrap: data and rule paths need zero approvals unless the author is
-conflicted, and rule paths still wait seven days. Prices need three, one seat per company.
+Launch needs two stewards; until the second is listed, the bootstrap clause
+below applies. Prices need three, one seat per company.
 The GitHub org and npm org each require **at least two org owners now**, and
 three before prices, one seat per company. This is a setup requirement, not a
 claim that the accounts or seats have already been filled. Owners administer
@@ -35,6 +36,24 @@ After 90 days without a commit, review or reply, remaining stewards may give
 14 days' public notice and reassign the silent steward's responsibilities and
 access. This applies equally to the founder. Anyone may fork under the licences,
 preserve attribution and continue maintenance if governance no longer serves them.
+
+## Bootstrap: while only one steward is listed
+
+While `stewards.json` lists fewer than two stewards, the review counts (one
+independent approval for data, two for rules, schema and licence) and the
+seven-day objection window don't apply. In practice the one steward can merge
+their own changes; every pull request stays public, so anyone can review it
+afterwards.
+
+A conflict of interest is still declared in the pull request. The governance
+check shows any conflict it finds, but doesn't block on it. Sources still settle
+facts, objections and steward change requests on rule paths still block, and
+the required checks still run.
+
+All of this switches on automatically once a second steward is listed in
+`stewards.json`. No other rule change is needed: the check enforces the counts,
+the window and conflicts from its next run. GitHub's own branch protection is
+separate and still needs the manual ruleset switch described below.
 
 ## GitHub, the check, and people
 
@@ -56,7 +75,7 @@ code and policy always come from main.
 
 Rule paths include governance/contribution documents, steward policy, README,
 NPM-PUBLISHING.md, data/README.md, package.json, bun.lock, licences, schema,
-workflows/rulesets and all scripts. Seven days start at ready-for-review (creation
+workflows/rulesets and all scripts. Outside bootstrap, seven days start at ready-for-review (creation
 for never-draft PRs). A force-push restarts the window. Return substantive ordinary
 pushes to draft, then mark ready to restart it. Drafts wait; reopening alone does
 not restart the window. Daily evaluation handles elapsed time.
