@@ -120,7 +120,7 @@ export function semantic(data: Record<FileName, any>): string[] {
 // Scan the distributable repository tree as well as the parsed datasets.
 function scanTree(dir: URL): void {
   for (const entry of readdirSync(dir, {withFileTypes: true})) {
-    if ([".git", "node_modules"].includes(entry.name)) continue;
+    if ([".git", "node_modules", "__pycache__"].includes(entry.name)) continue;
     const path = new URL(entry.name + (entry.isDirectory() ? "/" : ""), dir);
     if (entry.isDirectory()) scanTree(path);
     else if (FORBIDDEN.test(readFileSync(path, "utf8"))) problems.push(`tree: ${entry.name}: private reference`);

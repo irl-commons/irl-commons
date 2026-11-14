@@ -599,6 +599,26 @@
       "source": "https://docs.noalbs.com/guides/troubleshooting/",
       "uncertain": false,
       "checked_on": "2026-11-14"
+    },
+    {
+      "id": "codec",
+      "term": "Codec",
+      "aliases": [
+        "Video codec",
+        "Video format"
+      ],
+      "tier": "more",
+      "who": "streamer",
+      "heard_when": "App settings labelled 'video codec'; a platform's list of the formats it accepts",
+      "plain": "The method used to shrink video so it fits through the internet. Your app and the platform must both handle the same one.",
+      "related": [
+        "bitrate",
+        "encoder",
+        "b-frames"
+      ],
+      "source": "https://support.google.com/youtube/answer/2853702",
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     }
   ]
 }

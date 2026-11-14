@@ -1,0 +1,20 @@
+{
+  "approval_policy": {
+    "solo": 0,
+    "data": 1,
+    "rules": 2
+  },
+  "stewards": [
+    {
+      "github": null,
+      "name": "First steward — pending",
+      "affiliations": []
+    },
+    {
+      "github": null,
+      "name": "Second steward — pending",
+      "affiliations": []
+    }
+  ],
+  "entries": {}
+}

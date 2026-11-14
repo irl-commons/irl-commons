@@ -28,3 +28,53 @@ and access. This applies equally to the founder.
 
 Anyone may fork under the licences, preserve attribution and continue maintenance
 if this project becomes inactive or its governance no longer serves contributors.
+
+## GitHub enforcement and bootstrap
+
+The proposed ruleset in `.github/rulesets/main.json` protects main: pull requests,
+`validate` and `governance` checks, code-owner review, approval of the last push,
+stale-review dismissal, no force pushes, no deletion and no bypass actors.
+It is a configuration file, not a live setting. See `.github/rulesets/README.md`
+for the apply command and installation order. No workflow changes repository rules.
+
+During bootstrap the numeric approval count is zero with at most one named
+steward; it becomes one with two or more, and two for rule paths once three are
+listed. `stewards.json` supplies those thresholds. Null handles are unfilled seats
+and confer no review authority. The required governance check switches its count
+automatically using the policy already on main; proposed changes cannot appoint
+their own reviewers. The native ruleset count remains zero; the check enforces
+the dynamic count.
+
+At count zero, the author's own PRs may pass the numeric review gate. They still
+need CI and governance to pass; rule-path PRs must also complete seven days after
+being marked ready for review (creation time for a PR never drafted). A draft
+has no running consensus window. Returning to draft and marking ready again
+starts a new window. An `objection` label or a steward's unresolved request for
+changes fails the check. Daily runs re-evaluate open PRs without a new push.
+GitHub's separate last-push and code-owner requirements remain enabled: count
+zero does not promise that GitHub will permit a merge without another reviewer.
+The actual steward team must replace the CODEOWNERS placeholder before relying
+on code-owner protection.
+
+The check counts only current-head approvals from named, unconflicted stewards,
+never the PR author. Data conflicts are determined from edited entries, their
+maker, and explicit competitor mappings. Same-maker service ids can be derived;
+competitors and affiliations must be declared by people. Undeclared interests
+cannot be detected. The review API is read with a read-only token; a separate job
+has only `checks: write` to report pending/success/failure on the PR head.
+Policy code and steward data are read from main. Installation PRs test candidate
+logic but cannot enforce an absent base policy until it is merged.
+
+People still verify sources, independence, affiliations, seven-day discussion,
+block expiry/overrides, seat limits and succession. A steward must clear an expired
+block's label/review after documenting the outcome. Repository administrators
+can change settings or workflows; no repository file can prevent that. The weekly
+drift watch makes live ruleset changes visible in one issue, without fixing them
+automatically. Protecting the workflow files themselves still requires independent
+human review and responsible administrators.
+
+The publish workflow is manual-only and guarded to a different owner, so it is
+disabled here pending the naming decision. It uses npm trusted publishing with
+OIDC and provenance, without an npm token secret. Configure the npm trusted
+publisher for the final repository/workflow before enabling it. This does not
+move the organization or rename the package.
