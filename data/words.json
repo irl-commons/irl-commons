@@ -17,8 +17,7 @@
         "bonding"
       ],
       "source": "https://belabox.net/",
-      "uncertain": true,
-      "checked_on": "2026-11-14"
+      "uncertain": true
     },
     {
       "id": "backpack",
@@ -37,8 +36,7 @@
         "bonding"
       ],
       "source": "https://www.liveu.tv/products/create/liveu-solo",
-      "uncertain": true,
-      "checked_on": "2026-11-14"
+      "uncertain": true
     },
     {
       "id": "bonding",
@@ -56,8 +54,7 @@
         "relay"
       ],
       "source": "https://github.com/BELABOX/srtla",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "relay",
@@ -477,8 +474,7 @@
         "maximize-compatibility"
       ],
       "source": "https://github.com/eerimoq/moblin",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "noalbs",
@@ -517,8 +513,7 @@
         "bitrate"
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "ingest-and-output",
@@ -538,8 +533,7 @@
         "relay"
       ],
       "source": "https://kb.irltoolkit.com/cloudobs/0-QuickStart",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "stats-url",
@@ -560,8 +554,7 @@
         "noalbs"
       ],
       "source": "https://docs.noalbs.com/guides/stream-servers/",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "server-type",
@@ -580,8 +573,7 @@
         "noalbs"
       ],
       "source": "https://docs.noalbs.com/reference/stream-server-kinds/",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "fix-feed",
@@ -598,8 +590,7 @@
         "scene"
       ],
       "source": "https://docs.noalbs.com/guides/troubleshooting/",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     },
     {
       "id": "codec",
@@ -618,8 +609,7 @@
         "b-frames"
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
-      "uncertain": false,
-      "checked_on": "2026-11-14"
+      "uncertain": false
     }
   ]
 }

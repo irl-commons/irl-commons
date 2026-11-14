@@ -16,7 +16,7 @@ class RulesetTests(unittest.TestCase):
             bad = {**live, key: value}
             self.assertNotEqual(project(bad, expected), expected)
         bad = copy.deepcopy(live)
-        next(r for r in bad['rules'] if r['type'] == 'pull_request')['parameters']['require_last_push_approval'] = False
+        next(r for r in bad['rules'] if r['type'] == 'pull_request')['parameters']['require_last_push_approval'] = True
         self.assertNotEqual(project(bad, expected), expected)
 
 

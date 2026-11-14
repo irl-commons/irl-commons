@@ -21,7 +21,7 @@ export const WordL10n = z.strictObject({
 
 export const Word = z.strictObject({
   id: Id,
-  checked_on: Day,
+  checked_on: Day.optional(),
   term: Text,
   aliases: z.array(Text),
   tier: z.enum(["core", "more"]),
@@ -54,7 +54,7 @@ export const Check = z.strictObject({
 
 export const Answer = z.strictObject({
   id: Id,
-  checked_on: Day,
+  checked_on: Day.optional(),
   question: Text,
   /** Which part most likely broke, in one or two sentences. */
   summary: Text.max(220),

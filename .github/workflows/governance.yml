@@ -2,14 +2,15 @@ name: Governance evidence
 on:
   pull_request_target:
     types: [opened, synchronize, reopened, ready_for_review, converted_to_draft, labeled, unlabeled]
-  pull_request_review:
-    types: [submitted, edited, dismissed]
+  workflow_run:
+    workflows: [Governance review trigger]
+    types: [completed]
   schedule:
     - cron: '41 9 * * *'
   workflow_dispatch:
 permissions: {}
 concurrency:
-  group: governance-reports
+  group: governance-${{ github.event.pull_request.number || 'all' }}
   cancel-in-progress: false
 jobs:
   evaluate:

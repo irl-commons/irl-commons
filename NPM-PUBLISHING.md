@@ -1,42 +1,41 @@
 # npm release setup
 
 Package: `@irl-commons/data`. Repository: `irl-commons/irl-commons`.
-The first release waits for review. Creating or pushing a `v*` tag runs
-`.github/workflows/publish.yml`; the tag must equal `v` plus package.json's
-version. No tag or package is created by preparing this change.
+Only reviewed `v*` tags whose commits are ancestors of main can reach staging;
+the tag must equal `v` plus package.json's version. Install both release-tag
+rulesets as described in `.github/rulesets/README.md` before releasing.
 
-On npmjs.com, open **@irl-commons/data → Settings → Trusted publishing → GitHub Actions**:
+Create the `npm-release` GitHub environment with deployment tags restricted to
+`v*`. With two stewards, require a reviewer and prevent self-review. Configure
+npm trusted publishing with organization `irl-commons`, repository `irl-commons`,
+workflow `publish.yml`, environment `npm-release`, and allowed action **stage
+publish**. Require 2FA and disallow publishing tokens in npm publishing access.
 
-| Field | Value |
-| --- | --- |
-| Organization or user | `irl-commons` |
-| Repository | `irl-commons` |
-| Workflow filename | `publish.yml` (filename only) |
-| Environment | Leave empty (workflow uses none) |
-| Allowed actions | Enable direct `npm publish` |
+Tests, dependency installation (scripts disabled), ancestry, version and schema
+drift checks run in a read-only verify job. Only the separate staging job has
+`id-token: write`. It checks out the reviewed tag, installs no dependencies and
+runs no tests or lifecycle scripts. It uses Node 24, a staging-capable npm CLI,
+and `npm stage publish --ignore-scripts --provenance --access public`.
+A steward approves the staged release interactively on npmjs.com with 2FA.
+No long-lived npm token is used.
 
-The workflow uses GitHub-hosted runners, Node 24/npm with OIDC support,
-`--provenance`, and `id-token: write` only on the publishing job. It has no token
-secret. Configure the publisher near release time: its first successful publish
-must occur within two days or the connection must be recreated. See
-[npm trusted publishing](https://docs.npmjs.com/trusted-publishers/).
+## One-time package placeholder
 
-## Package does not exist yet
+The package must already exist before a trusted publisher can be configured.
+An npm org owner performs these interactive steps near release time:
 
-npm requires a registry package before adding a trusted publisher; creating the
-org alone is insufficient. See [npm trust requirements](https://docs.npmjs.com/cli/v11/commands/npm-trust/).
+1. Enable 2FA, confirm the npm org, and arrange at least two org owners from
+   different companies (three before prices).
+2. Run `npm login` locally. In a minimal reviewed directory use package name
+   `@irl-commons/data` and version `0.0.0-bootstrap.0`.
+3. Run `npm stage publish --access public`. For a new package this creates a
+   public placeholder. **Reject that staged version; do not approve it.**
+4. Set up the trusted publisher and publishing access above.
+5. Make the first real successful publish within **two days** of configuration
+   or recreate the configuration. A reviewed matching tag on main runs Actions;
+   approve that staged version on npmjs.com with 2FA.
 
-A minimal bootstrap avoids a long-lived CI token: after separate review, an npm
-org member signs in interactively with `npm login` and stages a small reviewed
-bootstrap package named `@irl-commons/data` at a distinct prerelease version such
-as `0.0.0-bootstrap.0`, using `npm stage publish --access public`. npm creates a
-public placeholder, while the staged contents stay unpublished until approval.
-Do not approve that staged package as a data release. Then configure the trusted
-publisher above. The reviewed first data version (for example `0.1.0`) is
-published from Actions by its matching tag. This bootstrap has not been performed.
-See [npm scoped-package staging](https://docs.npmjs.com/creating-and-publishing-scoped-public-packages/).
-
-If staging is unavailable for the account, a separately authorized, reviewed
-one-time interactive first publish with 2FA is the fallback; it would need an
-explicit exception to the Actions-only release policy. Do not add a permanent
-npm publishing token to Actions to get around initial setup.
+This procedure documents setup; it does not authorize a tag or release.
+References: [trusted publishing](https://docs.npmjs.com/trusted-publishers/),
+[npm trust](https://docs.npmjs.com/cli/v11/commands/npm-trust/),
+[npm stage](https://docs.npmjs.com/cli/v11/commands/npm-stage/).

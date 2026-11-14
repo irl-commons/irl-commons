@@ -40,8 +40,7 @@
           "label": "IRLToolkit: NoDrop quick start",
           "url": "https://kb.irltoolkit.com/nodrop/0-QuickStart"
         }
-      ],
-      "checked_on": "2026-11-14"
+      ]
     },
     {
       "id": "feed-into-obs",
@@ -125,8 +124,7 @@
           "label": "NOALBS Cloud: stream server kinds",
           "url": "https://docs.noalbs.com/reference/stream-server-kinds/"
         }
-      ],
-      "checked_on": "2026-11-14"
+      ]
     },
     {
       "id": "frozen-after-live",
@@ -170,8 +168,7 @@
           "label": "Smooth Media Source README",
           "url": "https://github.com/sniffingpickles/obs-smooth-media"
         }
-      ],
-      "checked_on": "2026-11-14"
+      ]
     },
     {
       "id": "second-link-idle",
@@ -216,19 +213,15 @@
     {
       "id": "picture-frozen",
       "question": "The camera picture froze or stutters, but I'm still live",
-      "summary": "Find where it starts. If the preview on your phone or box already freezes, the break is between the camera and the sender, not the internet.",
+      "summary": "For OBS capture devices, check the selected device and supported video settings. If OBS reports dropped network frames, check the upload connection.",
       "checks": [
         {
-          "part": "camera",
-          "text": "Look at the preview on your phone or box. If it already freezes or stutters there, the camera's link is the cause."
-        },
-        {
-          "part": "camera",
-          "text": "Check that link: cable and capture card seated, or Wi-Fi close by and on 5 GHz if it can."
+          "part": "obs",
+          "text": "For an OBS capture source, select the intended device and a resolution and frame rate it supports."
         },
         {
           "part": "connections",
-          "text": "Preview smooth? Look at the bitrate going out. If that drops, the connections are the cause."
+          "text": "If OBS reports dropped network frames, lower the video bitrate to fit the stable upload speed."
         }
       ],
       "words": [
@@ -285,8 +278,7 @@
           "label": "Android: change app permissions",
           "url": "https://support.google.com/android/answer/9431959"
         }
-      ],
-      "checked_on": "2026-11-14"
+      ]
     },
     {
       "id": "sound-missing",
@@ -387,8 +379,7 @@
           "label": "IRLToolkit: No Dest Enabled",
           "url": "https://kb.irltoolkit.com/cloudobs/1-Troubleshooting/NoDestEnabled"
         }
-      ],
-      "checked_on": "2026-11-14"
+      ]
     }
   ]
 }

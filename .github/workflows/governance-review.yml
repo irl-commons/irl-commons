@@ -1,0 +1,10 @@
+name: Governance review trigger
+on:
+  pull_request_review:
+    types: [submitted, edited, dismissed]
+permissions: {}
+jobs:
+  notify:
+    runs-on: ubuntu-latest
+    steps:
+      - run: 'true'

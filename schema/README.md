@@ -8,10 +8,13 @@ The privacy scan checks repository files and every dataset string. Standard meta
 
 ## Freshness
 
-Every entry (including carriers and nested plans) has one `checked_on` ISO date:
+Services, guides, carriers and nested plans require `checked_on`; words and
+answers may omit it for an unrecorded content check (unknown freshness). When
+present, `checked_on` is an ISO date:
 the day its content was checked against its public primary source. A successful
-link request alone is not a content check. Preserve actual dates; the initial
-bulk check is 2026-11-14 where no earlier check is recorded in history.
+link request alone is not a content check. Preserve actual dates; never infer one from link health or a bulk import.
+Undated words and answers have unknown freshness and must not be shown as fresh.
+See data/README.md for recorded source-check provenance.
 
 | Dataset or field | Stale after |
 | --- | --- |

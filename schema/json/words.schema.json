@@ -98,7 +98,6 @@
         },
         "required": [
           "id",
-          "checked_on",
           "term",
           "aliases",
           "tier",

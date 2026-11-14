@@ -12,3 +12,8 @@ test("field deadlines and nested plan dates are independent", () => {
   expect(staleRows(data, "2026-04-01").map(x => x.split(":")[0])).toEqual(["- services/sample status", "- plans/network/plan prices, caps and fair-use rules"]);
   expect(staleRows(data, "2026-07-01")).toHaveLength(3);
 });
+
+test("undated content is unknown freshness, never silently fresh", () => {
+  const data = {words: {words: [{id: "sample"}]}, answers: {answers: []}, guides: {guides: []}, services: {services: []}, plans: {carriers: []}};
+  expect(staleRows(data, "2026-11-14")).toEqual(["- words/sample: no recorded source-check date; freshness unknown"]);
+});

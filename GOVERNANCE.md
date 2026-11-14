@@ -1,81 +1,86 @@
 # Governance (draft)
 
 Sources settle facts: public primary evidence decides data corrections, not votes.
-Data changes need one independent, unconflicted review. Rules, schema, licence
-and steward changes need two independent, unconflicted reviews and seven days
-of lazy consensus: absent a reasoned objection, the proposal may proceed.
+Data normally needs one independent, unconflicted steward approval. Rule paths
+need two and seven days of lazy consensus; with exactly two listed stewards they
+need one approval, and with zero or one they need zero. An author conflict always
+requires at least one independent steward approval, even during bootstrap.
 
 A block applies only to rules, must cite a written rule and explain a remedy,
 and lapses after 14 days. Two thirds of unconflicted stewards can override it.
-A block cannot overrule source evidence or waive the review requirements.
+A block cannot overrule source evidence or waive review requirements. The
+`objection` label and unresolved steward change requests fail the check only on
+rule paths. On data paths, sources decide; people resolve review disagreements.
 
 Declare employment, payment and product affiliations in every proposal. Makers
-and competitors may submit edit requests with evidence, but cannot approve or
-merge their own or a competitor's entry. An independent person reviews and merges.
+and direct competitors may submit evidence but cannot approve or merge their
+own or a competitor's entry. A non-conflicted steward must approve a conflicted
+author's edit, or it waits. An independent person presses merge.
 
-Stewards: [first steward — pending], [second steward — pending]. There must be
-at least two stewards now and at least three before prices are included, with
-one seat per company. These placeholders confer no access. The founder has no
-special rights. Access and branch protections must reflect these requirements.
+There are currently **zero named stewards** in `stewards.json`; both seats are
+pending and grant no access. Launch needs two stewards; until the second is
+listed the project is in bootstrap. Prices need three, one seat per company.
+The GitHub org and npm org each require **at least two org owners now**, and
+three before prices, one seat per company. This is a setup requirement, not a
+claim that the accounts or seats have already been filled. Owners administer
+accounts; stewards review policy/data. The founder has no special rights.
 
-npm releases use GitHub Actions trusted publishing only, with no personal npm
-tokens. This document does not authorize a release. Code is MIT and data is
-CC BY 4.0; contributors retain copyright, with no copyright assignment.
+npm releases use Actions trusted publishing with no personal npm tokens and
+human 2FA approval of staged versions. This document authorizes no release.
+Code is MIT and data CC BY 4.0; contributors retain copyright without assignment.
 
-After 90 days without a commit, review or reply, the remaining stewards may give
-14 days' public notice and then reassign the silent steward's responsibilities
-and access. This applies equally to the founder.
+After 90 days without a commit, review or reply, remaining stewards may give
+14 days' public notice and reassign the silent steward's responsibilities and
+access. This applies equally to the founder. Anyone may fork under the licences,
+preserve attribution and continue maintenance if governance no longer serves them.
 
-Anyone may fork under the licences, preserve attribution and continue maintenance
-if this project becomes inactive or its governance no longer serves contributors.
+## GitHub, the check, and people
 
-## GitHub enforcement and bootstrap
+The committed bootstrap main ruleset requires PRs, resolved review threads,
+`validate` and `governance` from Actions app 15368, stale-review dismissal, no
+force-push, no deletion and no bypass. Its native approval count is zero; it
+requires neither code-owner nor last-push approval. Files are not live settings.
+Installation must land on main before its check is required; see
+`.github/rulesets/README.md` for owner apply commands. Workflows never apply rules.
 
-The proposed ruleset in `.github/rulesets/main.json` protects main: pull requests,
-`validate` and `governance` checks, code-owner review, approval of the last push,
-stale-review dismissal, no force pushes, no deletion and no bypass actors.
-It is a configuration file, not a live setting. See `.github/rulesets/README.md`
-for the apply command and installation order. No workflow changes repository rules.
+A second-steward PR adds the handle/affiliations, sets a real CODEOWNERS team,
+copies `main.steady.json` over `main.json`, and updates this bootstrap status.
+After it lands, the check requires one approval and fails every PR until an org
+owner manually PUTs the steady ruleset. GitHub then enforces code-owner review,
+at least one approval and approval of the last push. The check adds declared
+conflicts, current-head independent steward approvals and two approvals for rule
+paths once three stewards are listed. Proposed policy cannot appoint its reviewers:
+code and policy always come from main.
 
-During bootstrap the numeric approval count is zero with at most one named
-steward; it becomes one with two or more, and two for rule paths once three are
-listed. `stewards.json` supplies those thresholds. Null handles are unfilled seats
-and confer no review authority. The required governance check switches its count
-automatically using the policy already on main; proposed changes cannot appoint
-their own reviewers. The native ruleset count remains zero; the check enforces
-the dynamic count.
+Rule paths include governance/contribution documents, steward policy, README,
+NPM-PUBLISHING.md, data/README.md, package.json, bun.lock, licences, schema,
+workflows/rulesets and all scripts. Seven days start at ready-for-review (creation
+for never-draft PRs). A force-push restarts the window. Return substantive ordinary
+pushes to draft, then mark ready to restart it. Drafts wait; reopening alone does
+not restart the window. Daily evaluation handles elapsed time.
 
-At count zero, the author's own PRs may pass the numeric review gate. They still
-need CI and governance to pass; rule-path PRs must also complete seven days after
-being marked ready for review (creation time for a PR never drafted). A draft
-has no running consensus window. Returning to draft and marking ready again
-starts a new window. An `objection` label or a steward's unresolved request for
-changes fails the check. Daily runs re-evaluate open PRs without a new push.
-GitHub's separate last-push and code-owner requirements remain enabled: count
-zero does not promise that GitHub will permit a merge without another reviewer.
-The actual steward team must replace the CODEOWNERS placeholder before relying
-on code-owner protection.
+Only edited entries contribute conflicts, using both old and new maker ownership,
+linked services and explicit competitor mappings. Conflicted approvals are ignored
+and noted; they cannot veto otherwise sufficient independent approvals. Undeclared
+interests cannot be detected. The author's own approval never counts.
 
-The check counts only current-head approvals from named, unconflicted stewards,
-never the PR author. Data conflicts are determined from edited entries, their
-maker, and explicit competitor mappings. Same-maker service ids can be derived;
-competitors and affiliations must be declared by people. Undeclared interests
-cannot be detected. The review API is read with a read-only token; a separate job
-has only `checks: write` to report pending/success/failure on the PR head.
-Policy code and steward data are read from main. Installation PRs test candidate
-logic but cannot enforce an absent base policy until it is merged.
+Fork and same-repo reviews run a permissionless no-op trigger. A `workflow_run`
+uses main's evaluator with read-only API access and evaluates all open PRs. It
+never trusts PR code, artifacts or the trigger's PR list. A separate check reporter
+has `checks: write` and no checkout. API failures fail closed; a failed report can
+leave a previous check until rerun, so verify the current head before merging.
 
-People still verify sources, independence, affiliations, seven-day discussion,
-block expiry/overrides, seat limits and succession. A steward must clear an expired
-block's label/review after documenting the outcome. Repository administrators
-can change settings or workflows; no repository file can prevent that. The weekly
-drift watch makes live ruleset changes visible in one issue, without fixing them
-automatically. Protecting the workflow files themselves still requires independent
-human review and responsible administrators.
+People still verify sources, affiliations and independence; who presses merge;
+whether a block cites a written rule; expiry and the two-thirds override count;
+seat limits, succession and substantive-change discussion. The check cannot stop
+a conflicted person pressing merge once valid approvals exist. Clear an expired
+label/review only after documenting its outcome. Administrators can alter settings
+and workflows; drift monitoring makes changes visible but cannot prevent them.
+GitHub may disable scheduled daily, weekly and drift workflows after 60 days of
+inactivity. Check their status and run them manually when necessary.
 
-The publish workflow runs only for `v*` tag pushes under `irl-commons`. Releases
-use GitHub-hosted Actions, npm trusted publishing, OIDC and provenance, with no
-npm token secret. Tags and the first release require prior review. A one-time
-human package-name bootstrap may create an npm placeholder before trusted
-publishing is configured; it must not approve a data release. See
-NPM-PUBLISHING.md for the npm settings and bootstrap route.
+Releases stage only from `v*` tags on main, in the restricted `npm-release`
+environment, after read-only tests pass. Only the separate staging job can mint
+OIDC tokens; it runs no tests, dependency installation or lifecycle scripts.
+Release tag creation is admin-only and tags are immutable. A one-time interactive
+placeholder is rejected before trusted publishing setup; see NPM-PUBLISHING.md.

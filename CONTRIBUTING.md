@@ -15,7 +15,10 @@ fair-use terms. Prices require three stewards first (see GOVERNANCE.md).
 Declare employment, payment, ownership and competing-product affiliations.
 Makers should use an edit request; an unconnected reviewer verifies the evidence
 and merges. Nobody merges their own or a competitor's entry. One independent
-review is required for data; two for rules, schema, licence or stewards.
+steward review is normally required for data; two for rule paths (including
+schema, licence and stewards). Bootstrap requires zero, and two listed stewards
+require one on rule paths. A conflicted author always needs an independent
+steward approval. See GOVERNANCE.md for the exact counts.
 Rule changes also follow the seven-day process in GOVERNANCE.md.
 
 Run `bun install --frozen-lockfile`, `bun run check`, `bun run export` and

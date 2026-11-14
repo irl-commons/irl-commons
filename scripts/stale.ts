@@ -19,6 +19,7 @@ export function staleRows(data: Record<string, any>, today: string): string[] {
   Day.parse(today);
   const rows: string[] = [];
   const add = (label: string, entry: any, window: { months: number } | { days: number }) => {
+    if (!entry.checked_on) { rows.push(`- ${label}: no recorded source-check date; freshness unknown`); return; }
     const deadline = due(entry.checked_on, window);
     if (today >= deadline) rows.push(`- ${label}: checked ${entry.checked_on}; stale since ${deadline}`);
   };

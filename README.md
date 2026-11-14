@@ -1,6 +1,6 @@
 # irl-commons
 
-Small, reusable datasets about streaming live from outside (IRL streaming), maintained by irl-commons. This is v0: curated by hand, incomplete, and subject to corrections and schema changes. Every entry carries a source-check date; the initial bulk check was in November 2026. Links and service features can change.
+Small, reusable datasets about streaming live from outside (IRL streaming), maintained by irl-commons. This is v0: curated by hand, incomplete, and subject to corrections and schema changes. Entries carry source-check dates where a content review is recorded; undated words and answers have unknown freshness. Links and service features can change.
 
 - `data/words.json`: terms, plain explanations, aliases, related words and optional translations.
 - `data/answers.json`: short troubleshooting checks, with related words, services and sources.
@@ -42,10 +42,11 @@ Propose additions or corrections through issues or pull requests. Include public
 
 ## Freshness
 
-Every entry (including carriers and nested plans) has one `checked_on` ISO date:
+Services, guides, carriers and nested plans require a `checked_on` ISO date; words
+and answers may omit it when no content review is recorded. When present it is:
 the day its content was checked against its public primary source. A successful
-link request alone is not a content check. Preserve actual dates; the initial
-bulk check is 2026-11-14 where no earlier check is recorded in history.
+link request alone is not a content check. Preserve actual dates; never infer one from link health or a bulk import.
+See [data provenance](data/README.md) for the recorded 2026-11-14 content review.
 
 | Dataset or field | Stale after |
 | --- | --- |
@@ -56,6 +57,7 @@ bulk check is 2026-11-14 where no earlier check is recorded in history.
 | Carrier records | 6 calendar months |
 | Plan prices, caps and fair-use rules; service `status` | 90 days |
 
+Undated entries have unknown freshness and must not be presented as fresh.
 Consumers compute staleness from `checked_on` and today's UTC date; data stores
 only dates, never a stale flag. An entry is stale on its due date. Calendar
 months clamp to the final day of the target month. Show stale entries with their

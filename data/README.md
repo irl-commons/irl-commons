@@ -12,3 +12,26 @@ Descriptions and definitions are written in our own words. Sources and links poi
 - `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. See the root README for field conventions and attribution.
 
 All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the attribution format in `../README.md`.
+
+## Source-check provenance
+
+A content review on **2026-11-14** opened and read public primary sources for
+these words: relay, srt, srtla, encoder, cloud-obs, brb, noalbs, drop-protection,
+bitrate, adaptive-bitrate, packet-loss, srt-latency, latency,
+maximize-compatibility, mic-override, dns-lookup-strategy, browser-source,
+big-packets, scene, upload-speed and data-cap. It also checked feed-into-obs,
+second-link-idle, sound-missing and camera-switch-drop against their cited
+project documentation and platform guidance. This was a content review, not
+merely HTTP status checking. Corrections made after that review retain that day.
+
+The two OBS Knowledge Base sources for picture-frozen were read on 2026-11-14:
+[Video Capture Sources](https://obsproject.com/kb/video-capture-sources) backs
+selecting a capture device and supported resolution/frame rate;
+[Stream Connection Troubleshooting](https://obsproject.com/kb/stream-connection-troubleshooting)
+backs reducing bitrate when OBS reports dropped network frames. The answer is
+limited to those checks; neither page is evidence for phone-preview, cable
+seating or 5 GHz advice.
+
+Other words and answers omit `checked_on`: a source link without a recorded
+content check is insufficient. Omission means unknown freshness, not a fresh or
+recently checked claim. Uncertainty flags remain independent of review dates.

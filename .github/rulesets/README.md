@@ -1,48 +1,72 @@
-# Applying the main ruleset
+# Installing protections
 
-`main.json` is a GitHub repository-ruleset API request body. It is active when
-applied, has no bypass actors, and sets the native numeric review count to zero.
-The required `governance` check reads the committed steward policy to enforce
-0/1/2 reviews automatically. Do not apply this file before reviewing and merging
-the installation PR: main must contain the trusted evaluator and reporting
-workflow, and both required check names must have run. Fill the CODEOWNERS team
-with a real team before relying on owner review; placeholders grant no access.
+These files are API request bodies, not live settings. No workflow applies them.
+Review and merge the installation first so main contains the trusted evaluator
+and both required checks have run. Consentingly list the first steward and their
+affiliations before relying on bootstrap; null seats grant no review authority.
 
-From the repository root, an authorized administrator applies it once with:
+An org owner installs bootstrap from the repository root:
 
 ```sh
 gh api --method POST repos/irl-commons/irl-commons/rulesets --input .github/rulesets/main.json
 ```
 
-For an existing ruleset, read its id with `gh api
-repos/irl-commons/irl-commons/rulesets`, review it, then use `--method PUT` at
-`repos/irl-commons/irl-commons/rulesets/RULESET_ID` with the same input. Do not
-create duplicates. Read back the saved ruleset and confirm no bypass actors,
-main targeting, both check names and all review flags. The weekly drift job
-compares the live named ruleset with the committed configuration and updates one
-issue on differences. It never applies settings.
+Inspect existing rulesets first; use PUT for an existing id instead of creating
+duplicates. Bootstrap has no bypass, no native approvals, no code-owner or
+last-push requirement, and pins `validate` and `governance` to Actions app 15368.
+PRs, resolved threads, stale-review dismissal, no deletion and no force-push remain.
+The check enforces conflicts even at N=0 and seven days on rule paths.
 
-GitHub API reference: https://docs.github.com/en/rest/repos/rules#create-a-repository-ruleset
+## Adding the second steward
 
-## Steward policy
+One reviewed rule-path PR adds the consenting steward in `stewards.json`, sets
+CODEOWNERS to `* @irl-commons/stewards` (a real team with write access), copies
+`main.steady.json` over `main.json`, and updates the bootstrap status in
+GOVERNANCE.md. Wait seven days; the new steward should approve. Main's previous
+policy evaluates that addition, so a PR cannot appoint its own reviewers.
 
-In `stewards.json`, replace null `github` values with actual consenting stewards'
-handles. Keep one seat per company. `affiliations` contains service ids, including
-any maker or competitor the person works for, owns or is paid by. Empty pending
-seats are not counted. Ordinary data requires zero approvals with fewer than two
-named stewards and one thereafter. Rule paths need two once at least three
-stewards are named; with two, they require one plus the seven-day window.
+After it lands, the check automatically requires one independent approval. It
+also reads `GET /repos/irl-commons/irl-commons/rules/branches/main` and fails
+closed until live native protection requires at least one approval, code-owner
+review and last-push approval. An org owner performs this manual switch:
 
-The optional `entries` mapping uses `dataset/id` keys and values shaped like
-`{"maker":"sample-service","competitors":["sample-rival"]}` (synthetic example).
-For services, same-maker service ids are derived from the service's maker text;
-for answers and guides, linked services/covers are also conflict subjects. Do not
-infer direct competition from a broad category: record it explicitly after review.
-Only edited rows are evaluated, including previous ownership on deletion/change.
+```sh
+gh api repos/irl-commons/irl-commons/rulesets --jq '.[] | select(.name=="main governance") | .id'
+gh api --method PUT repos/irl-commons/irl-commons/rulesets/RULESET_ID --input .github/rulesets/main.json
+gh api repos/irl-commons/irl-commons/rulesets/RULESET_ID
+```
 
-The evaluator always reads policy from main, so a PR changing this file must
-satisfy the previous policy. `governance` is a separately reported check on the
-current PR head. Review, push, readiness and label events re-evaluate it; the daily
-run handles elapsed time. API errors fail the evaluator and the reporting job attempts to mark affected
-PRs failed; a GitHub outage or interrupted report can still leave a previous check
-unchanged until the next successful run. Last-push approval is additionally enforced by GitHub.
+Replace RULESET_ID with the returned id. Read back every flag, no bypass, and
+Actions app ids. Confirm the read-only workflow token can see effective branch
+rules and `bypass_actors`; missing fields must be treated as drift. Run the drift
+workflow manually after installation and switching. It reports, never repairs.
+
+## Release tags
+
+Install both files separately, after review:
+
+```sh
+gh api --method POST repos/irl-commons/irl-commons/rulesets --input .github/rulesets/release-tags.json
+gh api --method POST repos/irl-commons/irl-commons/rulesets --input .github/rulesets/release-tags-immutable.json
+```
+
+Only the repository admin role (id 5) bypasses tag creation restrictions for
+`v*`. A separate ruleset forbids update/deletion with no bypass, including for
+admins. Keeping these separate prevents a creation exception from also granting
+permission to move or delete a release tag. Read both back after applying.
+
+## Conflicts and cadence
+
+`affiliations` contains service ids for makers and direct competitors a steward
+works for, owns or is paid by. `entries` maps `dataset/id` to, for example,
+`{"maker":"sample-service","competitors":["sample-rival"]}`. Competitors are
+explicit, never inferred from a broad category. Edited rows include old and new
+ownership. Services with the same maker share conflict subjects; answers and
+guides use linked services/covers too.
+
+Review events trigger a read-only no-op workflow; a default-branch `workflow_run`
+evaluates all open PRs, including forks, without trusting artifacts or the event's
+PR list. A separate job reports checks and never checks out code. PR events and
+the daily run also evaluate. API errors fail closed per PR; an outage during
+reporting can leave an old check until a successful rerun. Verify the current
+head before merging. Scheduled workflows may stop after 60 inactive days.
