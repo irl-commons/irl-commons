@@ -46,7 +46,7 @@
       "open_source": false,
       "licence": null,
       "status": "open testing",
-      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras, over SRT, RTMP, SRTLA or IRL+'s own BOND, with bonding across cellular and Wi-Fi and Moblink relays. Free.",
+      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras, over SRT, RTMP, SRTLA or IRL+'s own BOND, with bonding across cellular and Wi-Fi and Moblink relays.",
       "platforms": [
         "android"
       ],
@@ -1332,7 +1332,7 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Automation for live streams on Twitch, YouTube and Kick, with first-class OBS Studio support and Stream Deck control.",
+      "description": "Automation for live streams on Twitch, YouTube and Kick, with OBS Studio control (OBS WebSocket 4 and 5) and Stream Deck control.",
       "platforms": [
         "windows"
       ],
