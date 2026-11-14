@@ -1,0 +1,24 @@
+# Contributing
+
+Propose an entry, correction or confirmation with a pull request or the matching
+issue template. Give the dataset and permanent id, public HTTPS primary source,
+date you read it, and the specific claim or fields it supports. Use your own
+words, neutral descriptions and no rankings, paid placement or affiliate links.
+Do not copy community posts, private material or credentials.
+
+A confirmation must say what you actually checked and whether each claim still
+matches. Set `checked_on` to that source-check date, never just the day a link
+returned success. Preserve uncertainty; do not invent historical check dates.
+For plans, cite the carrier's country-specific page and its cap, price or
+fair-use terms. Prices require three stewards first (see GOVERNANCE.md).
+
+Declare employment, payment, ownership and competing-product affiliations.
+Makers should use an edit request; an unconnected reviewer verifies the evidence
+and merges. Nobody merges their own or a competitor's entry. One independent
+review is required for data; two for rules, schema, licence or stewards.
+Rule changes also follow the seven-day process in GOVERNANCE.md.
+
+Run `bun install --frozen-lockfile`, `bun run check`, `bun run export` and
+`git diff --exit-code -- schema/json`. For intentional schema changes, regenerate
+and review the JSON Schema first, then repeat the drift check. Add invalid
+fixtures for new constraints. Keep ids stable and all cross-references valid.

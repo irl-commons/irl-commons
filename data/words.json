@@ -17,7 +17,8 @@
         "bonding"
       ],
       "source": "https://belabox.net/",
-      "uncertain": true
+      "uncertain": true,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "backpack",
@@ -36,7 +37,8 @@
         "bonding"
       ],
       "source": "https://www.liveu.tv/products/create/liveu-solo",
-      "uncertain": true
+      "uncertain": true,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "bonding",
@@ -54,7 +56,8 @@
         "relay"
       ],
       "source": "https://github.com/BELABOX/srtla",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "relay",
@@ -78,7 +81,8 @@
         "noalbs"
       ],
       "source": "https://github.com/OpenIRL/srtla-receiver",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "srt",
@@ -97,7 +101,8 @@
         "big-packets"
       ],
       "source": "https://github.com/Haivision/srt",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "srtla",
@@ -117,7 +122,8 @@
         "relay"
       ],
       "source": "https://github.com/BELABOX/srtla",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "encoder",
@@ -135,7 +141,8 @@
         "backpack"
       ],
       "source": "https://belabox.net/",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "cloud-obs",
@@ -155,7 +162,8 @@
         "scene"
       ],
       "source": "https://irlhosting.com/",
-      "uncertain": true
+      "uncertain": true,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "brb",
@@ -175,7 +183,8 @@
         "noalbs"
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "drop-protection",
@@ -194,7 +203,8 @@
         "relay"
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "data-cap",
@@ -212,7 +222,8 @@
         "bitrate"
       ],
       "source": "https://digital-strategy.ec.europa.eu/en/faqs/roaming-questions-answers",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "upload-speed",
@@ -231,7 +242,8 @@
         "bonding"
       ],
       "source": "https://obsproject.com/kb/stream-connection-troubleshooting",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "bitrate",
@@ -252,7 +264,8 @@
         "b-frames"
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "adaptive-bitrate",
@@ -270,7 +283,8 @@
         "bonding"
       ],
       "source": "https://github.com/eerimoq/moblin",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "packet-loss",
@@ -288,7 +302,8 @@
         "srt-latency"
       ],
       "source": "https://www.rfc-editor.org/rfc/rfc7680",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "srt-latency",
@@ -311,7 +326,8 @@
         "latency"
       ],
       "source": "https://github.com/Haivision/srt/blob/master/docs/API/API-socket-options.md",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "latency",
@@ -330,7 +346,8 @@
         "srt-latency"
       ],
       "source": "https://support.google.com/youtube/answer/7444635",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "scene",
@@ -350,7 +367,8 @@
         "mic-override"
       ],
       "source": "https://obsproject.com/kb/obs-studio-overview",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "big-packets",
@@ -366,7 +384,8 @@
         "srt"
       ],
       "source": "https://github.com/eerimoq/moblin/blob/main/Moblin/View/Settings/Streams/Stream/Srt/StreamSrtSettingsView.swift",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "dns-lookup-strategy",
@@ -384,7 +403,8 @@
         "relay"
       ],
       "source": "https://github.com/eerimoq/moblin/blob/main/Moblin/View/Settings/Streams/Stream/Srt/StreamSrtSettingsView.swift",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "maximize-compatibility",
@@ -401,7 +421,8 @@
         "local-ingest"
       ],
       "source": "https://support.apple.com/guide/platform-support/sup025284ac0/web",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "mic-override",
@@ -417,7 +438,8 @@
         "scene"
       ],
       "source": "https://github.com/eerimoq/moblin/blob/main/Moblin/View/Settings/Scenes/Scene/SceneSettingsView.swift",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "browser-source",
@@ -434,7 +456,8 @@
         "scene"
       ],
       "source": "https://obsproject.com/kb/browser-source",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "local-ingest",
@@ -453,7 +476,8 @@
         "maximize-compatibility"
       ],
       "source": "https://github.com/eerimoq/moblin",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "noalbs",
@@ -473,7 +497,8 @@
         "stats-url"
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "b-frames",
@@ -491,7 +516,8 @@
         "bitrate"
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "ingest-and-output",
@@ -511,7 +537,8 @@
         "relay"
       ],
       "source": "https://kb.irltoolkit.com/cloudobs/0-QuickStart",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "stats-url",
@@ -532,7 +559,8 @@
         "noalbs"
       ],
       "source": "https://docs.noalbs.com/guides/stream-servers/",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "server-type",
@@ -551,7 +579,8 @@
         "noalbs"
       ],
       "source": "https://docs.noalbs.com/reference/stream-server-kinds/",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     },
     {
       "id": "fix-feed",
@@ -568,7 +597,8 @@
         "scene"
       ],
       "source": "https://docs.noalbs.com/guides/troubleshooting/",
-      "uncertain": false
+      "uncertain": false,
+      "checked_on": "2026-11-14"
     }
   ]
 }

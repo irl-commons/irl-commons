@@ -39,3 +39,27 @@ Data (`data/*.json`) is licensed under CC BY 4.0; see `LICENSE-DATA` for the off
 Retain supplied attribution and modification notices, link the source and licence, and identify your changes. Data is supplied without warranties. Links do not license the linked third-party material or imply endorsement. Code in `schema/` and `scripts/`, and the remaining repository material, uses the MIT licence in `LICENSE`.
 
 Propose additions or corrections through issues or pull requests. Include public primary sources, stable ids and review dates. Write descriptions in your own words. Keep entries small and verifiable; leave uncertain claims out. Carrier submissions must support every populated field with official sources. Use ISO 3166-1 alpha-2 country codes, `MNO` or `MVNO`, a null host for an MNO and a same-country MNO id for an MVNO. `sources` backs carrier properties; each plan has its own source and checked date. A null data cap means unlimited, while null throttle and tethering values mean unknown. Data caps use decimal GB and throttles use kbit/s. Roaming routing is `home-routed`, `local-breakout` or `unknown`. Do not infer routing from marketing claims. Run the validation and export commands before submitting.
+
+## Freshness
+
+Every entry (including carriers and nested plans) has one `checked_on` ISO date:
+the day its content was checked against its public primary source. A successful
+link request alone is not a content check. Preserve actual dates; the initial
+bulk check is 2026-11-14 where no earlier check is recorded in history.
+
+| Dataset or field | Stale after |
+| --- | --- |
+| Words | 18 calendar months |
+| Answers | 12 calendar months |
+| Guides | 9 calendar months |
+| Services | 6 calendar months |
+| Carrier records | 6 calendar months |
+| Plan prices, caps and fair-use rules; service `status` | 90 days |
+
+Consumers compute staleness from `checked_on` and today's UTC date; data stores
+only dates, never a stale flag. An entry is stale on its due date. Calendar
+months clamp to the final day of the target month. Show stale entries with their
+date; hide stale plan prices/caps/fair-use figures and service status while
+keeping the carrier/service and source visible. Nested plans use their own date.
+Run `bun scripts/stale.ts [YYYY-MM-DD]` for a Markdown report. Weekly automation
+checks links and updates one freshness issue; it never edits data.

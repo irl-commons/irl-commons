@@ -39,6 +39,14 @@ const COUNTRY_CODES = "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD 
 
 export function semantic(data: Record<FileName, any>): string[] {
   const out: string[] = hygiene(data);
+  const today = new Date().toISOString().slice(0, 10);
+  for (const [dataset, doc] of Object.entries(data)) {
+    const entries = doc[dataset] ?? doc.carriers;
+    for (const entry of entries) {
+      for (const row of [entry, ...(entry.plans ?? [])])
+        if (row.checked_on > today) out.push(`${dataset}: ${row.id}: checked_on is in the future`);
+    }
+  }
   const dupes = (where: string, ids: string[]) => {
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) out.push(`${where}: duplicate id ${id}`);
   };

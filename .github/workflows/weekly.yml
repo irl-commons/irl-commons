@@ -1,0 +1,54 @@
+name: Weekly source review
+on:
+  schedule:
+    - cron: '23 8 * * 1'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: weekly-source-review
+  cancel-in-progress: false
+jobs:
+  links:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.3
+      - run: bun scripts/links.ts
+  freshness:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.3
+      - run: bun install --frozen-lockfile
+      - run: bun scripts/stale.ts > report.md
+      - name: Update rolling freshness issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          title='Dataset freshness report'
+          marker='<!-- rolling-freshness-report -->'
+          { printf '%s\n\n' "$marker"; cat report.md; } > issue.md
+          number=$(gh api --paginate "repos/$GH_REPO/issues?state=all&per_page=100" --jq '.[] | select(.user.login == "github-actions[bot]" and (.body // "" | startswith("<!-- rolling-freshness-report -->")) and (has("pull_request") | not)) | .number' | head -n 1)
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --title "$title" --body-file issue.md
+            gh issue reopen "$number"
+          else
+            gh issue create --title "$title" --body-file issue.md
+          fi
