@@ -17,9 +17,9 @@ jobs:
     timeout-minutes: 10
     permissions:
       contents: read
-    env:
-      FORM_OUT: ${{ runner.temp }}/form
     steps:
+      # The runner context isn't available in job-level env, so the path is set here.
+      - run: echo "FORM_OUT=$RUNNER_TEMP/form" >> "$GITHUB_ENV"
       - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
         with:
           persist-credentials: false
