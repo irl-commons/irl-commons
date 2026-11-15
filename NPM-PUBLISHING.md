@@ -69,26 +69,17 @@ An npm org owner performs these interactive steps near release time, in order:
    Do not stage the placeholder and then reject it. For a new package,
    `stage publish` creates a public `0.0.0-stage` version, and rejecting the
    only staged version unpublishes the whole package. npm then refuses any
-   publish of that name for 24 hours. For the same reason, never unpublish the
-   placeholder; deprecate it instead. Version numbers cannot be reused, so if
-   a placeholder is ever needed again it is `0.0.0-bootstrap.1`.
-7. Deprecate it (prompts for 2FA):
+   publish of that name for 24 hours. The placeholder stays until the first
+   real release is out (step 12).
+7. Verify. `versions` must list only `0.0.0-bootstrap.0` and `dist-tags` must
+   include `bootstrap`. If `view` returns 404, the package does not exist: stop
+   here and configure nothing.
 
    ```sh
-   npx npm@11.21.2 deprecate @irl-commons/data@0.0.0-bootstrap.0 "Placeholder so the package exists; use 0.1.0 or later."
+   npx npm@11.21.2 view @irl-commons/data versions dist-tags --json
    ```
 
-8. Verify. `versions` must list only `0.0.0-bootstrap.0`, `dist-tags` must
-   include `bootstrap`, and `deprecated` must print the message above. If
-   `view` returns 404, the package does not exist: stop here and configure
-   nothing. If `latest` also points at the placeholder, the first real release
-   moves it.
-
-   ```sh
-   npx npm@11.21.2 view @irl-commons/data versions dist-tags deprecated --json
-   ```
-
-9. Create the `npm-release` GitHub environment, restricted to `v*` tags,
+8. Create the `npm-release` GitHub environment, restricted to `v*` tags,
     before any tag exists. Otherwise the first tag push creates it unprotected:
 
     ```sh
@@ -102,7 +93,7 @@ An npm org owner performs these interactive steps near release time, in order:
     The read-back must show exactly one policy: name `v*`, type `tag`. While
     there is one steward, add no required reviewer. From two stewards, require
     a reviewer and prevent self-review.
-10. Configure the trusted publisher for stage publish only (prompts for 2FA),
+9. Configure the trusted publisher for stage publish only (prompts for 2FA),
     then read it back:
 
     ```sh
@@ -115,18 +106,32 @@ An npm org owner performs these interactive steps near release time, in order:
     `npm-release`. On npmjs.com the same settings are under package
     Settings → Trusted publishing → GitHub Actions, with direct publish and
     dist-tag left off.
-11. On npmjs.com, open package Settings → Publishing access, select "Require
+10. On npmjs.com, open package Settings → Publishing access, select "Require
     two-factor authentication and disallow tokens", and save.
-12. Log out:
+11. Make the first real successful publish within **two days** of step 9.
+    Otherwise the configuration expires: delete it and repeat step 9. A
+    reviewed `v<version>` tag on main stages the real version in Actions.
+    Approve that staged version on npmjs.com (Staged Packages) with 2FA.
+12. Once the real version is on npm and `latest` points at it, remove the
+    placeholder (prompts for 2FA). npm allows unpublishing a single version
+    within 72 hours of publishing it; it is safe now because it is no longer
+    the only version. Never do this while the placeholder is the only version.
+    Version numbers cannot be reused, so a later placeholder would be
+    `0.0.0-bootstrap.1`.
+
+    ```sh
+    npx npm@11.21.2 unpublish @irl-commons/data@0.0.0-bootstrap.0
+    npx npm@11.21.2 view @irl-commons/data versions dist-tags --json
+    ```
+
+    The read-back must list only real versions, with no `bootstrap` tag. After
+    72 hours, deprecate the placeholder instead.
+
+13. Log out:
 
     ```sh
     npx npm@11.21.2 logout
     ```
-
-13. Make the first real successful publish within **two days** of step 10.
-    Otherwise the configuration expires: delete it and repeat step 10. A
-    reviewed `v<version>` tag on main stages the real version in Actions.
-    Approve that staged version on npmjs.com (Staged Packages) with 2FA.
 
 This procedure documents setup; it does not authorize a tag or release.
 References: [trusted publishing](https://docs.npmjs.com/trusted-publishers/),

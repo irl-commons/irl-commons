@@ -104,4 +104,4 @@ Releases stage only from `v*` tags on main, in the restricted `npm-release`
 environment, after read-only tests pass. Only the separate staging job can mint
 OIDC tokens; it runs no tests, dependency installation or lifecycle scripts.
 Release tag creation is admin-only and tags are immutable. A one-time interactive
-placeholder is published and deprecated before trusted publishing setup; see NPM-PUBLISHING.md.
+placeholder is published before trusted publishing setup and removed after the first release; see NPM-PUBLISHING.md.
