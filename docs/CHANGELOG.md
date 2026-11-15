@@ -11,6 +11,11 @@ never change.
 
 - Docs for people who use the data: [Use the data](getting-started.md),
   [worked examples](examples.md) and an [FAQ](faq.md).
+- `standards.json`: stream-status and stream-session name the OpenStreamBox
+  Initiative as their maker, and the irl-commons entry has a plain
+  description. The credit line says "initial data by the OpenStreamBox
+  Initiative". Descriptions are "written for this list" instead of "our own
+  words".
 
 ## 15 November 2026
 

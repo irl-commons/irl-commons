@@ -223,7 +223,7 @@ export const StandardKind = z.enum(["protocol", "format", "settings", "data", "c
  *  not-public: not published yet. */
 export const Openness = z.enum(["open", "documented-closed", "undocumented", "not-public"]);
 
-// Comparison facts. Each one is a single claim for one table cell: short text in our own words,
+// Comparison facts. Each one is a single claim for one table cell: short text written for this list,
 // the public pages that support it, and the day they were read. unverified: true when the makers'
 // and platforms' own pages don't confirm it (shown as [U]); the claim then says what is known.
 const factFields = {
@@ -283,7 +283,7 @@ export const Standard = z.strictObject({
   maker: Text,
   /** The page that best describes it, the maker's own where one exists. Null only when not public. */
   url: HttpsUrl.nullable(),
-  /** Our own one-line description. Left out when `word` is set: the glossary definition is used instead. */
+  /** A one-line description written for this list. Left out when `word` is set: the glossary definition is used instead. */
   description: Text.max(200).optional(),
   /** The words.json id of the same thing, when it is also a glossary word. It must equal this entry's id,
    *  and the entry then carries no description of its own. */

@@ -69,8 +69,8 @@ including conflicts of interest.
 
 ## What are stream-status and stream-session doing in `standards.json`?
 
-They are drafts by a steward of this repository, so they sit in the
-`steward-projects` group. They are kept apart from the other standards, so
+The OpenStreamBox Initiative started them, and it also stewards this
+repository. So they sit in the `steward-projects` group. They are kept apart from the other standards, so
 nobody takes them for something the scene already uses. How they fit together is on
 [openstreambox.org/open-standards.html](https://openstreambox.org/open-standards.html).
 

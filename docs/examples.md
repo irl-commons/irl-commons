@@ -89,9 +89,10 @@ Each standard credits its `maker`, says how open it is (`openness`) and how
 far along it is (`status`). Codecs and transports also carry comparison
 facts, each with its own sources and `checked_on` date.
 
-The `steward-projects` group holds drafts that people who look after this
-repository work on themselves, such as stream-status and stream-session.
-They are kept apart, so nobody takes them for established standards.
+The `steward-projects` group holds drafts that the OpenStreamBox Initiative
+started, such as stream-status and stream-session. The initiative also
+stewards this repository, so they are kept apart, and nobody takes them for
+established standards.
 
 ## Check your own copy
 
