@@ -134,7 +134,7 @@ const latency = words.find((w) => w.id === "srt-latency").naming;
 latency.label;   // "SRT latency"
 latency.scope;   // "The receive buffer of an SRT or SRTLA connection, set in milliseconds."
 latency.alternatives.map((a) => `${a.term}: ${a.status}`);
-// ["Latency: ambiguous", "Receive buffer: technical", "SRT buffer: technical", "Buffer: ambiguous"]
+// Includes "Latency: ambiguous" and "Latency (SRT): also-used".
 ```
 
 Disagree with a label? Use the edit form with the entry `words/<id>`; it has
@@ -153,3 +153,10 @@ bun run check
 Other languages can use the JSON Schemas in `schema/json/`. A few rules
 across files, such as ids that must exist in another file, are only in the
 check script. [`schema/README.md`](../schema/README.md) lists them.
+
+Search covers `also_called`, `search_terms` and every `naming.alternatives[].term`,
+along with the word and recommended label. Do not read deprecated `aliases`
+in new consumers. Display evidence as “Where seen”, with the service name,
+observed label, support type and source date; do not tally makers on a site.
+For an alternative with `see`, show “X usually means … → X” and link to the
+referenced word.

@@ -78,3 +78,12 @@ never change.
 - First data: `words.json`, `answers.json`, `services.json`, `guides.json`
   and an empty `plans.json`, with zod schemas, exported JSON Schemas and
   checks.
+
+## Naming evidence and other names
+
+Evidence now references catalogue services and records the label seen and whether
+it directly supports the meaning or provides context only. Review counts distinct
+owning makers through the services catalogue. Ambiguous and narrower names can
+point to another word with `see`; synonyms and technical names cannot reuse its
+recommended label. Corrected synonym placement and regenerated compatibility aliases.
+Recommended labels are unchanged.

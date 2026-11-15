@@ -170,12 +170,16 @@
                       "maxLength": 200,
                       "pattern": "\\S"
                     },
+                    "see": {
+                      "type": "string",
+                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                    },
                     "seen_in": {
                       "minItems": 1,
                       "type": "array",
                       "items": {
                         "type": "string",
-                        "pattern": "\\S"
+                        "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
                       }
                     }
                   },
@@ -225,10 +229,20 @@
                 "items": {
                   "type": "object",
                   "properties": {
-                    "maker": {
+                    "service": {
                       "type": "string",
-                      "maxLength": 60,
+                      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                    },
+                    "label": {
+                      "type": "string",
                       "pattern": "\\S"
+                    },
+                    "support": {
+                      "type": "string",
+                      "enum": [
+                        "direct",
+                        "context-only"
+                      ]
                     },
                     "url": {
                       "type": "string",
@@ -243,14 +257,12 @@
                       "type": "string",
                       "maxLength": 300,
                       "pattern": "\\S"
-                    },
-                    "unverified": {
-                      "type": "boolean",
-                      "const": true
                     }
                   },
                   "required": [
-                    "maker",
+                    "service",
+                    "label",
+                    "support",
                     "url",
                     "read_on",
                     "note"
