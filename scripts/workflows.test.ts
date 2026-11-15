@@ -77,6 +77,8 @@ test("a form becomes a draft only through a read-only job and a write job that r
   const install = w.jobs.prepare.steps.find((s: any) => s.run?.startsWith("bun install"));
   expect(install.run).toContain("--ignore-scripts");
   expect(w.jobs.open.steps.map((s: any) => s.run).filter(Boolean)).toEqual(["node scripts/form-open.mjs"]);
+  // GitHub refuses a workflow whose job-level env uses the runner context.
+  for (const job of Object.values<any>(w.jobs)) expect(JSON.stringify(job.env ?? {})).not.toContain("runner.");
 });
 
 test("every action is pinned to a full commit", () => {
