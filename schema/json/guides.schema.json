@@ -55,7 +55,8 @@
             "type": "string",
             "enum": [
               "article",
-              "video"
+              "video",
+              "docs"
             ]
           },
           "published": {

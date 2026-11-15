@@ -318,7 +318,7 @@ export const Guide = z.strictObject({
   /** The service id of the maker who wrote it, when that maker is one of `covers`. */
   publisher: Id.nullable(),
   language: LanguageTag,
-  kind: z.enum(["article", "video"]),
+  kind: z.enum(["article", "video", "docs"]),
   published: Day.nullable(),
   /** The products the guide is about, as service ids. */
   covers: z.array(Id).min(1),

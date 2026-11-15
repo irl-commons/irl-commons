@@ -1,0 +1,26 @@
+{
+  "about": "",
+  "guides": [
+    {
+      "id": "moblin-readme",
+      "title": "Moblin README and features",
+      "title_display": "Moblin: set up the sender",
+      "url": "https://github.com/eerimoq/moblin#features",
+      "publisher": "moblin",
+      "language": "en",
+      "kind": "docs",
+      "published": null,
+      "checked_on": "2026-11-15",
+      "covers": [
+        "moblin"
+      ],
+      "part": [
+        "sender",
+        "camera",
+        "connections"
+      ],
+      "words": [],
+      "answers": []
+    }
+  ]
+}
