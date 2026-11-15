@@ -37,7 +37,8 @@
   "scripts": {
     "check": "bun scripts/check.ts",
     "export": "bun scripts/export.ts",
-    "titles": "bun scripts/titles.ts"
+    "titles": "bun scripts/titles.ts",
+    "aliases": "bun scripts/aliases.ts"
   },
   "dependencies": {
     "zod": "4.6.7"

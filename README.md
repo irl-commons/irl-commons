@@ -4,7 +4,7 @@ Small, reusable datasets about IRL streaming (streaming your real life away from
 
 **New here?** [Use the data](docs/getting-started.md) in your own app or site in about ten minutes, then read the [worked examples](docs/examples.md) and the [FAQ](docs/faq.md). What changed is in the [changelog](docs/CHANGELOG.md). Questions and ideas go to [Discussions](https://github.com/irl-commons/irl-commons/discussions). How this fits with the open standards for IRL streaming: [openstreambox.org/open-standards.html](https://openstreambox.org/open-standards.html).
 
-- `data/words.json`: terms, plain explanations, aliases, related words and optional translations.
+- `data/words.json`: terms, plain explanations, other names (`also_called` for true synonyms, `search_terms` for search only), related words and optional translations. Some words also carry a naming guide for app makers: a recommended label for one context, other names with a status, and dated evidence from the apps' own settings.
 - `data/answers.json`: short troubleshooting checks, with related words, services and sources.
 - `data/services.json`: apps, receivers, hubs, hardware, production tools and documentation, with official links and review dates.
 - `data/guides.json`: links to public tutorials, covered services, chain parts and review dates.
@@ -25,7 +25,7 @@ bun run export
 git diff --exit-code -- schema/json
 ```
 
-The check validates all six files, cross-references, generated titles, privacy rules, schema drift and rejection fixtures. Carrier checks also exercise a valid synthetic network and virtual operator, missing hosts, country mismatches and duplicates. Run `bun run titles` after changing the service names or relationships used by guide titles.
+The check validates all six files, cross-references, generated titles, privacy rules, schema drift and rejection fixtures. Carrier checks also exercise a valid synthetic network and virtual operator, missing hosts, country mismatches and duplicates. Run `bun run titles` after changing the service names or relationships used by guide titles, and `bun run aliases` after changing a word's names.
 
 The package is prepared as `@irl-commons/data`; it has not been published to npm. You can clone this repository and use the JSON files directly. After the first reviewed release, install with `npm install @irl-commons/data`. The exported paths are:
 

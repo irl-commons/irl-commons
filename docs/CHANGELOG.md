@@ -9,6 +9,19 @@ never change.
 
 ## Unreleased
 
+- `words.json`: a naming guide for app makers. An optional `naming` block
+  recommends a label for one context, lists other names as also used,
+  narrower, technical or ambiguous, and keeps dated evidence from the apps' own
+  settings. Six words start as drafts: bonding, relay, SRT latency, bitrate,
+  BRB and drop protection. Reviewed blocks need evidence from two makers and a
+  second steward.
+- `words.json`: `aliases` is split into `also_called` (true synonyms, fine to
+  show as "Also called") and `search_terms` (plurals, units, spellings and
+  syntax, for search only); other names of words in the naming guide sit in
+  `naming.alternatives`. `aliases` is deprecated and generated from these for
+  one release (`bun run aliases`); read the new fields instead.
+- The edit and maker forms have an optional field for the label a product
+  uses, and why. See "Propose a different label" in CONTRIBUTING.
 - `services.json`: two new fields on every entry. `class` puts each product
   in one overview a streamer would look for: phone apps, helper apps,
   connections, bonding (receivers, relays and bonding services), hardware,

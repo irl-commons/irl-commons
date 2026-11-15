@@ -2,7 +2,7 @@
 // it is parsed here as text and JSON, never evaluated, and every value is checked
 // before it reaches a data file. The workflow runs `bun run check` on the result.
 import { readFileSync, readdirSync } from "node:fs";
-import { Day, HttpsUrl, Id, files, guideTitle, type FileName } from "../schema/src/schema.ts";
+import { Day, HttpsUrl, Id, files, guideTitle, wordAliases, type FileName } from "../schema/src/schema.ts";
 
 export const DATASETS = ["words", "answers", "services", "guides", "standards", "plans"] as const satisfies readonly FileName[];
 export type Dataset = (typeof DATASETS)[number];
@@ -85,11 +85,13 @@ export type Request = {
   fields: Record<string, unknown> | null;
   conflict: boolean;
   conflictDetails: string;
+  /** Optional, on edits: the label the person's product uses for a word, and why. */
+  productLabel: string;
 };
 
 const LIMITS: Record<string, number> = {
   entry: 120, name: 200, link: 500, source: 500, read_on: 20, description: 1000,
-  checked: 5000, changes: 5000, fields: 20000, conflict_details: 2000,
+  checked: 5000, changes: 5000, fields: 20000, conflict_details: 2000, product_label: 2000,
 };
 
 const LABEL = (form: Form, id: string) => form.fields.find((f) => f.id === id)?.label ?? id;
@@ -151,6 +153,7 @@ export function readRequest(form: Form, values: Record<string, string>, today: s
       kind: form.kind, dataset: dataset as Dataset, id, readOn, fields, conflict,
       name: v("name"), link: v("link"), source: v("source"), description: v("description"),
       checked: v("checked"), changes: v("changes"), conflictDetails: v("conflict_details"),
+      productLabel: v("product_label"),
     },
   };
 }
@@ -158,7 +161,7 @@ export function readRequest(form: Form, values: Record<string, string>, today: s
 /** Where the form's common fields go in each dataset. */
 type Mapping = { name: string; link: string | null; description: string | null; lists: string[]; extra?: Record<string, unknown> };
 const MAP: Record<Dataset, Mapping> = {
-  words: { name: "term", link: null, description: "plain", lists: ["aliases", "related"], extra: { heard_when: "", uncertain: true } },
+  words: { name: "term", link: null, description: "plain", lists: ["also_called", "search_terms", "aliases", "related"], extra: { heard_when: "", uncertain: true } },
   answers: { name: "question", link: null, description: "summary", lists: ["words", "services"] },
   services: { name: "name", link: "url", description: "description", lists: ["links", "support", "tags", "words", "covers"] },
   guides: { name: "title", link: "url", description: null, lists: ["words", "answers"] },
@@ -224,6 +227,7 @@ export function applyRequest(request: Request, data: Record<FileName, any>): Cha
     const keys = Object.keys(request.fields);
     if (keys.includes("id")) return fail("The JSON fields can't change the id. Ids never change.");
     if (keys.includes("checked_on")) return fail(`The JSON fields can't set checked_on; it comes from the date you read the source.`);
+    if (dataset === "words" && keys.includes("aliases")) return fail("The JSON fields can't set aliases; they are generated from also_called, search_terms and naming.");
     const unknown = keys.filter((k) => !allowed.includes(k));
     if (unknown.length) return fail(`The JSON has fields that ${dataset} entries don't have. The fields are listed in data/README.md.`);
   }
@@ -288,8 +292,10 @@ export function applyRequest(request: Request, data: Record<FileName, any>): Cha
   return { status: "ready", problems: [], summary, notes, before, after, doc };
 }
 
-/** Guides carry a generated display title; keep it in step with covers, publisher and part. */
+/** Guides carry a generated display title, and words the deprecated aliases; keep them in step. */
 function retitle(dataset: Dataset, entry: Record<string, unknown>, data: Record<FileName, any>) {
+  if (dataset === "words" && Array.isArray(entry.also_called) && Array.isArray(entry.search_terms) && typeof entry.term === "string")
+    entry.aliases = wordAliases(entry as any);
   if (dataset !== "guides" || !Array.isArray(entry.covers) || !Array.isArray(entry.part) || !entry.part.length) return;
   const names = new Map<string, string>(data.services.services.map((s: any) => [s.id, s.name]));
   entry.title_display = guideTitle({ covers: entry.covers, publisher: (entry.publisher as string) ?? null, part: entry.part }, (x) => names.get(x) ?? x);
