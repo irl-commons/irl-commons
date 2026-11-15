@@ -1,5 +1,5 @@
 {
-  "about": "Formats and protocols that IRL streaming apps and services share, one entry per item. Each entry credits its maker; listing an item here does not mean this project makes, runs or endorses it. group: 'shared' when several makers' products write or read it; 'app-formats' for one app's own format that a named second product also writes or reads; 'hardware-codecs' for the video and audio codecs and the camera interfaces (UVC, HDMI, SDI) a stream goes through; 'steward-projects' for items made by people who steward this repository, kept apart so they are not mistaken for established standards. An entry that is also a glossary word shares its words.json id, sets word to it and carries no description of its own. Codecs carry codec facts and transports carry transport facts (licensing, efficiency, hardware support, bonding, latency, loss recovery, platform ingest); each fact has its own sources and checked_on, and unverified: true marks a claim the makers' or platforms' own pages don't confirm. service_ids link products in services.json; other_users names products that are not catalogued. Descriptions are our own words; sources are public primary pages. checked_on is the day the entry was compared with its sources.",
+  "about": "Formats and protocols that IRL streaming apps and services share, one entry per item. Each entry credits its maker; listing an item here does not mean this project makes, runs or endorses it. group: 'shared' when several makers' products write or read it; 'app-formats' for one app's own format that a named second product also writes or reads; 'hardware-codecs' for the video and audio codecs and the camera interfaces (UVC, HDMI, SDI) a stream goes through; 'steward-projects' for items made by people who steward this repository, kept apart so they are not mistaken for established standards. An entry that is also a glossary word shares its words.json id, sets word to it and carries no description of its own. Codecs carry codec facts and transports carry transport facts (licensing, efficiency, hardware support, bonding, latency, loss recovery, platform ingest); each fact has its own sources and checked_on, and unverified: true marks a claim the makers' or platforms' own pages don't confirm. service_ids link products in services.json; other_users names products that are not catalogued. Descriptions are written for this list; sources are public primary pages. checked_on is the day the entry was compared with its sources.",
   "standards": [
     {
       "id": "srt",
@@ -2176,14 +2176,14 @@
     },
     {
       "id": "stream-status",
-      "checked_on": "2026-11-14",
+      "checked_on": "2026-11-15",
       "name": "stream-status",
       "group": "steward-projects",
       "kind": "format",
       "status": "proposed",
       "openness": "open",
       "licence": "MIT",
-      "maker": "openstreambox",
+      "maker": "OpenStreamBox Initiative",
       "url": "https://github.com/openstreambox/stream-status",
       "description": "A JSON format for live-stream findings: what's wrong, where, how sure, and whether the stream is still live.",
       "service_ids": [],
@@ -2205,7 +2205,7 @@
       "status": "proposed",
       "openness": "open",
       "licence": "MIT",
-      "maker": "openstreambox",
+      "maker": "OpenStreamBox Initiative",
       "url": "https://github.com/openstreambox/stream-session",
       "description": "A format that lets the devices in a live show agree on which show it is, who is in it, which device is in charge and what each person shares.",
       "service_ids": [],
@@ -2220,16 +2220,16 @@
     },
     {
       "id": "irl-commons",
-      "checked_on": "2026-11-14",
+      "checked_on": "2026-11-15",
       "name": "irl-commons",
       "group": "steward-projects",
       "kind": "data",
       "status": "proposed",
       "openness": "open",
       "licence": "CC BY 4.0 (data); MIT (code)",
-      "maker": "irl-commons contributors (started by openstreambox)",
+      "maker": "irl-commons contributors (started by the OpenStreamBox Initiative)",
       "url": "https://github.com/irl-commons/irl-commons",
-      "description": "This catalogue: small curated datasets about IRL streaming, with Zod and JSON Schema validation.",
+      "description": "Small curated datasets about IRL streaming: words, quick checks, services, guides and standards, with Zod and JSON Schema validation.",
       "service_ids": [],
       "other_users": [],
       "sources": [

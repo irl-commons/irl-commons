@@ -38,7 +38,7 @@ import wordsSchema from '@irl-commons/data/schema/json/words.schema.json' with {
 
 Data (`data/*.json`) is licensed under CC BY 4.0; see `LICENSE-DATA` for the official text. Credit format:
 
-> Data from irl-commons contributors (initial data by openstreambox) — https://github.com/irl-commons/irl-commons — CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: [describe changes, or “none”].
+> Data from irl-commons contributors (initial data by the OpenStreamBox Initiative) — https://github.com/irl-commons/irl-commons — CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: [describe changes, or “none”].
 
 Retain supplied attribution and modification notices, link the source and licence, and identify your changes. Data is supplied without warranties. Links do not license the linked third-party material or imply endorsement. Code in `schema/` and `scripts/`, and the remaining repository material, uses the MIT licence in `LICENSE`.
 
