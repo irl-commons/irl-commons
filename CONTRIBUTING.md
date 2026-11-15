@@ -34,7 +34,7 @@ fixtures for new constraints. Keep ids stable and all cross-references valid.
 ## No GitHub account?
 
 Write to hello@irlcommons.org, or post on Discord
-(https://discord.gg/3B9b9n9N6). Say which entry it is about, what is wrong,
+(https://discord.gg/KChVwU6fjk). Say which entry it is about, what is wrong,
 missing or still right, the public page that shows it, and the date you read
 that page. A steward files the matching issue form for you and links it in the
 reply; the change then follows the same steps as any other.

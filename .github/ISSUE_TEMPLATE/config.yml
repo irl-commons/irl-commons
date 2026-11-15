@@ -7,7 +7,7 @@ contact_links:
     url: https://github.com/irl-commons/irl-commons/blob/main/CONTRIBUTING.md#no-github-account
     about: Send the entry, the source and the date you read it to hello@irlcommons.org. A steward files it for you.
   - name: No GitHub account? Ask on Discord
-    url: https://discord.gg/3B9b9n9N6
+    url: https://discord.gg/KChVwU6fjk
     about: Post the entry, the source and the date you read it on Discord. A steward files it for you.
   - name: Report a security problem privately
     url: https://github.com/irl-commons/irl-commons/security/advisories/new
