@@ -23,3 +23,12 @@ test("standards go stale after six calendar months", () => {
   expect(staleRows(data, "2026-11-29")).toEqual([]);
   expect(staleRows(data, "2026-11-30")).toEqual(["- standards/sample-format: checked 2026-05-31; stale since 2026-11-30"]);
 });
+
+test("comparison facts on standards keep their own dates", () => {
+  const fact = (checked_on: string) => ({text: "x", sources: [], checked_on});
+  const entry = {id: "sample-codec", checked_on: "2026-11-01", codec: {media: "video", licensing: fact("2026-11-01"), efficiency: null,
+    hardware: {nvidia: {encode: "yes", decode: "yes", ...fact("2026-05-31")}}, ingest: {kick: fact("2026-11-01")}}};
+  const data = {words: {words: []}, answers: {answers: []}, guides: {guides: []}, services: {services: []}, plans: {carriers: []}, standards: {standards: [entry]}};
+  expect(staleRows(data, "2026-11-29")).toEqual([]);
+  expect(staleRows(data, "2026-11-30")).toEqual(["- standards/sample-codec codec.hardware.nvidia: checked 2026-05-31; stale since 2026-11-30"]);
+});

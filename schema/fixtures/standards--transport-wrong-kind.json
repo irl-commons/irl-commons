@@ -1,0 +1,111 @@
+{
+  "about": "Synthetic invalid standards file.",
+  "standards": [
+    {
+      "id": "sample-protocol",
+      "checked_on": "2026-11-14",
+      "name": "Sample protocol",
+      "group": "shared",
+      "kind": "format",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "Sample maker",
+      "url": "https://example.org/format",
+      "description": "A synthetic format.",
+      "service_ids": [
+        "sample-app",
+        "sample-relay"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "Format page",
+          "url": "https://example.org/format"
+        }
+      ],
+      "notes": null,
+      "transport": {
+        "bonding": {
+          "value": "no",
+          "text": "A synthetic claim.",
+          "sources": [
+            {
+              "label": "Source",
+              "url": "https://example.org/source"
+            }
+          ],
+          "checked_on": "2026-11-14"
+        },
+        "latency": {
+          "value": "buffer",
+          "text": "A synthetic claim.",
+          "sources": [
+            {
+              "label": "Source",
+              "url": "https://example.org/source"
+            }
+          ],
+          "checked_on": "2026-11-14"
+        },
+        "loss_recovery": {
+          "value": "resend",
+          "text": "A synthetic claim.",
+          "sources": [
+            {
+              "label": "Source",
+              "url": "https://example.org/source"
+            }
+          ],
+          "checked_on": "2026-11-14"
+        },
+        "licensing": {
+          "value": "open-spec",
+          "text": "A synthetic claim.",
+          "sources": [
+            {
+              "label": "Source",
+              "url": "https://example.org/source"
+            }
+          ],
+          "checked_on": "2026-11-14"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "kick": {
+            "value": "no",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          }
+        }
+      }
+    }
+  ]
+}

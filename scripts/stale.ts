@@ -15,6 +15,20 @@ export function due(checked: string, window: { months: number } | { days: number
   }
   return date.toISOString().slice(0, 10);
 }
+/** The dated comparison facts on a standard (codec and transport fields), as [path, fact] pairs. */
+export function comparisonFacts(entry: any): [string, any][] {
+  const out: [string, any][] = [];
+  for (const group of ["codec", "transport"]) {
+    const facts = entry[group];
+    if (!facts) continue;
+    for (const [field, value] of Object.entries<any>(facts)) {
+      if (!value || typeof value !== "object") continue;
+      if ("checked_on" in value) out.push([`${group}.${field}`, value]);
+      else for (const [key, inner] of Object.entries<any>(value)) if (inner?.checked_on) out.push([`${group}.${field}.${key}`, inner]);
+    }
+  }
+  return out;
+}
 export function staleRows(data: Record<string, any>, today: string): string[] {
   Day.parse(today);
   const rows: string[] = [];
@@ -26,6 +40,7 @@ export function staleRows(data: Record<string, any>, today: string): string[] {
   for (const [dataset, count] of Object.entries(months)) {
     for (const entry of data[dataset][dataset === "plans" ? "carriers" : dataset]) {
       add(`${dataset}/${entry.id}`, entry, { months: count });
+      if (dataset === "standards") for (const [where, fact] of comparisonFacts(entry)) add(`standards/${entry.id} ${where}`, fact, { months: count });
       if (dataset === "services" && entry.status !== null) add(`services/${entry.id} status`, entry, { days: 90 });
       for (const plan of entry.plans ?? []) add(`plans/${entry.id}/${plan.id} prices, caps and fair-use rules`, plan, { days: 90 });
     }
