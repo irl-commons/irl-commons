@@ -2,6 +2,8 @@
 
 Small, reusable datasets about streaming live from outside (IRL streaming), maintained by irl-commons. This is v0: curated by hand, incomplete, and subject to corrections and schema changes. Entries carry source-check dates where a content review is recorded; undated words and answers have unknown freshness. Links and service features can change.
 
+**New here?** [Use the data](docs/getting-started.md) in your own app or site in about ten minutes, then read the [worked examples](docs/examples.md) and the [FAQ](docs/faq.md). What changed is in the [changelog](docs/CHANGELOG.md). Questions and ideas go to [Discussions](https://github.com/irl-commons/irl-commons/discussions). How this fits with the open standards for IRL streaming: [openstreambox.org/open-standards.html](https://openstreambox.org/open-standards.html).
+
 - `data/words.json`: terms, plain explanations, aliases, related words and optional translations.
 - `data/answers.json`: short troubleshooting checks, with related words, services and sources.
 - `data/services.json`: apps, receivers, hubs, hardware, production tools and documentation, with official links and review dates.
@@ -12,6 +14,7 @@ Small, reusable datasets about streaming live from outside (IRL streaming), main
 - `schema/json/`: exported JSON Schema draft 2020-12, plus chain-part and role metadata in `parts.json`.
 - `schema/fixtures/`: deliberately invalid, synthetic validation examples.
 - `scripts/`: validation, schema export and guide title generation.
+- `docs/`: a ten-minute guide, worked examples, an FAQ and the changelog.
 
 Validate with Bun 1.4.3:
 
