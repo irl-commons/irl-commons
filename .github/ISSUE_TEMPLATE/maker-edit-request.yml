@@ -1,0 +1,88 @@
+name: Edit request from the maker
+description: You make, sell or work on this product, or on a competing one, and want an entry changed.
+title: "Maker edit: "
+labels: ["form: maker edit"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Makers are welcome here. You know your product best, and the list should be right about it.
+        Please link a public page that shows the change. An independent steward checks it against the source and decides.
+        You can't approve or merge a change to your own entry or a competitor's.
+  - type: input
+    id: entry
+    attributes:
+      label: Entry
+      description: The dataset and the id, for example services/moblin.
+      placeholder: services/moblin
+    validations:
+      required: true
+  - type: dropdown
+    id: dataset
+    attributes:
+      label: Dataset
+      description: Only needed when the entry above has no dataset in front of the id.
+      options:
+        - "words: the word list"
+        - "answers: quick checks for common problems"
+        - "services: apps, relays, receivers, hardware and communities"
+        - "guides: tutorials from the makers"
+        - "standards: shared formats and protocols"
+        - "plans: mobile carriers and their plans"
+    validations:
+      required: false
+  - type: input
+    id: name
+    attributes:
+      label: New name
+      description: Only if the name changed.
+    validations:
+      required: false
+  - type: input
+    id: link
+    attributes:
+      label: New link
+      description: Only if the main link changed. Your product's own https page.
+      placeholder: https://
+    validations:
+      required: false
+  - type: input
+    id: source
+    attributes:
+      label: Source you read
+      description: A public https page that shows the change, for example your release notes or product page.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: read_on
+    attributes:
+      label: Date you read it
+      description: Year-month-day, for example 2026-11-15.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+  - type: textarea
+    id: changes
+    attributes:
+      label: What changed
+      description: What is wrong or out of date, and what the source says now. Plain facts, no ranking or advertising.
+    validations:
+      required: true
+  - type: textarea
+    id: fields
+    attributes:
+      label: Changed fields as JSON (optional)
+      description: |
+        Only if you know the data format. The fields to change and their new values, for example {"status": "Discontinued"}.
+        Leave it empty if you are not sure. A steward can do this part.
+      render: json
+    validations:
+      required: false
+  - type: textarea
+    id: conflict_details
+    attributes:
+      label: Your connection to the product
+      description: For example "I build this app" or "I work for a company that makes a competing relay".
+    validations:
+      required: true

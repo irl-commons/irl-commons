@@ -58,3 +58,37 @@ test("tag creation exception cannot bypass immutability", () => {
   expect(immutable.bypass_actors).toEqual([]);
   expect(immutable.rules).toEqual([{type: "update"}, {type: "deletion"}]);
 });
+
+test("a form becomes a draft only through a read-only job and a write job that runs no issue text", () => {
+  const w = workflow("form-to-pr");
+  expect(w.on).toEqual({issues: {types: ["labeled"]}});
+  expect(w.permissions).toEqual({});
+  expect(w.jobs.prepare.if).toBe("github.event.label.name == 'make-pr' && github.event.issue.state == 'open'");
+  expect(w.jobs.prepare.permissions).toEqual({contents: "read"});
+  expect(w.jobs.open.needs).toBe("prepare");
+  expect(w.jobs.open.permissions).toEqual({contents: "write", "pull-requests": "write", issues: "write"});
+  for (const job of Object.values<any>(w.jobs)) {
+    for (const step of job.steps) {
+      if (step.uses?.startsWith("actions/checkout@")) expect(step.with["persist-credentials"]).toBe(false);
+      // Issue text reaches the scripts only through the event file, never through an expression.
+      expect(JSON.stringify(step)).not.toMatch(/github\.event\.(issue\.(body|title)|comment)|github\.event\.label\.description/);
+    }
+  }
+  const install = w.jobs.prepare.steps.find((s: any) => s.run?.startsWith("bun install"));
+  expect(install.run).toContain("--ignore-scripts");
+  expect(w.jobs.open.steps.map((s: any) => s.run).filter(Boolean)).toEqual(["node scripts/form-open.mjs"]);
+});
+
+test("every action is pinned to a full commit", () => {
+  const { readdirSync } = require("node:fs");
+  for (const file of readdirSync(new URL("../.github/workflows/", import.meta.url)).filter((f: string) => f.endsWith(".yml"))) {
+    const w = workflow(file.replace(/\.yml$/, ""));
+    for (const job of Object.values<any>(w.jobs)) for (const step of job.steps ?? [])
+      if (step.uses) expect(step.uses).toMatch(/^[\w.-]+\/[\w.-]+@[0-9a-f]{40}$/);
+  }
+});
+
+test("drafts get the validate check once a steward marks them ready", () => {
+  expect(workflow("check").on.pull_request.types).toEqual(["opened", "synchronize", "reopened", "ready_for_review"]);
+  expect(workflow("governance").on.pull_request_target.types).toContain("ready_for_review");
+});
