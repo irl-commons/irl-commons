@@ -68,7 +68,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Every bonded setup; relay services, srtla-receiver and other self-hosted receiver guides",
+      "heard_when": "When you set up bonding, or read the guide for a relay service or your own receiver",
       "plain": "A computer on the internet that collects your stream's pieces from every connection. It joins them back into one stream for OBS or the platform.",
       "related": [
         "srtla",
@@ -193,7 +193,7 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Choosing cloud production or a hosted relay; NOALBS switching to a BRB scene when the feed drops",
-      "plain": "When your connection drops, viewers see a holding screen instead of the stream ending. It switches back by itself when you return.",
+      "plain": "When your connection drops, viewers see a waiting screen instead of the stream ending. It switches back by itself when you return.",
       "related": [
         "brb",
         "cloud-obs",
@@ -213,7 +213,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Mobile plan terms, carrier texts when you near the limit, 'unlimited' plans with small print",
+      "heard_when": "Mobile plan terms, carrier texts when you near the limit, 'unlimited' plans that still have limits",
       "plain": "How much mobile data your phone plan includes. Using more can cost extra. One hour of a typical stream (6 megabits each second) uses about 2.7 GB.",
       "related": [
         "bitrate"
@@ -507,7 +507,7 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Encoder advanced settings; a platform's recommended settings list",
-      "plain": "Some pictures in a video are saved as just the changes from the pictures before and after them. That saves data, and streaming sites say how many to use.",
+      "plain": "Some frames in a video are saved as only the changes from the frames before and after them. That saves data. Streaming sites say how many to use.",
       "related": [
         "encoder",
         "bitrate"
@@ -526,7 +526,7 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Cloud OBS and relay dashboards; the app says live but the platform says offline",
-      "plain": "With an online streaming service, your stream arrives there first, then the service sends it on to Twitch or YouTube. Each half starts on its own.",
+      "plain": "With an online streaming service, your stream arrives there first. Then the service sends it on to Twitch or YouTube. You have to start each half separately.",
       "related": [
         "cloud-obs",
         "drop-protection",

@@ -46,7 +46,7 @@
       "open_source": false,
       "licence": null,
       "status": "open testing",
-      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras, over SRT, RTMP, SRTLA or IRL+'s own BOND, with bonding across cellular and Wi-Fi and Moblink relays.",
+      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras. It sends over SRT, RTMP, SRTLA or IRL+'s own BOND, and bonds cellular, Wi-Fi and Moblink relays.",
       "platforms": [
         "android"
       ],
@@ -222,11 +222,11 @@
       "kind": "app",
       "role": "streaming-app",
       "maker": "eerimoq",
-      "url": "https://github.com/eerimoq/moblin",
+      "url": "https://moblin.app/",
       "links": [
         {
-          "label": "site",
-          "url": "https://moblin.app/"
+          "label": "GitHub",
+          "url": "https://github.com/eerimoq/moblin"
         },
         {
           "label": "sponsor",
@@ -266,7 +266,12 @@
       "role": "extra-connections",
       "maker": "eerimoq",
       "url": "https://github.com/eerimoq/moblink",
-      "links": [],
+      "links": [
+        {
+          "label": "moblin.app",
+          "url": "https://moblin.app/"
+        }
+      ],
       "open_source": true,
       "licence": "MIT",
       "status": "alpha",
@@ -296,8 +301,13 @@
       "kind": "app",
       "role": "remote-control",
       "maker": "Kounex",
-      "url": "https://github.com/Kounex/obs_blade",
-      "links": [],
+      "url": "https://obs-blade.kounex.com/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Kounex/obs_blade"
+        }
+      ],
       "open_source": true,
       "licence": "GPL-3.0",
       "status": null,
@@ -332,8 +342,13 @@
       "kind": "app",
       "role": "chat-overlays",
       "maker": "Muxable",
-      "url": "https://apps.apple.com/us/app/id1558493719",
-      "links": [],
+      "url": "https://rtirl.com/",
+      "links": [
+        {
+          "label": "App Store",
+          "url": "https://apps.apple.com/us/app/id1558493719"
+        }
+      ],
       "open_source": null,
       "licence": null,
       "status": null,
@@ -449,7 +464,7 @@
       "open_source": false,
       "licence": null,
       "status": null,
-      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA, sent with IRL+'s bond-send app or the IRL+ phone app to a relay run by IRL+ or a relay host. Free trials.",
+      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA. You send with IRL+'s bond-send app or the IRL+ phone app, to a relay run by IRL+ or a relay host. Free trials.",
       "platforms": [
         "service"
       ],
@@ -500,12 +515,17 @@
       "kind": "relay",
       "role": "relay",
       "maker": "bluenviron",
-      "url": "https://github.com/bluenviron/mediamtx",
-      "links": [],
+      "url": "https://mediamtx.org/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/bluenviron/mediamtx"
+        }
+      ],
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A ready-to-use live media server and proxy for SRT, RTMP, WebRTC, RTSP and more; it takes plain SRT, not SRTLA, so in a bonded setup it sits behind an SRTLA receiver.",
+      "description": "A ready-to-use live media server and proxy for SRT, RTMP, WebRTC, RTSP and more. It takes plain SRT but not SRTLA, so in a bonded setup it sits behind an SRTLA receiver.",
       "platforms": [
         "linux",
         "macos",
@@ -538,11 +558,11 @@
       "kind": "relay",
       "role": "relay",
       "maker": "SR Digital",
-      "url": "https://github.com/OpenIRL/srtla-receiver",
+      "url": "https://www.openirl.net/",
       "links": [
         {
-          "label": "site",
-          "url": "https://www.openirl.net/"
+          "label": "GitHub",
+          "url": "https://github.com/OpenIRL/srtla-receiver"
         }
       ],
       "open_source": true,
@@ -610,12 +630,17 @@
       "kind": "relay",
       "role": "relay",
       "maker": "Haivision (SRT Alliance)",
-      "url": "https://github.com/Haivision/srt",
-      "links": [],
+      "url": "https://srtalliance.org/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/Haivision/srt"
+        }
+      ],
       "open_source": true,
       "licence": "MPL-2.0",
       "status": null,
-      "description": "Secure Reliable Transport, the open protocol underneath.",
+      "description": "Secure Reliable Transport, the open protocol that SRTLA is built on.",
       "platforms": [
         "linux",
         "macos",
@@ -732,7 +757,7 @@
       "open_source": null,
       "licence": null,
       "status": "pre-release",
-      "description": "\"a live-streaming system you build yourself\", built on open source; its control panel, bonding sender and receivers are public on GitHub, the streaming engine on the device isn't.",
+      "description": "\"a live-streaming system you build yourself\", built on open source. Its control panel, bonding sender and receivers are public on GitHub; the streaming engine on the device isn't.",
       "platforms": [
         "hardware"
       ],
@@ -1090,7 +1115,7 @@
       "open_source": false,
       "licence": null,
       "status": "closed beta",
-      "description": "Mixes HDMI and USB cameras, a phone feed and overlays into one picture on the box itself, for BELABOX setups on a ROCK 5B+ or Orange Pi 5+. An independent add-on with its own support. Free, with paid remote access.",
+      "description": "Mixes HDMI and USB cameras, a phone feed and overlays into one picture on the box itself. For BELABOX setups on a ROCK 5B+ or Orange Pi 5+. An independent add-on with its own support. Free, with paid remote access.",
       "platforms": [
         "hardware"
       ],
@@ -1470,7 +1495,7 @@
       "open_source": null,
       "licence": null,
       "status": "open beta",
-      "description": "An all-in-one Android app for streaming IRL from one phone: phone and USB cameras, scenes with picture-in-picture, SRTLA, RIST and SRT with adaptive bitrate, spare phones as extra paths through Moblink, Twitch and Kick chat with text-to-speech, overlays and alerts, OBS scene switching and a browser remote. Licence not stated.",
+      "description": "An all-in-one Android app for streaming IRL from one phone. It has phone and USB cameras, scenes with picture-in-picture, and SRTLA, RIST and SRT with adaptive bitrate. It can use spare phones as extra connections through Moblink. It also has Twitch and Kick chat with text-to-speech, overlays and alerts, OBS scene switching and a browser remote. Licence not stated.",
       "platforms": [
         "android"
       ],
@@ -1596,7 +1621,7 @@
       "kind": "production",
       "role": "production",
       "maker": "NOALBS",
-      "url": "https://docs.noalbs.com/",
+      "url": "https://noalbs.com/",
       "links": [
         {
           "label": "GitHub",
@@ -1672,8 +1697,13 @@
       "kind": "relay",
       "role": "relay",
       "maker": "moo-the-cow",
-      "url": "https://github.com/moo-the-cow/moo-rist-hosting-native",
-      "links": [],
+      "url": "https://moo-the-cow.github.io/moo-rist-hosting-native/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/moo-the-cow/moo-rist-hosting-native"
+        }
+      ],
       "open_source": true,
       "licence": "MIT",
       "status": null,
@@ -1703,12 +1733,17 @@
       "kind": "relay",
       "role": "relay",
       "maker": "OpenRTMP",
-      "url": "https://github.com/OpenRTMP/librtmp2-server",
-      "links": [],
+      "url": "https://openrtmp.org/",
+      "links": [
+        {
+          "label": "GitHub",
+          "url": "https://github.com/OpenRTMP/librtmp2-server"
+        }
+      ],
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A self-hosted RTMP, RTMPS and Enhanced RTMP server for OBS and FFmpeg, with live stats; NOALBS reads it as the OpenRTMP server type. A young project (since June 2026).",
+      "description": "A self-hosted RTMP, RTMPS and Enhanced RTMP server for OBS and FFmpeg, with live stats; NOALBS reads it as the OpenRTMP server type. A new project, started in June 2026.",
       "platforms": [
         "linux"
       ],
@@ -1784,7 +1819,7 @@
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A chat bot that controls a BELABOX's belaUI through BELABOX Cloud, from the NOALBS project. Last changed April 2025.",
+      "description": "A chat bot that controls a BELABOX's belaUI through BELABOX Cloud, from the NOALBS project. Last updated in April 2025.",
       "platforms": [
         "windows",
         "macos",
