@@ -6,7 +6,7 @@ Small, reusable datasets about streaming live from outside (IRL streaming), main
 - `data/answers.json`: short troubleshooting checks, with related words, services and sources.
 - `data/services.json`: apps, receivers, hubs, hardware, production tools and documentation, with official links and review dates.
 - `data/guides.json`: links to public tutorials, covered services, chain parts and review dates.
-- `data/standards.json`: shared formats and protocols (SRT, SRTLA, WHIP and others), who makes them and which products write or read them, in three groups: shared, app formats, and the stewards' own projects.
+- `data/standards.json`: shared formats and protocols (SRT, SRTLA, WHIP and others), who makes them and which products write or read them, in four groups: shared, app formats, hardware and codecs (codecs and camera interfaces), and the stewards' own projects. Codecs and transports carry sourced comparison facts: licensing, efficiency, hardware support, bonding, latency, loss recovery and platform ingest.
 - `data/plans.json`: carrier records and optional data plans. Currently empty: no coverage or plan claims are implied. The name leaves room for plans under each carrier without a separate lookup table.
 - `schema/src/schema.ts`: Zod schemas and shared rules; the source of truth.
 - `schema/json/`: exported JSON Schema draft 2020-12, plus chain-part and role metadata in `parts.json`.
@@ -56,6 +56,7 @@ See [data provenance](data/README.md) for the recorded 2026-11-14 content review
 | Guides | 9 calendar months |
 | Services | 6 calendar months |
 | Standards | 6 calendar months |
+| Standards comparison facts (each by its own `checked_on`) | 6 calendar months |
 | Carrier records | 6 calendar months |
 | Plan prices, caps and fair-use rules; service `status` | 90 days |
 

@@ -1,0 +1,154 @@
+{
+  "about": "Synthetic invalid standards file.",
+  "standards": [
+    {
+      "id": "sample-codec",
+      "checked_on": "2026-11-14",
+      "name": "Sample codec",
+      "group": "hardware-codecs",
+      "kind": "codec",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "Some licence",
+      "maker": "Sample maker",
+      "url": "https://example.org/format",
+      "description": "A synthetic format.",
+      "service_ids": [
+        "sample-app",
+        "sample-relay"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "Format page",
+          "url": "https://example.org/format"
+        }
+      ],
+      "notes": null,
+      "codec": {
+        "media": "video",
+        "licensing": {
+          "value": "royalty-free",
+          "text": "A synthetic claim.",
+          "sources": [
+            {
+              "label": "Source",
+              "url": "https://example.org/source"
+            }
+          ],
+          "checked_on": "2026-11-14"
+        },
+        "efficiency": null,
+        "hardware": {
+          "ios": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "android": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "rk3588": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "intel": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "nvidia": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "apple_mac": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          }
+        },
+        "ingest": {
+          "twitch": {
+            "value": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "youtube": {
+            "value": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          },
+          "kick": {
+            "value": "yes",
+            "text": "A synthetic claim.",
+            "sources": [
+              {
+                "label": "Source",
+                "url": "https://example.org/source"
+              }
+            ],
+            "checked_on": "2026-11-14"
+          }
+        }
+      }
+    }
+  ]
+}

@@ -1,5 +1,5 @@
 {
-  "about": "Formats and protocols that IRL streaming apps and services share, one entry per item. Each entry credits its maker; listing an item here does not mean this project makes, runs or endorses it. group: 'shared' when several makers' products write or read it; 'app-formats' for one app's own format that a named second product also writes or reads; 'steward-projects' for items made by people who steward this repository, kept apart so they are not mistaken for established standards. service_ids link products in services.json; other_users names products that are not catalogued. Descriptions are our own words; sources are public primary pages. checked_on is the day the entry was compared with its sources.",
+  "about": "Formats and protocols that IRL streaming apps and services share, one entry per item. Each entry credits its maker; listing an item here does not mean this project makes, runs or endorses it. group: 'shared' when several makers' products write or read it; 'app-formats' for one app's own format that a named second product also writes or reads; 'hardware-codecs' for the video and audio codecs and the camera interfaces (UVC, HDMI, SDI) a stream goes through; 'steward-projects' for items made by people who steward this repository, kept apart so they are not mistaken for established standards. An entry that is also a glossary word shares its words.json id, sets word to it and carries no description of its own. Codecs carry codec facts and transports carry transport facts (licensing, efficiency, hardware support, bonding, latency, loss recovery, platform ingest); each fact has its own sources and checked_on, and unverified: true marks a claim the makers' or platforms' own pages don't confirm. service_ids link products in services.json; other_users names products that are not catalogued. Descriptions are our own words; sources are public primary pages. checked_on is the day the entry was compared with its sources.",
   "standards": [
     {
       "id": "srt",
@@ -9,10 +9,10 @@
       "kind": "protocol",
       "status": "in-use",
       "openness": "open",
-      "licence": "MPL-2.0 (libsrt)",
+      "licence": null,
       "maker": "Haivision (SRT Alliance)",
       "url": "https://github.com/Haivision/srt",
-      "description": "The open transport most IRL streams travel on between the sender and the receiver.",
+      "word": "srt",
       "service_ids": [
         "srt-protocol",
         "obs-studio",
@@ -33,7 +33,92 @@
           "url": "https://github.com/Haivision/srt"
         }
       ],
-      "notes": "Support in each listed product follows its services.json entry."
+      "notes": "Support in each listed product follows its services.json entry.",
+      "transport": {
+        "bonding": {
+          "value": "built-in",
+          "text": "Built in: libsrt socket groups send over several links at once (broadcast) or switch to a backup; balancing is still under development.",
+          "sources": [
+            {
+              "label": "libsrt socket groups",
+              "url": "https://github.com/Haivision/srt/blob/master/docs/features/socket-groups.md"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "buffer",
+          "text": "A receive buffer you set (latency, 120 ms by default) that decides how long missing packets may take.",
+          "sources": [
+            {
+              "label": "libsrt socket options: SRTO_LATENCY",
+              "url": "https://github.com/Haivision/srt/blob/master/docs/API/API-socket-options.md#SRTO_LATENCY"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "resend-and-fec",
+          "text": "Resends lost packets (ARQ); forward error correction (FEC) can be added.",
+          "sources": [
+            {
+              "label": "libsrt README",
+              "url": "https://github.com/Haivision/srt#readme"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "open-code",
+          "text": "Open source, MPL-2.0 (libsrt).",
+          "sources": [
+            {
+              "label": "libsrt repository",
+              "url": "https://github.com/Haivision/srt"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "Not listed; Twitch's help pages need JavaScript; this follows OBS's services.json, whose Twitch servers are all rtmp:// addresses.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube takes RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "Not listed; Kick's help gives an RTMPS address.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
     },
     {
       "id": "srt-url",
@@ -120,10 +205,10 @@
       "kind": "protocol",
       "status": "in-use",
       "openness": "open",
-      "licence": "AGPL-3.0 (BELABOX reference code)",
+      "licence": null,
       "maker": "BELABOX",
       "url": "https://github.com/BELABOX/srtla",
-      "description": "Spreads one SRT stream over several connections (modems, Wi-Fi, phones) and puts it back together at the receiver.",
+      "word": "srtla",
       "service_ids": [
         "srtla",
         "belabox",
@@ -157,7 +242,92 @@
           "url": "https://github.com/OpenIRL/srtla-receiver"
         }
       ],
-      "notes": "The reference code and its README describe it; there is no separate spec. srtla2 is incompatible with earlier srtla. BELABOX marks its own receiver (srtla_rec) unsupported and points to BELABOX Cloud; the other receivers are independent implementations. Sender support follows the services.json entries."
+      "notes": "The reference code and its README describe it; there is no separate spec. srtla2 is incompatible with earlier srtla. BELABOX marks its own receiver (srtla_rec) unsupported and points to BELABOX Cloud; the other receivers are independent implementations. Sender support follows the services.json entries.",
+      "transport": {
+        "bonding": {
+          "value": "built-in",
+          "text": "It is the bonding: one SRT stream spread over several links, balanced by how each link is doing.",
+          "sources": [
+            {
+              "label": "BELABOX srtla README",
+              "url": "https://github.com/BELABOX/srtla"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "buffer",
+          "text": "SRT's buffer you set; it also covers packets arriving out of order from different links.",
+          "sources": [
+            {
+              "label": "BELABOX srtla README",
+              "url": "https://github.com/BELABOX/srtla"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "resend",
+          "text": "SRT's own resends, which srtla also uses to balance the links.",
+          "sources": [
+            {
+              "label": "BELABOX srtla README",
+              "url": "https://github.com/BELABOX/srtla"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "open-code",
+          "text": "AGPL-3.0 reference code from BELABOX; no separate spec.",
+          "sources": [
+            {
+              "label": "BELABOX srtla README",
+              "url": "https://github.com/BELABOX/srtla"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "Not listed; Twitch's help pages need JavaScript; this follows OBS's services.json, whose Twitch servers are all rtmp:// addresses.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube takes RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "Not listed; Kick's help gives an RTMPS address.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
     },
     {
       "id": "moblink",
@@ -167,7 +337,7 @@
       "kind": "protocol",
       "status": "in-use",
       "openness": "undocumented",
-      "licence": "MIT (code)",
+      "licence": null,
       "maker": "eerimoq (Moblin)",
       "url": "https://github.com/eerimoq/Moblink",
       "description": "Lets spare phones, or a router, lend their own mobile data to the streaming phone as extra bonding connections.",
@@ -199,7 +369,92 @@
           "url": "https://github.com/dimadesu/LifeStreamer"
         }
       ],
-      "notes": "No written spec; the MIT code is the reference. IRL+ Cast support follows its services.json entry."
+      "notes": "No written spec; the MIT code is the reference. IRL+ Cast support follows its services.json entry.",
+      "transport": {
+        "bonding": {
+          "value": "add-on",
+          "text": "Add-on: spare phones become extra SRTLA bonding links.",
+          "sources": [
+            {
+              "label": "Moblink README",
+              "url": "https://github.com/eerimoq/Moblink"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "buffer",
+          "text": "The SRT buffer of the stream it carries.",
+          "sources": [
+            {
+              "label": "Moblink README",
+              "url": "https://github.com/eerimoq/Moblink"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "resend",
+          "text": "The SRT resends of the stream it carries.",
+          "sources": [
+            {
+              "label": "Moblink README",
+              "url": "https://github.com/eerimoq/Moblink"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "open-code",
+          "text": "MIT code; no written spec.",
+          "sources": [
+            {
+              "label": "Moblink README",
+              "url": "https://github.com/eerimoq/Moblink"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "Not listed; Twitch's help pages need JavaScript; this follows OBS's services.json, whose Twitch servers are all rtmp:// addresses.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube takes RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "Not listed; Kick's help gives an RTMPS address.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
     },
     {
       "id": "rist",
@@ -209,7 +464,7 @@
       "kind": "protocol",
       "status": "in-use",
       "openness": "open",
-      "licence": "VSF TR-06 specifications; librist BSD-2-Clause",
+      "licence": null,
       "maker": "Video Services Forum (RIST Activity Group); librist by VideoLAN",
       "url": "https://vsf.tv/technical-recommendations/",
       "description": "A broadcast-industry alternative to SRT for sending video over the internet, with its own multi-link bonding.",
@@ -243,7 +498,220 @@
           "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/blob/v2/src/stream_servers/rist.rs"
         }
       ],
-      "notes": "Support in the other listed products follows their services.json entries."
+      "notes": "Support in the other listed products follows their services.json entries.",
+      "transport": {
+        "bonding": {
+          "value": "built-in",
+          "text": "Built in: the Main Profile supports several links, load-balanced or redundant (librist).",
+          "sources": [
+            {
+              "label": "librist README",
+              "url": "https://code.videolan.org/rist/librist"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "buffer",
+          "text": "A receive buffer you set, from 50 ms to 30 seconds in librist.",
+          "sources": [
+            {
+              "label": "librist README",
+              "url": "https://code.videolan.org/rist/librist"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "resend",
+          "text": "Resends lost packets (ARQ).",
+          "sources": [
+            {
+              "label": "librist README",
+              "url": "https://code.videolan.org/rist/librist"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "open-spec",
+          "text": "VSF TR-06 specifications; librist under BSD-2-Clause.",
+          "sources": [
+            {
+              "label": "VSF technical recommendations (TR-06)",
+              "url": "https://vsf.tv/technical-recommendations/"
+            },
+            {
+              "label": "librist README",
+              "url": "https://code.videolan.org/rist/librist"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "Not listed; Twitch's help pages need JavaScript; this follows OBS's services.json, whose Twitch servers are all rtmp:// addresses.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube takes RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "Not listed; Kick's help gives an RTMPS address.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
+    },
+    {
+      "id": "ndi",
+      "checked_on": "2026-11-15",
+      "name": "NDI (Network Device Interface)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "documented-closed",
+      "licence": null,
+      "maker": "Vizrt NDI AB",
+      "url": "https://ndi.video/",
+      "description": "Video between cameras, computers and apps on the same network, with very little delay; some cameras send it directly.",
+      "service_ids": [
+        "obs-studio"
+      ],
+      "other_users": [
+        "vMix",
+        "DistroAV"
+      ],
+      "sources": [
+        {
+          "label": "NDI docs: NDI protocols",
+          "url": "https://docs.ndi.video/all/getting-started/white-paper/ndi-protocols"
+        },
+        {
+          "label": "NDI SDK page",
+          "url": "https://ndi.video/for-developers/ndi-sdk/"
+        },
+        {
+          "label": "DistroAV README",
+          "url": "https://github.com/DistroAV/DistroAV"
+        },
+        {
+          "label": "vMix features",
+          "url": "https://www.vmix.com/software/features.aspx"
+        }
+      ],
+      "notes": "OBS speaks NDI through the DistroAV plugin. NDI|HX cameras send compressed NDI from the camera itself.",
+      "transport": {
+        "bonding": {
+          "value": "no",
+          "text": "No bonding of internet links; NDI 4's multipath TCP spreads one stream over several network cards.",
+          "sources": [
+            {
+              "label": "NDI docs: NDI protocols",
+              "url": "https://docs.ndi.video/all/getting-started/white-paper/ndi-protocols"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "real-time",
+          "text": "Real-time: NDI's docs describe Reliable UDP as low latency, with minimal delay.",
+          "sources": [
+            {
+              "label": "NDI docs: NDI protocols",
+              "url": "https://docs.ndi.video/all/getting-started/white-paper/ndi-protocols"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "resend-and-fec",
+          "text": "Reliable UDP (the NDI 5 default) asks for lost packets again; a UDP mode with FEC also exists.",
+          "sources": [
+            {
+              "label": "NDI docs: NDI protocols",
+              "url": "https://docs.ndi.video/all/getting-started/white-paper/ndi-protocols"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "proprietary",
+          "text": "Proprietary SDK from Vizrt NDI AB, offered under NDI's own terms.",
+          "sources": [
+            {
+              "label": "NDI SDK page",
+              "url": "https://ndi.video/for-developers/ndi-sdk/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "Not listed; Twitch's help pages need JavaScript; this follows OBS's services.json, whose Twitch servers are all rtmp:// addresses.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube takes RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "Not listed; Kick's help gives an RTMPS address.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
     },
     {
       "id": "whip",
@@ -286,7 +754,92 @@
           "url": "https://softvelum.com/larix/grove/"
         }
       ],
-      "notes": "RFC 9725, a Proposed Standard published in March 2025."
+      "notes": "RFC 9725, a Proposed Standard published in March 2025.",
+      "transport": {
+        "bonding": {
+          "value": "no",
+          "text": "No; RFC 9725 sets up one WebRTC session.",
+          "sources": [
+            {
+              "label": "RFC 9725 (WHIP)",
+              "url": "https://datatracker.ietf.org/doc/rfc9725/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "real-time",
+          "text": "Real-time by design: WebRTC aims for the lowest possible latency.",
+          "sources": [
+            {
+              "label": "RFC 9725 (WHIP)",
+              "url": "https://datatracker.ietf.org/doc/rfc9725/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "resend",
+          "text": "WebRTC's NACK and RTP retransmission (RFC 8834).",
+          "sources": [
+            {
+              "label": "RFC 8834, section 6.1 (WebRTC NACK and retransmission)",
+              "url": "https://www.rfc-editor.org/rfc/rfc8834#section-6.1"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "open-spec",
+          "text": "IETF standard, RFC 9725.",
+          "sources": [
+            {
+              "label": "RFC 9725 (WHIP)",
+              "url": "https://datatracker.ietf.org/doc/rfc9725/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "no",
+            "text": "Not listed; Twitch's help pages need JavaScript; this follows OBS's services.json, whose Twitch servers are all rtmp:// addresses.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube takes RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "Not listed; Kick's help gives an RTMPS address.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
     },
     {
       "id": "whep",
@@ -324,7 +877,7 @@
       "kind": "protocol",
       "status": "in-use",
       "openness": "open",
-      "licence": "Apache-2.0",
+      "licence": null,
       "maker": "Veovera Software Organization",
       "url": "https://github.com/veovera/enhanced-rtmp",
       "description": "Brings modern codecs (HEVC, AV1, Opus), multitrack and reconnect to the old RTMP protocol.",
@@ -348,7 +901,93 @@
           "url": "https://github.com/OpenRTMP/librtmp2-server"
         }
       ],
-      "notes": "The adopters follow Veovera's own adoption list, not a test of each product."
+      "notes": "The adopters follow Veovera's own adoption list, not a test of each product.",
+      "transport": {
+        "bonding": {
+          "value": "no",
+          "text": "No; RTMP runs over a single TCP connection.",
+          "sources": [
+            {
+              "label": "Enhanced RTMP v2 spec",
+              "url": "https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "latency": {
+          "value": "tcp",
+          "text": "No buffer to set; it rides on TCP, which waits for its own resends.",
+          "sources": [
+            {
+              "label": "Enhanced RTMP v2 spec",
+              "url": "https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "loss_recovery": {
+          "value": "tcp",
+          "text": "TCP resends lost data; E-RTMP adds a reconnect request from the server.",
+          "sources": [
+            {
+              "label": "Enhanced RTMP v2 spec",
+              "url": "https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "licensing": {
+          "value": "open-spec",
+          "text": "Open spec under Apache-2.0 from Veovera.",
+          "sources": [
+            {
+              "label": "Enhanced RTMP repository",
+              "url": "https://github.com/veovera/enhanced-rtmp"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "ingest": {
+          "twitch": {
+            "value": "some",
+            "text": "Plain RTMP, yes (Twitch's help pages need JavaScript; this follows OBS's services.json). Veovera lists Twitch as an adopter, through Enhanced Broadcasting.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              },
+              {
+                "label": "Enhanced RTMP repository",
+                "url": "https://github.com/veovera/enhanced-rtmp"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "youtube": {
+            "value": "yes",
+            "text": "Yes: RTMP/RTMPS, with HEVC and AV1 as well as H.264.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "some",
+            "text": "RTMPS with H.264 only, so plain RTMP but none of the newer codecs.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
     },
     {
       "id": "obs-websocket",
@@ -672,6 +1311,868 @@
         }
       ],
       "notes": "IRLhosting's config generator writes it and its config checker reads it."
+    },
+    {
+      "id": "h264",
+      "checked_on": "2026-11-15",
+      "name": "H.264 / AVC",
+      "group": "hardware-codecs",
+      "kind": "codec",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "ITU-T and ISO/IEC MPEG (Joint Video Team)",
+      "url": "https://www.itu.int/rec/T-REC-H.264",
+      "description": "The video codec every streaming app, box and platform handles; the safe default.",
+      "service_ids": [
+        "moblin",
+        "belabox",
+        "obs-studio",
+        "simplestreamer"
+      ],
+      "other_users": [
+        "Twitch",
+        "YouTube",
+        "Kick"
+      ],
+      "sources": [
+        {
+          "label": "ITU-T H.264",
+          "url": "https://www.itu.int/rec/T-REC-H.264"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "belacoder README",
+          "url": "https://github.com/BELABOX/belacoder"
+        }
+      ],
+      "notes": "Also called AVC or MPEG-4 Part 10. Support in the listed products follows their services.json entries and READMEs.",
+      "codec": {
+        "media": "video",
+        "licensing": {
+          "value": "patent-pools",
+          "text": "Patent pool run by Via LA. Its page says royalties are spread across the value chain, with thresholds below which some aren't charged.",
+          "sources": [
+            {
+              "label": "Via LA: AVC/H.264 licence",
+              "url": "https://www.via-la.com/licensing-2/avc-h-264/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "efficiency": null,
+        "hardware": {
+          "ios": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Apple's own docs read here name HEVC, not H.264; iPhones still record and stream H.264.",
+            "sources": [
+              {
+                "label": "Apple Support: HEIF and HEVC on Apple devices",
+                "url": "https://support.apple.com/en-us/116944"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "android": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Android lists an H.264 encoder (Main profile from Android 6) and decoder. Whether it runs in hardware depends on the phone.",
+            "sources": [
+              {
+                "label": "Android: supported media formats",
+                "url": "https://developer.android.com/media/platform/supported-formats"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "rk3588": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Encode up to 8K at 30 fps, decode up to 8K at 60 fps.",
+            "sources": [
+              {
+                "label": "Rockchip RK3588 product page",
+                "url": "https://www.rock-chips.com/a/en/products/RK35_Series/2022/0926/1660.html"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "intel": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Decode and encode from Broadwell (5th gen Core) in Intel's media driver.",
+            "sources": [
+              {
+                "label": "Intel media-driver: decoding/encoding features",
+                "url": "https://github.com/intel/media-driver#decodingencoding-features"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "nvidia": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "NVENC and NVDEC from the first Maxwell GPUs.",
+            "sources": [
+              {
+                "label": "NVIDIA video encode and decode support matrix",
+                "url": "https://developer.nvidia.com/video-encode-decode-support-matrix"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "apple_mac": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Apple's media engine accelerates H.264 (stated for M3 chips).",
+            "sources": [
+              {
+                "label": "Apple Newsroom: M3 chips",
+                "url": "https://www.apple.com/newsroom/2023/10/apple-unveils-m3-m3-pro-and-m3-max-the-most-advanced-chips-for-a-personal-computer/"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        },
+        "ingest": {
+          "twitch": {
+            "value": "yes",
+            "text": "Yes. Twitch's help pages need JavaScript; this follows OBS's services.json, which lists H.264 for Twitch.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "youtube": {
+            "value": "yes",
+            "text": "Yes, over RTMP/RTMPS and HLS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "yes",
+            "text": "Yes; Kick says it supports only H.264 (x264).",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
+    },
+    {
+      "id": "hevc",
+      "checked_on": "2026-11-15",
+      "name": "HEVC / H.265",
+      "group": "hardware-codecs",
+      "kind": "codec",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "ITU-T and ISO/IEC MPEG (JCT-VC)",
+      "url": "https://www.itu.int/rec/T-REC-H.265",
+      "description": "The successor to H.264: a sharper picture at the same bitrate, which helps on weak mobile links.",
+      "service_ids": [
+        "moblin",
+        "belabox",
+        "obs-studio",
+        "ceralive",
+        "liveu-solo",
+        "haivision-pro"
+      ],
+      "other_users": [
+        "YouTube"
+      ],
+      "sources": [
+        {
+          "label": "ITU-T H.265",
+          "url": "https://www.itu.int/rec/T-REC-H.265"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "belacoder README",
+          "url": "https://github.com/BELABOX/belacoder"
+        },
+        {
+          "label": "CeraLive site",
+          "url": "https://ceralive.tv/"
+        },
+        {
+          "label": "LiveU Solo product page",
+          "url": "https://www.liveu.tv/products/create/liveu-solo"
+        },
+        {
+          "label": "Haivision Pro product page",
+          "url": "https://www.haivision.com/products/pro-mobile-transmitter/"
+        }
+      ],
+      "notes": "Support in the listed products follows their services.json entries and makers' pages.",
+      "codec": {
+        "media": "video",
+        "licensing": {
+          "value": "patent-pools",
+          "text": "Patent pools run by Access Advance (HEVC Advance) and Via LA (HEVC/VVC). Via LA's licence covers devices; Access Advance lists devices, software and content on physical media.",
+          "sources": [
+            {
+              "label": "Access Advance: HEVC Advance pool",
+              "url": "https://accessadvance.com/licensing-programs/hevc-advance/"
+            },
+            {
+              "label": "Via LA: HEVC/VVC licence",
+              "url": "https://www.via-la.com/licensing-2/hevc-vvc/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "efficiency": {
+          "compared_with": [
+            "h264"
+          ],
+          "text": "About half the bitrate of H.264 for the same picture, says ITU-T (2013).",
+          "sources": [
+            {
+              "label": "ITU press release, 25 Jan 2013",
+              "url": "https://www.itu.int/net/pressoffice/press_releases/2013/01.aspx"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "hardware": {
+          "ios": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "iPhone 7 and later record HEVC, says Apple; older devices play it with limits.",
+            "sources": [
+              {
+                "label": "Apple Support: HEIF and HEVC on Apple devices",
+                "url": "https://support.apple.com/en-us/116944"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "android": {
+            "encode": "some",
+            "decode": "yes",
+            "text": "Android lists an HEVC decoder from Android 5 but no platform encoder; encoding depends on the phone.",
+            "sources": [
+              {
+                "label": "Android: supported media formats",
+                "url": "https://developer.android.com/media/platform/supported-formats"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "rk3588": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Encode up to 8K at 30 fps, decode up to 8K at 60 fps.",
+            "sources": [
+              {
+                "label": "Rockchip RK3588 product page",
+                "url": "https://www.rock-chips.com/a/en/products/RK35_Series/2022/0926/1660.html"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "intel": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Decode and encode from Skylake (6th gen Core) in Intel's media driver.",
+            "sources": [
+              {
+                "label": "Intel media-driver: decoding/encoding features",
+                "url": "https://github.com/intel/media-driver#decodingencoding-features"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "nvidia": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Encode from Pascal GPUs, decode from second-generation Maxwell.",
+            "sources": [
+              {
+                "label": "NVIDIA video encode and decode support matrix",
+                "url": "https://developer.nvidia.com/video-encode-decode-support-matrix"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "apple_mac": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Apple's media engine accelerates HEVC (stated for M3 chips).",
+            "sources": [
+              {
+                "label": "Apple Newsroom: M3 chips",
+                "url": "https://www.apple.com/newsroom/2023/10/apple-unveils-m3-m3-pro-and-m3-max-the-most-advanced-chips-for-a-personal-computer/"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        },
+        "ingest": {
+          "twitch": {
+            "value": "some",
+            "text": "Not for a normal stream: Twitch's help pages need JavaScript; this follows OBS's services.json, which lists only H.264. Twitch said in 2024 its Enhanced Broadcasting beta was experimenting with HEVC.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              },
+              {
+                "label": "Twitch blog: Enhanced Broadcasting beta (8 Jan 2024)",
+                "url": "https://blog.twitch.tv/en/2024/01/08/introducing-the-enhanced-broadcasting-beta/"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "youtube": {
+            "value": "yes",
+            "text": "Yes, over RTMP/RTMPS and HLS; HDR needs HEVC.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              },
+              {
+                "label": "YouTube Help: set up an HLS stream",
+                "url": "https://support.google.com/youtube/answer/10349430"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "No; Kick says it doesn't support H.265.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              },
+              {
+                "label": "Kick Help: OBS or Streamlabs not connecting",
+                "url": "https://help.kick.com/en/articles/14994318-obs-or-streamlabs-not-connecting-to-kick"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
+    },
+    {
+      "id": "av1",
+      "checked_on": "2026-11-15",
+      "name": "AV1",
+      "group": "hardware-codecs",
+      "kind": "codec",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "Alliance for Open Media (AOMedia)",
+      "url": "https://aomedia.org/specifications/av1/",
+      "description": "An open, royalty-free video codec from AOMedia, newer than HEVC; hardware encoders are still rare on IRL gear.",
+      "service_ids": [
+        "obs-studio"
+      ],
+      "other_users": [
+        "YouTube",
+        "FFmpeg"
+      ],
+      "sources": [
+        {
+          "label": "AOMedia: AV1",
+          "url": "https://aomedia.org/specifications/av1/"
+        },
+        {
+          "label": "YouTube Help: live encoder settings",
+          "url": "https://support.google.com/youtube/answer/2853702"
+        },
+        {
+          "label": "Enhanced RTMP v2 spec",
+          "url": "https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md"
+        }
+      ],
+      "notes": "OBS and FFmpeg follow Veovera's Enhanced RTMP adoption list, which carries AV1 over RTMP.",
+      "codec": {
+        "media": "video",
+        "licensing": {
+          "value": "royalty-free",
+          "text": "AOMedia members license their AV1 patents royalty-free (AOMedia Patent License 1.0). Sisvel separately runs a royalty-bearing AV1 pool for consumer products.",
+          "sources": [
+            {
+              "label": "AOMedia Patent License 1.0",
+              "url": "https://aomedia.org/license/patent-license/"
+            },
+            {
+              "label": "Sisvel: AV1 patent pool",
+              "url": "https://sisvel.com/licensing-programmes/audio-and-video-coding-decoding/video-coding-platform-av1"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "efficiency": {
+          "compared_with": [
+            "h264"
+          ],
+          "text": "50.3% fewer bits than x264 main profile and 46.2% fewer than x264 high profile at the same quality (BD-rate), in Facebook's 2018 test of 400 videos.",
+          "sources": [
+            {
+              "label": "Facebook Engineering, 10 Apr 2018",
+              "url": "https://engineering.fb.com/2018/04/10/video-engineering/av1-beats-x264-and-libvpx-vp9-in-practical-use-case/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "hardware": {
+          "ios": {
+            "encode": "no",
+            "decode": "some",
+            "text": "A17 Pro (iPhone 15 Pro) and later have an AV1 decoder; Apple names no AV1 encoder.",
+            "sources": [
+              {
+                "label": "Apple Newsroom: iPhone 15 Pro (A17 Pro)",
+                "url": "https://www.apple.com/newsroom/2023/09/apple-unveils-iphone-15-pro-and-iphone-15-pro-max/"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "android": {
+            "encode": "yes",
+            "decode": "yes",
+            "text": "Android 14 makes an AV1 encoder and decoder mandatory; they may run in software.",
+            "sources": [
+              {
+                "label": "Android: supported media formats",
+                "url": "https://developer.android.com/media/platform/supported-formats"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "rk3588": {
+            "encode": "no",
+            "decode": "yes",
+            "text": "Decodes AV1 up to 8K at 60 fps; Rockchip lists only H.264 and H.265 encoders.",
+            "sources": [
+              {
+                "label": "Rockchip RK3588 product page",
+                "url": "https://www.rock-chips.com/a/en/products/RK35_Series/2022/0926/1660.html"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "intel": {
+            "encode": "some",
+            "decode": "yes",
+            "text": "Decode from Tiger Lake (11th gen Core); encode on Arc (DG2) and Meteor Lake and later.",
+            "sources": [
+              {
+                "label": "Intel media-driver: decoding/encoding features",
+                "url": "https://github.com/intel/media-driver#decodingencoding-features"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "nvidia": {
+            "encode": "some",
+            "decode": "yes",
+            "text": "Decode from Ampere (RTX 30); encode from Ada Lovelace (RTX 40).",
+            "sources": [
+              {
+                "label": "NVIDIA video encode and decode support matrix",
+                "url": "https://developer.nvidia.com/video-encode-decode-support-matrix"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "apple_mac": {
+            "encode": "no",
+            "decode": "some",
+            "text": "M3 chips and later decode AV1; Apple names no AV1 encoder.",
+            "sources": [
+              {
+                "label": "Apple Newsroom: M3 chips",
+                "url": "https://www.apple.com/newsroom/2023/10/apple-unveils-m3-m3-pro-and-m3-max-the-most-advanced-chips-for-a-personal-computer/"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          }
+        },
+        "ingest": {
+          "twitch": {
+            "value": "some",
+            "text": "Not for a normal stream: Twitch's help pages need JavaScript; this follows OBS's services.json, which lists only H.264. Twitch said in 2024 its Enhanced Broadcasting beta was experimenting with AV1.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              },
+              {
+                "label": "Twitch blog: Enhanced Broadcasting beta (8 Jan 2024)",
+                "url": "https://blog.twitch.tv/en/2024/01/08/introducing-the-enhanced-broadcasting-beta/"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "youtube": {
+            "value": "yes",
+            "text": "Yes, over RTMP/RTMPS; not for HDR.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "no",
+            "text": "No; Kick says it supports only H.264.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          }
+        }
+      }
+    },
+    {
+      "id": "aac",
+      "checked_on": "2026-11-15",
+      "name": "AAC (Advanced Audio Coding)",
+      "group": "hardware-codecs",
+      "kind": "codec",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "ISO/IEC MPEG",
+      "url": "https://www.mpeg.org/standards/MPEG-4/3/",
+      "description": "The usual audio codec for RTMP streams and most platforms.",
+      "service_ids": [
+        "obs-studio"
+      ],
+      "other_users": [
+        "YouTube",
+        "FFmpeg"
+      ],
+      "sources": [
+        {
+          "label": "MPEG-4 Audio (ISO/IEC 14496-3)",
+          "url": "https://www.mpeg.org/standards/MPEG-4/3/"
+        },
+        {
+          "label": "YouTube Help: live encoder settings",
+          "url": "https://support.google.com/youtube/answer/2853702"
+        },
+        {
+          "label": "Android: supported media formats",
+          "url": "https://developer.android.com/media/platform/supported-formats"
+        }
+      ],
+      "notes": "Part of MPEG-4 Audio (ISO/IEC 14496-3). Android phones encode AAC-LC as part of the platform.",
+      "codec": {
+        "media": "audio",
+        "licensing": {
+          "value": "patent-pools",
+          "text": "Via LA licenses AAC patents to makers of encoder and decoder products. It says no fees are due for broadcasting or streaming AAC.",
+          "sources": [
+            {
+              "label": "Via LA: AAC licence",
+              "url": "https://www.via-la.com/licensing-2/aac/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "efficiency": null,
+        "hardware": null,
+        "ingest": {
+          "twitch": {
+            "value": "yes",
+            "text": "Most likely yes; Twitch's help pages need JavaScript; this follows OBS's services.json, which names no audio codec for Twitch.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "youtube": {
+            "value": "yes",
+            "text": "Yes; YouTube asks for AAC or MP3, and 5.1 sound only with AAC over RTMP/RTMPS.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "unknown",
+            "text": "Kick's help asks for stereo at up to 48 kHz but names no audio codec.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          }
+        }
+      }
+    },
+    {
+      "id": "opus",
+      "checked_on": "2026-11-15",
+      "name": "Opus",
+      "group": "hardware-codecs",
+      "kind": "codec",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "IETF (codec from Xiph.Org and Skype)",
+      "url": "https://opus-codec.org/",
+      "description": "An open, royalty-free audio codec, used by WebRTC (WHIP) and Enhanced RTMP.",
+      "service_ids": [
+        "obs-studio"
+      ],
+      "other_users": [
+        "FFmpeg"
+      ],
+      "sources": [
+        {
+          "label": "RFC 6716",
+          "url": "https://datatracker.ietf.org/doc/rfc6716/"
+        },
+        {
+          "label": "Opus licence page",
+          "url": "https://opus-codec.org/license/"
+        },
+        {
+          "label": "RFC 7874 (WebRTC audio)",
+          "url": "https://datatracker.ietf.org/doc/rfc7874/"
+        },
+        {
+          "label": "Enhanced RTMP v2 spec",
+          "url": "https://github.com/veovera/enhanced-rtmp/blob/main/docs/enhanced/enhanced-rtmp-v2.md"
+        }
+      ],
+      "notes": "Every WebRTC endpoint, and so every WHIP sender and receiver, must support Opus (RFC 7874). OBS and FFmpeg follow Veovera's Enhanced RTMP adoption list.",
+      "codec": {
+        "media": "audio",
+        "licensing": {
+          "value": "royalty-free",
+          "text": "Royalty-free patent licences from Xiph.Org, Broadcom and Microsoft; BSD-licensed code in RFC 6716. Some other companies have disclosed patents with possibly royalty-bearing terms, the Opus site says.",
+          "sources": [
+            {
+              "label": "Opus licence page",
+              "url": "https://opus-codec.org/license/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "efficiency": {
+          "compared_with": [
+            "aac"
+          ],
+          "text": "Rated above HE-AAC at 64 kb/s and above LC-AAC at 96 kb/s in HydrogenAudio's public listening tests on stereo music, linked from opus-codec.org.",
+          "sources": [
+            {
+              "label": "Opus comparison page",
+              "url": "https://opus-codec.org/comparison/"
+            }
+          ],
+          "checked_on": "2026-11-15"
+        },
+        "hardware": null,
+        "ingest": {
+          "twitch": {
+            "value": "unknown",
+            "text": "Twitch's help pages need JavaScript; this follows OBS's services.json, which names no audio codec for Twitch.",
+            "sources": [
+              {
+                "label": "OBS services.json (Twitch, YouTube entries)",
+                "url": "https://github.com/obsproject/obs-studio/blob/7fc60ea38122e84681767c100d0ef3a82fe2dcf4/plugins/rtmp-services/data/services.json"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          },
+          "youtube": {
+            "value": "no",
+            "text": "Not listed; YouTube asks for AAC or MP3.",
+            "sources": [
+              {
+                "label": "YouTube Help: live encoder settings",
+                "url": "https://support.google.com/youtube/answer/2853702"
+              }
+            ],
+            "checked_on": "2026-11-15"
+          },
+          "kick": {
+            "value": "unknown",
+            "text": "Kick's help names no audio codec.",
+            "sources": [
+              {
+                "label": "Kick Help: how to stream on Kick",
+                "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
+              }
+            ],
+            "checked_on": "2026-11-15",
+            "unverified": true
+          }
+        }
+      }
+    },
+    {
+      "id": "uvc",
+      "checked_on": "2026-11-15",
+      "name": "UVC (USB Video Class)",
+      "group": "hardware-codecs",
+      "kind": "interface",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "USB-IF specification, downloadable from usb.org",
+      "maker": "USB Implementers Forum (USB-IF)",
+      "url": "https://www.usb.org/document-library/video-class-v15-document-set",
+      "description": "The standard way a USB camera or HDMI capture stick shows up as a camera, with no driver to install.",
+      "service_ids": [
+        "moblin",
+        "lifestreamer",
+        "irlplus-cast",
+        "irlwhatever",
+        "irlplus-video-mixer"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "USB-IF: Video Class v1.5 document set",
+          "url": "https://www.usb.org/document-library/video-class-v15-document-set"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        }
+      ],
+      "notes": "Moblin supports UVC cameras on iPad; support in the Android apps and the mixer follows their services.json entries."
+    },
+    {
+      "id": "hdmi",
+      "checked_on": "2026-11-15",
+      "name": "HDMI",
+      "group": "hardware-codecs",
+      "kind": "interface",
+      "status": "in-use",
+      "openness": "documented-closed",
+      "licence": "Licensed to adopters by HDMI LA, with adopter and licensing fees",
+      "maker": "HDMI Forum; licensed by HDMI Licensing Administrator (HDMI LA)",
+      "url": "https://www.hdmi.org/",
+      "description": "The camera's video-out cable; IRL boxes take it in directly or through a USB capture stick.",
+      "service_ids": [
+        "belabox",
+        "ceralive",
+        "liveu-solo",
+        "haivision-pro",
+        "yolobox-ultra",
+        "irlplus-video-mixer"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "HDMI LA: adopter information",
+          "url": "https://www.hdmi.org/adopter/index"
+        },
+        {
+          "label": "belacoder README",
+          "url": "https://github.com/BELABOX/belacoder"
+        },
+        {
+          "label": "CeraLive site",
+          "url": "https://ceralive.tv/"
+        },
+        {
+          "label": "LiveU Solo product page",
+          "url": "https://www.liveu.tv/products/create/liveu-solo"
+        },
+        {
+          "label": "Haivision Pro product page",
+          "url": "https://www.haivision.com/products/pro-mobile-transmitter/"
+        },
+        {
+          "label": "YoloBox Ultra product page",
+          "url": "https://www.yololiv.com/yoloboxUltra"
+        }
+      ],
+      "notes": "The specification is available to adopters; HDMI LA's public page names adopter and licensing fees but no amounts."
+    },
+    {
+      "id": "sdi",
+      "checked_on": "2026-11-15",
+      "name": "SDI (Serial Digital Interface)",
+      "group": "hardware-codecs",
+      "kind": "interface",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "SMPTE standards (ST 259, ST 292 and later), freely accessible from SMPTE",
+      "maker": "SMPTE",
+      "url": "https://www.smpte.org/standards/overview",
+      "description": "The locking broadcast video cable on pro cameras; some bonded encoders take it in.",
+      "service_ids": [
+        "liveu-solo",
+        "haivision-pro"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "SMPTE standards overview",
+          "url": "https://www.smpte.org/standards/overview"
+        },
+        {
+          "label": "LiveU Solo product page",
+          "url": "https://www.liveu.tv/products/create/liveu-solo"
+        },
+        {
+          "label": "Haivision Pro product page",
+          "url": "https://www.haivision.com/products/pro-mobile-transmitter/"
+        }
+      ],
+      "notes": "SMPTE says its standards library is freely accessible; HD-SDI and 3G/12G-SDI are later versions."
     },
     {
       "id": "stream-status",

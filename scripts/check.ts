@@ -3,6 +3,7 @@
 import { readFileSync, readdirSync } from "node:fs";
 import { files, guideTitle, RolesByKind, type FileName } from "../schema/src/schema.ts";
 import { exported, partsJson } from "./export.ts";
+import { comparisonFacts } from "./stale.ts";
 
 const here = (p: string) => new URL(p, import.meta.url);
 const problems: string[] = [];
@@ -119,7 +120,28 @@ export function semantic(data: Record<FileName, any>): string[] {
     // A format only counts as shared, or as an app format, once a second named product writes or reads it.
     const named = x.service_ids.length + x.other_users.length;
     if (x.group === "app-formats" && named < 2) out.push(`standards: ${x.id}: an app format needs a named second product that writes or reads it`);
-    if (x.group === "shared" && x.status === "in-use" && named < 2) out.push(`standards: ${x.id}: a shared item in use needs at least two named products`);
+    if (["shared", "hardware-codecs"].includes(x.group) && x.status === "in-use" && named < 2) out.push(`standards: ${x.id}: a shared item in use needs at least two named products`);
+  }
+  // One thing, one definition: a standard that is also a glossary word points at the word and shares its id.
+  const wordById = new Map<string, any>(data.words.words.map((w: any) => [w.id, w]));
+  const wordByName = new Map<string, string>();
+  for (const w of data.words.words) for (const n of [w.term, ...w.aliases]) wordByName.set(n.toLowerCase(), w.id);
+  for (const x of data.standards.standards) {
+    if (x.word !== undefined && !wordById.has(x.word)) out.push(`standards: ${x.id}: word '${x.word}' is not in words`);
+    if (x.word !== undefined) continue;
+    const short = x.name.replace(/\s*\(.*\)\s*$/, "");
+    const same = wordById.has(x.id) ? x.id : wordByName.get(x.name.toLowerCase()) ?? wordByName.get(short.toLowerCase());
+    if (same) out.push(`standards: ${x.id}: duplicates the glossary word '${same}'; give it that id, set word, and drop the description`);
+  }
+  // Comparison facts: efficiency compares with other codecs of the same kind; no fact is dated in the future.
+  const codecs = new Map<string, any>(data.standards.standards.filter((x: any) => x.codec).map((x: any) => [x.id, x]));
+  for (const x of data.standards.standards) {
+    for (const r of x.codec?.efficiency?.compared_with ?? []) {
+      const other = codecs.get(r);
+      if (!other || r === x.id) out.push(`standards: ${x.id}: efficiency compared_with '${r}', which is not another codec entry`);
+      else if (other.codec.media !== x.codec.media) out.push(`standards: ${x.id}: efficiency compared_with '${r}', a ${other.codec.media} codec`);
+    }
+    for (const [where, f] of comparisonFacts(x)) if (f.checked_on > today) out.push(`standards: ${x.id}: ${where}: checked_on is in the future`);
   }
   const carrierById = new Map<string, any>(data.plans.carriers.map((c: any) => [c.id, c]));
   const countries = new Set(COUNTRY_CODES.split(" "));
@@ -201,9 +223,40 @@ for (const mutation of [
   (d: any) => { d.standards.standards[0].url = null; },
   (d: any) => { d.standards.standards[0].sources = []; },
   (d: any) => { d.standards.standards.push(d.standards.standards[0]); },
+  (d: any) => { d.standards.standards[0].id = data.words.words[0].id; },
+  (d: any) => { d.standards.standards[0].name = data.words.words[0].term; },
+  (d: any) => { d.standards.standards[0].name = `${data.words.words[0].aliases[0]} (long name)`; },
+  (d: any) => { const s = d.standards.standards[0]; s.id = "not-a-word"; s.word = "not-a-word"; delete s.description; },
 ]) {
   const bad = structuredClone(withStandard); mutation(bad);
   if (!semantic(bad).length) problems.push("invalid standard reference accepted");
+}
+// A glossary word as a standard: same id, word set, no description of its own.
+const asWord = structuredClone(withStandard);
+const w0 = data.words.words[0];
+asWord.standards.standards = [{...standard, id: w0.id, name: w0.term, word: w0.id, description: undefined}];
+delete asWord.standards.standards[0].description;
+if (!files.standards.safeParse(asWord.standards).success || semantic(asWord).length) problems.push("valid glossary-word standard rejected");
+// Codec comparison references.
+const fact = {text: "A synthetic claim.", sources: [{label: "Source", url: "https://example.org/source"}], checked_on: "2026-11-14"};
+const yes = {...fact, value: "yes"};
+const hw = {encode: "yes", decode: "yes", ...fact};
+const codecFacts = (media: string) => ({media, licensing: {...fact, value: "royalty-free"}, efficiency: null,
+  hardware: media === "video" ? {ios: hw, android: hw, rk3588: hw, intel: hw, nvidia: hw, apple_mac: hw} : null,
+  ingest: {twitch: yes, youtube: yes, kick: yes}});
+const codec = (id: string, media: string) => ({...standard, id, name: id, group: "hardware-codecs", kind: "codec", codec: codecFacts(media)});
+const withCodecs = structuredClone(data);
+withCodecs.standards.standards = [codec("sample-old", "video"), codec("sample-new", "video"), codec("sample-sound", "audio")];
+withCodecs.standards.standards[1].codec.efficiency = {...fact, compared_with: ["sample-old"]};
+if (!files.standards.safeParse(withCodecs.standards).success || semantic(withCodecs).length) problems.push("valid codec fixture rejected");
+for (const mutation of [
+  (d: any) => { d.standards.standards[1].codec.efficiency.compared_with = ["sample-sound"]; },
+  (d: any) => { d.standards.standards[1].codec.efficiency.compared_with = ["sample-new"]; },
+  (d: any) => { d.standards.standards[1].codec.efficiency.compared_with = ["missing"]; },
+  (d: any) => { d.standards.standards[1].codec.ingest.kick.checked_on = "2999-01-01"; },
+]) {
+  const bad = structuredClone(withCodecs); mutation(bad);
+  if (!semantic(bad).length) problems.push("invalid codec comparison accepted");
 }
 const chat = "https://disco" + "rd.gg/example";
 if (files.services.safeParse({...data.services, services: [{...data.services.services[0], url: chat}]}).success)

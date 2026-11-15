@@ -30,6 +30,7 @@
             "enum": [
               "shared",
               "app-formats",
+              "hardware-codecs",
               "steward-projects"
             ]
           },
@@ -39,7 +40,9 @@
               "protocol",
               "format",
               "settings",
-              "data"
+              "data",
+              "codec",
+              "interface"
             ]
           },
           "status": {
@@ -89,6 +92,10 @@
             "maxLength": 200,
             "pattern": "\\S"
           },
+          "word": {
+            "type": "string",
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+          },
           "service_ids": {
             "type": "array",
             "items": {
@@ -134,6 +141,1173 @@
                 "type": "null"
               }
             ]
+          },
+          "codec": {
+            "type": "object",
+            "properties": {
+              "media": {
+                "type": "string",
+                "enum": [
+                  "video",
+                  "audio"
+                ]
+              },
+              "licensing": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "royalty-free",
+                      "patent-pools",
+                      "open-spec",
+                      "open-code",
+                      "proprietary"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 240,
+                    "pattern": "\\S"
+                  },
+                  "sources": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "pattern": "\\S"
+                        },
+                        "url": {
+                          "type": "string",
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "checked_on": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "unverified": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "value",
+                  "text",
+                  "sources",
+                  "checked_on"
+                ],
+                "additionalProperties": false
+              },
+              "efficiency": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "compared_with": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "string",
+                          "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                        }
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "compared_with",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "hardware": {
+                "anyOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "ios": {
+                        "type": "object",
+                        "properties": {
+                          "encode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "decode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 240,
+                            "pattern": "\\S"
+                          },
+                          "sources": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "pattern": "\\S"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "checked_on": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          "unverified": {
+                            "type": "boolean",
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "encode",
+                          "decode",
+                          "text",
+                          "sources",
+                          "checked_on"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "android": {
+                        "type": "object",
+                        "properties": {
+                          "encode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "decode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 240,
+                            "pattern": "\\S"
+                          },
+                          "sources": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "pattern": "\\S"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "checked_on": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          "unverified": {
+                            "type": "boolean",
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "encode",
+                          "decode",
+                          "text",
+                          "sources",
+                          "checked_on"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "rk3588": {
+                        "type": "object",
+                        "properties": {
+                          "encode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "decode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 240,
+                            "pattern": "\\S"
+                          },
+                          "sources": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "pattern": "\\S"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "checked_on": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          "unverified": {
+                            "type": "boolean",
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "encode",
+                          "decode",
+                          "text",
+                          "sources",
+                          "checked_on"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "intel": {
+                        "type": "object",
+                        "properties": {
+                          "encode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "decode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 240,
+                            "pattern": "\\S"
+                          },
+                          "sources": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "pattern": "\\S"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "checked_on": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          "unverified": {
+                            "type": "boolean",
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "encode",
+                          "decode",
+                          "text",
+                          "sources",
+                          "checked_on"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "nvidia": {
+                        "type": "object",
+                        "properties": {
+                          "encode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "decode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 240,
+                            "pattern": "\\S"
+                          },
+                          "sources": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "pattern": "\\S"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "checked_on": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          "unverified": {
+                            "type": "boolean",
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "encode",
+                          "decode",
+                          "text",
+                          "sources",
+                          "checked_on"
+                        ],
+                        "additionalProperties": false
+                      },
+                      "apple_mac": {
+                        "type": "object",
+                        "properties": {
+                          "encode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "decode": {
+                            "type": "string",
+                            "enum": [
+                              "yes",
+                              "some",
+                              "no",
+                              "unknown"
+                            ]
+                          },
+                          "text": {
+                            "type": "string",
+                            "maxLength": 240,
+                            "pattern": "\\S"
+                          },
+                          "sources": {
+                            "minItems": 1,
+                            "type": "array",
+                            "items": {
+                              "type": "object",
+                              "properties": {
+                                "label": {
+                                  "type": "string",
+                                  "pattern": "\\S"
+                                },
+                                "url": {
+                                  "type": "string",
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                }
+                              },
+                              "required": [
+                                "label",
+                                "url"
+                              ],
+                              "additionalProperties": false
+                            }
+                          },
+                          "checked_on": {
+                            "type": "string",
+                            "format": "date",
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                          },
+                          "unverified": {
+                            "type": "boolean",
+                            "const": true
+                          }
+                        },
+                        "required": [
+                          "encode",
+                          "decode",
+                          "text",
+                          "sources",
+                          "checked_on"
+                        ],
+                        "additionalProperties": false
+                      }
+                    },
+                    "required": [
+                      "ios",
+                      "android",
+                      "rk3588",
+                      "intel",
+                      "nvidia",
+                      "apple_mac"
+                    ],
+                    "additionalProperties": false
+                  },
+                  {
+                    "type": "null"
+                  }
+                ]
+              },
+              "ingest": {
+                "type": "object",
+                "properties": {
+                  "twitch": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "yes",
+                          "some",
+                          "no",
+                          "unknown"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "youtube": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "yes",
+                          "some",
+                          "no",
+                          "unknown"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "kick": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "yes",
+                          "some",
+                          "no",
+                          "unknown"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "twitch",
+                  "youtube",
+                  "kick"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "media",
+              "licensing",
+              "efficiency",
+              "hardware",
+              "ingest"
+            ],
+            "additionalProperties": false
+          },
+          "transport": {
+            "type": "object",
+            "properties": {
+              "bonding": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "built-in",
+                      "add-on",
+                      "no"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 240,
+                    "pattern": "\\S"
+                  },
+                  "sources": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "pattern": "\\S"
+                        },
+                        "url": {
+                          "type": "string",
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "checked_on": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "unverified": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "value",
+                  "text",
+                  "sources",
+                  "checked_on"
+                ],
+                "additionalProperties": false
+              },
+              "latency": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "buffer",
+                      "real-time",
+                      "tcp"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 240,
+                    "pattern": "\\S"
+                  },
+                  "sources": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "pattern": "\\S"
+                        },
+                        "url": {
+                          "type": "string",
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "checked_on": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "unverified": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "value",
+                  "text",
+                  "sources",
+                  "checked_on"
+                ],
+                "additionalProperties": false
+              },
+              "loss_recovery": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "resend",
+                      "resend-and-fec",
+                      "tcp"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 240,
+                    "pattern": "\\S"
+                  },
+                  "sources": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "pattern": "\\S"
+                        },
+                        "url": {
+                          "type": "string",
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "checked_on": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "unverified": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "value",
+                  "text",
+                  "sources",
+                  "checked_on"
+                ],
+                "additionalProperties": false
+              },
+              "licensing": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "enum": [
+                      "royalty-free",
+                      "patent-pools",
+                      "open-spec",
+                      "open-code",
+                      "proprietary"
+                    ]
+                  },
+                  "text": {
+                    "type": "string",
+                    "maxLength": 240,
+                    "pattern": "\\S"
+                  },
+                  "sources": {
+                    "minItems": 1,
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "label": {
+                          "type": "string",
+                          "pattern": "\\S"
+                        },
+                        "url": {
+                          "type": "string",
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                        }
+                      },
+                      "required": [
+                        "label",
+                        "url"
+                      ],
+                      "additionalProperties": false
+                    }
+                  },
+                  "checked_on": {
+                    "type": "string",
+                    "format": "date",
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  },
+                  "unverified": {
+                    "type": "boolean",
+                    "const": true
+                  }
+                },
+                "required": [
+                  "value",
+                  "text",
+                  "sources",
+                  "checked_on"
+                ],
+                "additionalProperties": false
+              },
+              "ingest": {
+                "type": "object",
+                "properties": {
+                  "twitch": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "yes",
+                          "some",
+                          "no",
+                          "unknown"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "youtube": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "yes",
+                          "some",
+                          "no",
+                          "unknown"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  },
+                  "kick": {
+                    "type": "object",
+                    "properties": {
+                      "value": {
+                        "type": "string",
+                        "enum": [
+                          "yes",
+                          "some",
+                          "no",
+                          "unknown"
+                        ]
+                      },
+                      "text": {
+                        "type": "string",
+                        "maxLength": 240,
+                        "pattern": "\\S"
+                      },
+                      "sources": {
+                        "minItems": 1,
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "label": {
+                              "type": "string",
+                              "pattern": "\\S"
+                            },
+                            "url": {
+                              "type": "string",
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                            }
+                          },
+                          "required": [
+                            "label",
+                            "url"
+                          ],
+                          "additionalProperties": false
+                        }
+                      },
+                      "checked_on": {
+                        "type": "string",
+                        "format": "date",
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                      },
+                      "unverified": {
+                        "type": "boolean",
+                        "const": true
+                      }
+                    },
+                    "required": [
+                      "value",
+                      "text",
+                      "sources",
+                      "checked_on"
+                    ],
+                    "additionalProperties": false
+                  }
+                },
+                "required": [
+                  "twitch",
+                  "youtube",
+                  "kick"
+                ],
+                "additionalProperties": false
+              }
+            },
+            "required": [
+              "bonding",
+              "latency",
+              "loss_recovery",
+              "licensing",
+              "ingest"
+            ],
+            "additionalProperties": false
           }
         },
         "required": [
@@ -147,13 +1321,161 @@
           "licence",
           "maker",
           "url",
-          "description",
           "service_ids",
           "other_users",
           "sources",
           "notes"
         ],
-        "additionalProperties": false
+        "additionalProperties": false,
+        "allOf": [
+          {
+            "oneOf": [
+              {
+                "required": [
+                  "description"
+                ]
+              },
+              {
+                "required": [
+                  "word"
+                ]
+              }
+            ]
+          },
+          {
+            "if": {
+              "anyOf": [
+                {
+                  "required": [
+                    "codec"
+                  ]
+                },
+                {
+                  "required": [
+                    "transport"
+                  ]
+                }
+              ]
+            },
+            "then": {
+              "properties": {
+                "licence": {
+                  "type": "null"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "codec"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "const": "codec"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "transport"
+              ]
+            },
+            "then": {
+              "properties": {
+                "kind": {
+                  "const": "protocol"
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": {
+                "kind": {
+                  "enum": [
+                    "codec",
+                    "interface"
+                  ]
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "group": {
+                  "const": "hardware-codecs"
+                }
+              }
+            },
+            "else": {
+              "properties": {
+                "group": {
+                  "not": {
+                    "const": "hardware-codecs"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "codec"
+              ],
+              "properties": {
+                "codec": {
+                  "properties": {
+                    "media": {
+                      "const": "video"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "codec": {
+                  "properties": {
+                    "hardware": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "required": [
+                "codec"
+              ],
+              "properties": {
+                "codec": {
+                  "properties": {
+                    "media": {
+                      "const": "audio"
+                    }
+                  }
+                }
+              }
+            },
+            "then": {
+              "properties": {
+                "codec": {
+                  "properties": {
+                    "hardware": {
+                      "type": "null"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        ]
       }
     }
   },

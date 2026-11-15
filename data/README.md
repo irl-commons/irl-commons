@@ -10,7 +10,7 @@ Six reviewed data files about streaming live from outside (IRL streaming):
 Descriptions and definitions are written in our own words. Sources and links point to public primary pages only (makers' own pages, standards, platform help); no chat invites, private links or community posts. The schemas in `../schema` (zod, with exported JSON Schema) validate every file; see that folder's README.
 
 - `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. See the root README for field conventions and attribution.
-- `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, Moblink, RIST, WHIP and OBS WebSocket. Each entry credits its maker, says how open it is (a public spec, documented by a closed product, code only, or not public yet), and names the products that write or read it: catalogued ones by `service_ids`, the rest in `other_users`. Entries sit in one of three groups. `shared` is for items several makers' products use. `app-formats` is for one app's own export or setup format, listed only when a named second product writes or reads it. `steward-projects` holds items made by people who steward this repository, kept apart so they're never mistaken for established standards. Listing an item doesn't mean this project makes, runs or endorses it.
+- `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, Moblink, RIST, WHIP and OBS WebSocket. Each entry credits its maker, says how open it is (a public spec, documented by a closed product, code only, or not public yet), and names the products that write or read it: catalogued ones by `service_ids`, the rest in `other_users`. Entries sit in one of three groups. `shared` is for items several makers' products use. `app-formats` is for one app's own export or setup format, listed only when a named second product writes or reads it. `hardware-codecs` holds the video and audio codecs (H.264, HEVC, AV1, AAC, Opus) and the camera interfaces (UVC, HDMI, SDI). `steward-projects` holds items made by people who steward this repository, kept apart so they're never mistaken for established standards. Codec and transport entries also carry comparison facts: how they're licensed (as the licensors put it), efficiency only from a published comparison, hardware encode and decode on common IRL gear, bonding, latency, loss recovery, and ingest on Twitch, YouTube and Kick. Every fact names its own sources and `checked_on` date. An entry that is also a glossary word (SRT, SRTLA) uses the same id, points at it with `word`, and leaves the definition to `words.json`. Listing an item doesn't mean this project makes, runs or endorses it.
 
 All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the attribution format in `../README.md`.
 
@@ -37,6 +37,13 @@ Every `standards.json` entry was compared with its listed sources on
 **2026-11-14**. Where a note says support "follows the services.json entries",
 the per-product claim rests on those catalogue entries (checked the same day)
 rather than a separate read of each product's page.
+
+The codec and interface entries, NDI, and every comparison fact were checked on
+**2026-11-15** against the pages each one cites. Twitch's help pages need
+JavaScript, so Twitch facts rest on OBS's `services.json` (pinned to a commit)
+and Twitch's own blog, and say so. Facts marked `unverified` say what the
+makers' pages leave open, such as whether an Android encoder runs in hardware.
+VP9 isn't listed: YouTube takes it only over DASH, which IRL senders don't use.
 
 Other words and answers omit `checked_on`: a source link without a recorded
 content check is insufficient. Omission means unknown freshness, not a fresh or
