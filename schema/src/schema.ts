@@ -19,11 +19,113 @@ export const WordL10n = z.strictObject({
   heard_when: z.string().optional(),
 });
 
+// Naming guide for app makers: an optional `naming` block on a word. Advisory: `label` is the
+// recommended label for the context in `scope`, never the only correct one. Reasons describe the
+// word, never a maker. Statuses of other names:
+//   also-used: means the same thing (the true synonyms in `also_called`);
+//   narrower: one part or one kind of it; technical: the engineering name;
+//   ambiguous: in this context it can also mean something else.
+export const NamingStatus = z.enum(["also-used", "narrower", "technical", "ambiguous"]);
+/** How a label is written: sentence case ("Relay server", acronyms stay capitals), a proper name, or an acronym ("BRB"). */
+export const LabelCase = z.enum(["sentence", "proper", "acronym"]);
+/** A GitHub login, as listed in stewards.json. */
+export const Login = z.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/, "a GitHub login");
+
+export const Alternative = z.strictObject({
+  term: Text.max(60),
+  status: NamingStatus,
+  /** Why it isn't the recommended label here, about the word. Required unless the status is also-used. */
+  why: Text.max(200).optional(),
+  /** Products whose own settings show this name; each must be a maker in the word's evidence. Never on ambiguous items. */
+  seen_in: z.array(Text).min(1).optional(),
+}).superRefine((a, ctx) => {
+  if (a.status !== "also-used" && a.why === undefined)
+    ctx.addIssue({ code: "custom", path: ["why"], message: "give a reason unless the status is also-used" });
+  if (a.status === "ambiguous" && a.seen_in !== undefined)
+    ctx.addIssue({ code: "custom", path: ["seen_in"], message: "ambiguous items don't name products" });
+}).meta({
+  allOf: [
+    { if: { properties: { status: { not: { const: "also-used" } } } }, then: { required: ["why"] } },
+    { if: { properties: { status: { const: "ambiguous" } } }, then: { not: { required: ["seen_in"] } } },
+  ],
+});
+
+/** One public page that shows a product's own label, read on a given day. `note` quotes the label as shown.
+ *  unverified: true when the page doesn't settle it (for example a feature list rather than a settings screen). */
+export const Evidence = z.strictObject({
+  maker: Text.max(60),
+  url: HttpsUrl,
+  read_on: Day,
+  note: Text.max(300),
+  unverified: z.literal(true).optional(),
+});
+
+export const Naming = z.strictObject({
+  label: Text.max(40),
+  short_label: Text.max(20).optional(),
+  case: LabelCase,
+  plural: Text.max(40).optional(),
+  /** Where the label fits: the screen or setting it names. */
+  scope: Text.max(200),
+  why: Text.max(300),
+  alternatives: z.array(Alternative),
+  evidence: z.array(Evidence),
+  translation_note: Text.max(300),
+  status: z.enum(["draft", "reviewed"]),
+  /** Stewards who reviewed it: at least two different ones for reviewed. */
+  reviewed_by: z.array(Login).optional(),
+}).superRefine((n, ctx) => {
+  const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
+  const makers = new Set(n.evidence.filter((e) => !e.unverified).map((e) => e.maker.toLowerCase()));
+  if (n.status === "reviewed" && makers.size < 2) issue("evidence", "reviewed needs verified evidence from at least two makers");
+  if (n.status === "reviewed" && new Set((n.reviewed_by ?? []).map((x) => x.toLowerCase())).size < 2)
+    issue("reviewed_by", "reviewed needs a second steward");
+  if (n.status === "draft" && n.reviewed_by !== undefined) issue("reviewed_by", "only reviewed entries list reviewers");
+  const all = new Set(n.evidence.map((e) => e.maker.toLowerCase()));
+  n.alternatives.forEach((a, i) => {
+    for (const m of a.seen_in ?? []) if (!all.has(m.toLowerCase())) issue("alternatives", `alternatives[${i}].seen_in: '${m}' has no evidence`);
+    if (a.term.toLowerCase() === n.label.toLowerCase()) issue("alternatives", `alternatives[${i}] repeats the label`);
+  });
+  const terms = n.alternatives.map((a) => a.term.toLowerCase());
+  if (new Set(terms).size !== terms.length) issue("alternatives", "an alternative is listed twice");
+  if (n.case === "acronym" && /[a-z]/.test(n.label)) issue("case", "an acronym label has no lowercase letters");
+  if (n.case === "sentence" && !sentenceCase(n.label)) issue("case", "sentence case: capital first letter, later words lowercase unless they are acronyms");
+}).meta({
+  allOf: [
+    { if: { properties: { status: { const: "reviewed" } } }, then: { required: ["reviewed_by"], properties: { reviewed_by: { minItems: 2, uniqueItems: true }, evidence: { minItems: 2 } } } },
+    { if: { properties: { status: { const: "draft" } } }, then: { not: { required: ["reviewed_by"] } } },
+    { if: { properties: { case: { const: "acronym" } } }, then: { properties: { label: { pattern: "^[^a-z]*$" } } } },
+  ],
+});
+
+/** "SRT latency", "Relay server", "Max bitrate": first letter capital, later words lowercase or all capitals. */
+export function sentenceCase(label: string): boolean {
+  const words = label.split(/\s+/);
+  return /^[A-Z0-9]/.test(words[0]) && words.slice(1).every((w) => w === w.toLowerCase() || w === w.toUpperCase());
+}
+
+/** The deprecated `aliases` list, generated for one release from the fields that replaced it:
+ *  the label (when it differs from the term), also_called, the plural, the other names and the search terms. */
+export function wordAliases(w: { term: string; also_called: string[]; search_terms: string[]; naming?: { label: string; plural?: string; alternatives: { term: string }[] } }): string[] {
+  const out: string[] = [];
+  const seen = new Set([w.term.toLowerCase()]);
+  const n = w.naming;
+  for (const x of [n?.label, ...w.also_called, n?.plural, ...(n?.alternatives ?? []).map((a) => a.term), ...w.search_terms])
+    if (x !== undefined && !seen.has(x.toLowerCase())) { seen.add(x.toLowerCase()); out.push(x); }
+  return out;
+}
+
 export const Word = z.strictObject({
   id: Id,
   checked_on: Day.optional(),
   term: Text,
-  aliases: z.array(Text),
+  /** True synonyms only: other names for exactly this thing, the ones a streamer may hear.
+   *  With a naming block, each one is the label or an also-used alternative, and every also-used alternative is here. */
+  also_called: z.array(Text),
+  /** Search only, never shown as a name: plurals, units, spellings, address syntax and nearby phrases. */
+  search_terms: z.array(Text),
+  /** Deprecated, kept for one release: generated by `bun run aliases` from the fields above. */
+  aliases: z.array(Text).meta({ deprecated: true }),
   tier: z.enum(["core", "more"]),
   who: z.enum(["streamer", "helper", "both"]),
   heard_when: z.string(),
@@ -32,11 +134,38 @@ export const Word = z.strictObject({
   source: Text,
   uncertain: z.boolean(),
   l10n: z.record(LanguageTag, WordL10n).optional(),
+  naming: Naming.optional(),
+}).superRefine((w, ctx) => {
+  const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
+  const lower = (xs: string[]) => xs.map((x) => x.toLowerCase());
+  const also = lower(w.also_called), search = lower(w.search_terms);
+  if (also.includes(w.term.toLowerCase())) issue("also_called", "repeats the term");
+  for (const x of also) if (search.includes(x)) issue("search_terms", `'${x}' is already in also_called`);
+  if (w.naming) {
+    const same = lower(w.naming.alternatives.filter((a) => a.status === "also-used").map((a) => a.term));
+    const label = w.naming.label.toLowerCase();
+    for (const x of also) if (x !== label && !same.includes(x)) issue("also_called", `'${x}' is neither the label nor an also-used alternative`);
+    for (const x of same) if (!also.includes(x)) issue("naming", `the also-used alternative '${x}' belongs in also_called too`);
+  }
 });
 
 export const WordsFile = z.strictObject({
   about: z.string(),
   words: z.array(Word).min(1),
+}).superRefine((f, ctx) => {
+  // One recommended label per thing: labels are unique, and no word lists another word's label as an alternative.
+  const labels = new Map<string, string>();
+  f.words.forEach((w, i) => {
+    if (!w.naming) return;
+    const key = w.naming.label.toLowerCase();
+    if (labels.has(key)) ctx.addIssue({ code: "custom", path: ["words", i, "naming", "label"], message: `'${w.naming.label}' is already the label of ${labels.get(key)}` });
+    else labels.set(key, w.id);
+  });
+  f.words.forEach((w, i) => w.naming?.alternatives.forEach((a, j) => {
+    const other = labels.get(a.term.toLowerCase());
+    if (other && other !== w.id)
+      ctx.addIssue({ code: "custom", path: ["words", i, "naming", "alternatives", j, "term"], message: `'${a.term}' is the label of ${other}` });
+  }));
 });
 
 // ---------- Answers (quick checks) ----------

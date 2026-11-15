@@ -9,6 +9,7 @@ body:
         Thank you for the fix. Sources decide: please link the public page that shows the right information.
         A steward reads this form and can turn it into a draft pull request with you as co-author.
         Do you make or sell this product, or a competing one? Please use the "Edit request from the maker" form instead.
+        Proposing a different label for a word in the naming guide? Write the entry as words/<id>, say what you suggest under "What changed", and fill in the label field below if you have one.
   - type: input
     id: entry
     attributes:
@@ -69,6 +70,13 @@ body:
       description: What is wrong or out of date, and what the source says now.
     validations:
       required: true
+  - type: textarea
+    id: product_label
+    attributes:
+      label: The label your product uses, and why (optional)
+      description: For a word in the naming guide. The label as your settings show it, for example "SRT latency (ms)", and why it suits your users. A public page or screenshot that shows it helps.
+    validations:
+      required: false
   - type: textarea
     id: fields
     attributes:

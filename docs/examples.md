@@ -1,6 +1,6 @@
 # Worked examples
 
-Four small things you can build with the data. Each example loads one or
+Five small things you can build with the data. Each example loads one or
 two files, like this:
 
 ```js
@@ -15,19 +15,27 @@ appears.
 ## 1. A glossary with search
 
 Streamers search for the word they heard, and that is often another name
-for the same thing. So search the `aliases` too:
+for the same thing. So search the other names too. `also_called` holds true
+synonyms, which you can show as "Also called". `search_terms` holds plurals,
+units, spellings and address syntax: good for search, not for display. Words
+in the naming guide add their recommended label and other names under `naming`.
 
 ```js
 const { words } = await load("words");
 
+const names = (w) => [w.term, ...w.also_called, ...w.search_terms,
+  ...(w.naming ? [w.naming.label, ...w.naming.alternatives.map((a) => a.term)] : [])];
+
 function findWords(query) {
   const q = query.trim().toLowerCase();
-  return words.filter((w) =>
-    [w.term, ...(w.aliases ?? [])].some((name) => name.toLowerCase().includes(q)));
+  return words.filter((w) => names(w).some((name) => name.toLowerCase().includes(q)));
 }
 
 findWords("link aggregation").map((w) => w.term);  // ["Bonding", "SRTLA"]
 ```
+
+`aliases` still lists all of these in one list, but it is deprecated and
+will be removed after the next release.
 
 Each word also has `heard_when` (when people meet the word) and `related`
 (ids of other words). Use `related` for "See also" links. Each word has a
@@ -107,6 +115,30 @@ The `steward-projects` group holds drafts that IRL Commons
 started, such as stream-status and stream-session. The initiative also
 stewards this repository, so they are kept apart, and nobody takes them for
 established standards.
+
+## 5. Labels for your settings screen
+
+Some words carry a `naming` block: a recommended label for one context, for
+app makers choosing what to call a setting. It is advice, not a rule. Other
+names come with a status: `also-used` (means the same), `narrower` (one part
+or one kind of it), `technical` (the engineering name) or `ambiguous` (can
+mean something else in that context). Each block lists the public pages it
+rests on, with the day they were read. `draft` blocks are still open for
+comment; `reviewed` ones have evidence from at least two makers and two
+stewards.
+
+```js
+const { words } = await load("words");
+const latency = words.find((w) => w.id === "srt-latency").naming;
+
+latency.label;   // "SRT latency"
+latency.scope;   // "The receive buffer of an SRT or SRTLA connection, set in milliseconds."
+latency.alternatives.map((a) => `${a.term}: ${a.status}`);
+// ["Latency: ambiguous", "Receive buffer: technical", "SRT buffer: technical", "Buffer: ambiguous"]
+```
+
+Disagree with a label? Use the edit form with the entry `words/<id>`; it has
+a field for the label your product uses and why. See CONTRIBUTING.
 
 ## Check your own copy
 

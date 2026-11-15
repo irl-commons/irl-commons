@@ -1,9 +1,15 @@
 {
-  "about": "A word list for IRL streaming, one entry per term. Fields: id (an anchor), term, aliases, tier (core | more), who (streamer | helper | both), heard_when, plain, related (ids), source, uncertain, and optional l10n: {<language tag>: {term, plain, heard_when}} such as es-419 or pt-BR. Translations keep the scene's English terms as the term and explain in the language, and are read by a native speaker before publishing. Validated by the zod schema in ../schema.",
+  "about": "A word list for IRL streaming, one entry per term. Fields: id (an anchor), term, also_called (true synonyms), search_terms (search only), aliases (deprecated, generated from the fields before it), tier (core | more), who (streamer | helper | both), heard_when, plain, related (ids), source, uncertain, optional l10n: {<language tag>: {term, plain, heard_when}} such as es-419 or pt-BR, and optional naming: a naming guide for app makers (recommended label, other names with a status, dated evidence). Translations keep the scene's English terms as the term and explain in the language, and are read by a native speaker before publishing. Validated by the zod schema in ../schema.",
   "words": [
     {
       "id": "irl",
       "term": "IRL",
+      "also_called": [
+        "in real life"
+      ],
+      "search_terms": [
+        "IRL streaming"
+      ],
       "aliases": [
         "in real life",
         "IRL streaming"
@@ -22,6 +28,13 @@
     {
       "id": "backpack",
       "term": "Backpack",
+      "also_called": [
+        "streaming backpack",
+        "IRL backpack"
+      ],
+      "search_terms": [
+        "encoder box"
+      ],
       "aliases": [
         "streaming backpack",
         "IRL backpack",
@@ -41,9 +54,15 @@
     {
       "id": "bonding",
       "term": "Bonding",
+      "also_called": [],
+      "search_terms": [
+        "bonded stream"
+      ],
       "aliases": [
-        "bonded stream",
-        "link aggregation"
+        "Link aggregation",
+        "SRTLA bonding",
+        "Bond",
+        "bonded stream"
       ],
       "tier": "core",
       "who": "both",
@@ -54,16 +73,77 @@
         "relay"
       ],
       "source": "https://github.com/BELABOX/srtla",
-      "uncertain": false
+      "uncertain": false,
+      "naming": {
+        "label": "Bonding",
+        "case": "sentence",
+        "scope": "A switch, status or section about sending one stream over several connections at the same time.",
+        "why": "One short word that people already search for and say in chat. It names what happens, not the protocol, so it still fits when an app offers more than one way to bond.",
+        "alternatives": [
+          {
+            "term": "Link aggregation",
+            "status": "technical",
+            "why": "The networking term the SRTLA protocol is named after. Accurate, but most streamers don't use it."
+          },
+          {
+            "term": "SRTLA bonding",
+            "status": "narrower",
+            "why": "One protocol for bonding. Useful where an app offers a choice of protocols.",
+            "seen_in": [
+              "IRL Pro"
+            ]
+          },
+          {
+            "term": "Bond",
+            "status": "narrower",
+            "why": "The group of connections in use, rather than the act of combining them. Works for a status such as \"in the bond\".",
+            "seen_in": [
+              "CeraLive"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "maker": "Moblin",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/Rist/StreamRistSettingsView.swift#L17",
+            "read_on": "2026-11-15",
+            "note": "Toggle labelled \"Bonding\" in the RIST stream settings."
+          },
+          {
+            "maker": "CeraLive",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2169",
+            "read_on": "2026-11-15",
+            "note": "\"Use for bonding\" on a network link; the same catalogue has \"Bonded Links\" and \"Enable Bond\"."
+          },
+          {
+            "maker": "IRL Pro",
+            "url": "https://irlpro.app/",
+            "read_on": "2026-11-15",
+            "note": "Feature list on the app's page: \"SRTLA Bonding over multiple connections\". A feature name, not a settings screen.",
+            "unverified": true
+          }
+        ],
+        "translation_note": "If your language has no settled word, keep \"bonding\" and explain it once in a hint. Don't translate it as a word for glue or ties.",
+        "status": "draft"
+      }
     },
     {
       "id": "relay",
       "term": "Relay or receiver",
-      "aliases": [
-        "Relay",
+      "also_called": [
+        "Relay server",
         "Receiver",
-        "SRTLA receiver",
+        "Bonding server"
+      ],
+      "search_terms": [
+        "Ingest relay"
+      ],
+      "aliases": [
+        "Relay server",
+        "Receiver",
         "Bonding server",
+        "SRTLA receiver",
+        "Relay",
         "Ingest relay"
       ],
       "tier": "more",
@@ -79,11 +159,72 @@
       ],
       "source": "https://github.com/OpenIRL/srtla-receiver",
       "uncertain": false,
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-14",
+      "naming": {
+        "label": "Relay server",
+        "case": "sentence",
+        "scope": "Where the sender picks the server that collects a bonded stream and passes it on to OBS or the platform.",
+        "why": "\"Server\" makes clear that this is a computer on the internet. On its own, \"relay\" can also mean a phone that lends its connection.",
+        "alternatives": [
+          {
+            "term": "Receiver",
+            "status": "also-used",
+            "why": "The same thing, named from the receiving side. Common for a receiver you run yourself.",
+            "seen_in": [
+              "CeraLive"
+            ]
+          },
+          {
+            "term": "Bonding server",
+            "status": "also-used"
+          },
+          {
+            "term": "SRTLA receiver",
+            "status": "technical",
+            "why": "Names the protocol. Useful next to the address and port fields.",
+            "seen_in": [
+              "BELABOX"
+            ]
+          },
+          {
+            "term": "Relay",
+            "status": "ambiguous",
+            "why": "In some apps a relay is a second phone or device that adds its connection to the stream, not a server."
+          }
+        ],
+        "evidence": [
+          {
+            "maker": "BELABOX",
+            "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/index.html#L226",
+            "read_on": "2026-11-15",
+            "note": "Field labels \"Relay server\" and \"SRTLA receiver address\" in the relay settings."
+          },
+          {
+            "maker": "CeraLive",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2381",
+            "read_on": "2026-11-15",
+            "note": "\"Relay Server\" (title case); the server dialog is titled \"Receiver Server\"."
+          },
+          {
+            "maker": "Moblin",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Moblink/MoblinkSettingsView.swift#L179",
+            "read_on": "2026-11-15",
+            "note": "Section \"Relay\" for the device that adds an extra bonding connection, not a server."
+          }
+        ],
+        "translation_note": "Translate \"server\"; \"relay\" can stay in English if the local word sounds like an electrical relay.",
+        "status": "draft"
+      }
     },
     {
       "id": "srt",
       "term": "SRT",
+      "also_called": [
+        "Secure Reliable Transport"
+      ],
+      "search_terms": [
+        "srt://"
+      ],
       "aliases": [
         "Secure Reliable Transport",
         "srt://"
@@ -104,6 +245,13 @@
     {
       "id": "srtla",
       "term": "SRTLA",
+      "also_called": [
+        "SRT link aggregation"
+      ],
+      "search_terms": [
+        "srtla2",
+        "srtla://"
+      ],
       "aliases": [
         "SRT link aggregation",
         "srtla2",
@@ -125,6 +273,11 @@
     {
       "id": "encoder",
       "term": "Encoder",
+      "also_called": [
+        "Video encoder",
+        "Streaming encoder"
+      ],
+      "search_terms": [],
       "aliases": [
         "Video encoder",
         "Streaming encoder"
@@ -144,10 +297,17 @@
     {
       "id": "cloud-obs",
       "term": "Cloud OBS",
+      "also_called": [
+        "OBS in the cloud",
+        "Hosted OBS"
+      ],
+      "search_terms": [
+        "Cloud production"
+      ],
       "aliases": [
         "OBS in the cloud",
-        "Cloud production",
-        "Hosted OBS"
+        "Hosted OBS",
+        "Cloud production"
       ],
       "tier": "more",
       "who": "both",
@@ -165,10 +325,16 @@
     {
       "id": "brb",
       "term": "BRB",
-      "aliases": [
+      "also_called": [
         "Be right back",
         "BRB screen",
         "BRB scene"
+      ],
+      "search_terms": [],
+      "aliases": [
+        "BRB scene",
+        "Be right back",
+        "BRB screen"
       ],
       "tier": "core",
       "who": "both",
@@ -181,14 +347,48 @@
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
       "uncertain": false,
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-14",
+      "naming": {
+        "label": "BRB scene",
+        "short_label": "BRB",
+        "case": "sentence",
+        "scope": "The scene or screen shown while the streamer is away or the signal is gone, where an app lets you pick it.",
+        "why": "\"Scene\" tells the reader they pick one of their own scenes. BRB alone is fine where space is short.",
+        "alternatives": [
+          {
+            "term": "Be right back",
+            "status": "also-used",
+            "why": "The words BRB stands for. Clearer to newcomers, but long for a label."
+          },
+          {
+            "term": "BRB screen",
+            "status": "also-used"
+          }
+        ],
+        "evidence": [
+          {
+            "maker": "Moblin",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/ObsRemoteControl/StreamObsRemoteControlSettingsView.swift#L64",
+            "read_on": "2026-11-15",
+            "note": "\"BRB scene\" in the OBS remote control settings, and a toggle \"BRB scene when video source is broken\"."
+          }
+        ],
+        "translation_note": "Keep BRB as written; it's chat shorthand. A translated name can follow it in a hint.",
+        "status": "draft"
+      }
     },
     {
       "id": "drop-protection",
       "term": "Drop protection",
+      "also_called": [
+        "Disconnect protection"
+      ],
+      "search_terms": [],
       "aliases": [
         "Disconnect protection",
-        "Fallback scene"
+        "Fallback scene",
+        "Fallback source",
+        "Offline scene"
       ],
       "tier": "more",
       "who": "both",
@@ -201,11 +401,87 @@
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
       "uncertain": false,
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-14",
+      "naming": {
+        "label": "Drop protection",
+        "case": "sentence",
+        "scope": "A feature that shows a waiting screen while the incoming stream is gone and switches back when it returns.",
+        "why": "Names the whole feature in two words, and \"drop\" is what streamers call losing the signal.",
+        "alternatives": [
+          {
+            "term": "Disconnect protection",
+            "status": "also-used",
+            "why": "The same feature. A little longer.",
+            "seen_in": [
+              "Moblin"
+            ]
+          },
+          {
+            "term": "Fallback scene",
+            "status": "narrower",
+            "why": "The scene it switches to, not the whole feature.",
+            "seen_in": [
+              "Moblin"
+            ]
+          },
+          {
+            "term": "Fallback source",
+            "status": "narrower",
+            "why": "The picture it switches to, not the whole feature.",
+            "seen_in": [
+              "IRLToolkit"
+            ]
+          },
+          {
+            "term": "Offline scene",
+            "status": "narrower",
+            "why": "The scene shown while the feed is gone, not the switching itself.",
+            "seen_in": [
+              "NOALBS"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "maker": "IRL Server",
+            "url": "https://irlserver.com/",
+            "read_on": "2026-11-15",
+            "note": "The product page lists \"drop protection\" and \"Drop protection with NOALBS\" as plan features. A feature name, not a settings screen.",
+            "unverified": true
+          },
+          {
+            "maker": "Moblin",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
+            "read_on": "2026-11-15",
+            "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\"."
+          },
+          {
+            "maker": "IRLToolkit",
+            "url": "https://kb.irltoolkit.com/nodrop/0-QuickStart",
+            "read_on": "2026-11-15",
+            "note": "The NoDrop guide names the setting \"Fallback Source\"."
+          },
+          {
+            "maker": "NOALBS",
+            "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/blob/53bd883c75dedf858d5e0b17a59f894e9f82005a/README.md#L256",
+            "read_on": "2026-11-15",
+            "note": "The config calls the scene used when the feed is gone the \"offline\" scene."
+          }
+        ],
+        "translation_note": "Translate the meaning (protection when the connection drops), not the word \"drop\" literally.",
+        "status": "draft"
+      }
     },
     {
       "id": "data-cap",
       "term": "Data cap",
+      "also_called": [
+        "Data allowance"
+      ],
+      "search_terms": [
+        "Fair use limit",
+        "Unlimited data"
+      ],
       "aliases": [
         "Data allowance",
         "Fair use limit",
@@ -225,6 +501,13 @@
     {
       "id": "upload-speed",
       "term": "Upload speed",
+      "also_called": [
+        "Upload"
+      ],
+      "search_terms": [
+        "Upstream",
+        "Speed test"
+      ],
       "aliases": [
         "Upload",
         "Upstream",
@@ -245,10 +528,17 @@
     {
       "id": "bitrate",
       "term": "Bitrate",
-      "aliases": [
+      "also_called": [],
+      "search_terms": [
         "kbps",
-        "Mbps",
-        "Video bitrate"
+        "Mbps"
+      ],
+      "aliases": [
+        "Bitrates",
+        "Max bitrate",
+        "Video bitrate",
+        "kbps",
+        "Mbps"
       ],
       "tier": "more",
       "who": "both",
@@ -263,11 +553,70 @@
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
       "uncertain": false,
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-14",
+      "naming": {
+        "label": "Bitrate",
+        "case": "sentence",
+        "plural": "Bitrates",
+        "scope": "How much data per second the encoder aims for or may use, in kbit/s or Mbit/s.",
+        "why": "One word that every app checked uses in some form. Say next to it whether the value is a limit or a target, and give the unit.",
+        "alternatives": [
+          {
+            "term": "Max bitrate",
+            "status": "narrower",
+            "why": "The upper limit when the app changes the bitrate by itself.",
+            "seen_in": [
+              "BELABOX",
+              "CeraLive"
+            ]
+          },
+          {
+            "term": "Video bitrate",
+            "status": "narrower",
+            "why": "Only the picture. Use it where an audio bitrate sits next to it.",
+            "seen_in": [
+              "OBS Studio"
+            ]
+          }
+        ],
+        "evidence": [
+          {
+            "maker": "BELABOX",
+            "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/script.js#L1741",
+            "read_on": "2026-11-15",
+            "note": "Slider value shown as \"Max bitrate: … Kbps\"."
+          },
+          {
+            "maker": "CeraLive",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2073",
+            "read_on": "2026-11-15",
+            "note": "\"Bitrate (Kbps)\" in the encoder dialog; \"Max bitrate\" on the go-live card."
+          },
+          {
+            "maker": "Moblin",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/Video/StreamVideoSettingsView.swift#L151",
+            "read_on": "2026-11-15",
+            "note": "Picker labelled \"Bitrate\" in the video settings of a stream."
+          },
+          {
+            "maker": "OBS Studio",
+            "url": "https://obsproject.com/kb/stream-connection-troubleshooting",
+            "read_on": "2026-11-15",
+            "note": "The knowledge base names the setting \"Video Bitrate\" under Settings → Output."
+          }
+        ],
+        "translation_note": "Many languages keep \"bitrate\" as a loanword. Keep the unit as kbit/s or Mbit/s; don't translate it.",
+        "status": "draft"
+      }
     },
     {
       "id": "adaptive-bitrate",
       "term": "Adaptive bitrate",
+      "also_called": [
+        "Dynamic bitrate",
+        "Auto bitrate"
+      ],
+      "search_terms": [],
       "aliases": [
         "Dynamic bitrate",
         "Auto bitrate"
@@ -287,9 +636,16 @@
     {
       "id": "packet-loss",
       "term": "Packet loss",
-      "aliases": [
+      "also_called": [
+        "Lost packets"
+      ],
+      "search_terms": [
         "Loss",
+        "Retransmits"
+      ],
+      "aliases": [
         "Lost packets",
+        "Loss",
         "Retransmits"
       ],
       "tier": "more",
@@ -306,11 +662,18 @@
     {
       "id": "srt-latency",
       "term": "SRT latency",
-      "aliases": [
+      "also_called": [],
+      "search_terms": [
         "Latency (SRT)",
-        "SRT buffer",
+        "Latency (ms)",
+        "latency= in an SRT address"
+      ],
+      "aliases": [
+        "Latency",
         "Receive buffer",
+        "SRT buffer",
         "Buffer",
+        "Latency (SRT)",
         "Latency (ms)",
         "latency= in an SRT address"
       ],
@@ -325,11 +688,69 @@
       ],
       "source": "https://github.com/Haivision/srt/blob/master/docs/API/API-socket-options.md",
       "uncertain": false,
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-14",
+      "naming": {
+        "label": "SRT latency",
+        "case": "sentence",
+        "scope": "The receive buffer of an SRT or SRTLA connection, set in milliseconds.",
+        "why": "Naming the protocol keeps it apart from the delay viewers see. Show the unit (ms) next to the value.",
+        "alternatives": [
+          {
+            "term": "Latency",
+            "status": "ambiguous",
+            "why": "Also means the whole delay from camera to viewer. Clear enough only inside a section that is already about SRT."
+          },
+          {
+            "term": "Receive buffer",
+            "status": "technical",
+            "why": "What the setting is underneath. Good in a hint, less familiar as a label."
+          },
+          {
+            "term": "SRT buffer",
+            "status": "technical",
+            "why": "Describes the mechanism. Fine in a hint."
+          },
+          {
+            "term": "Buffer",
+            "status": "ambiguous",
+            "why": "Many settings are buffers: audio, jitter, recording."
+          }
+        ],
+        "evidence": [
+          {
+            "maker": "BELABOX",
+            "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/script.js#L1783",
+            "read_on": "2026-11-15",
+            "note": "Slider value shown as \"SRT latency: … ms\"."
+          },
+          {
+            "maker": "Moblin",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/Srt/StreamSrtSettingsView.swift#L54",
+            "read_on": "2026-11-15",
+            "note": "\"Latency\" inside the SRT settings of a stream, shown in ms."
+          },
+          {
+            "maker": "CeraLive",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2259",
+            "read_on": "2026-11-15",
+            "note": "\"Latency\" in the latency section of the server dialog."
+          }
+        ],
+        "translation_note": "Keep \"SRT\" as written. Translate \"latency\" with the word your language uses for delay in network settings.",
+        "status": "draft"
+      }
     },
     {
       "id": "latency",
       "term": "Latency",
+      "also_called": [
+        "Delay",
+        "Viewer delay"
+      ],
+      "search_terms": [
+        "Low-latency mode",
+        "Glass-to-glass"
+      ],
       "aliases": [
         "Delay",
         "Viewer delay",
@@ -350,6 +771,12 @@
     {
       "id": "scene",
       "term": "Scene",
+      "also_called": [],
+      "search_terms": [
+        "Scenes",
+        "Scene collection",
+        "Live scene"
+      ],
       "aliases": [
         "Scenes",
         "Scene collection",
@@ -371,6 +798,10 @@
     {
       "id": "big-packets",
       "term": "Big packets",
+      "also_called": [
+        "Big SRT packets"
+      ],
+      "search_terms": [],
       "aliases": [
         "Big SRT packets"
       ],
@@ -388,6 +819,11 @@
     {
       "id": "dns-lookup-strategy",
       "term": "DNS lookup strategy",
+      "also_called": [],
+      "search_terms": [
+        "DNS lookup",
+        "IPv4 or IPv6 lookup"
+      ],
       "aliases": [
         "DNS lookup",
         "IPv4 or IPv6 lookup"
@@ -407,6 +843,11 @@
     {
       "id": "maximize-compatibility",
       "term": "Maximize Compatibility",
+      "also_called": [],
+      "search_terms": [
+        "Maximise Compatibility",
+        "2.4 GHz hotspot"
+      ],
       "aliases": [
         "Maximise Compatibility",
         "2.4 GHz hotspot"
@@ -425,6 +866,10 @@
     {
       "id": "mic-override",
       "term": "Mic override",
+      "also_called": [
+        "Per-scene mic"
+      ],
+      "search_terms": [],
       "aliases": [
         "Per-scene mic"
       ],
@@ -442,6 +887,11 @@
     {
       "id": "browser-source",
       "term": "Browser source",
+      "also_called": [],
+      "search_terms": [
+        "Browser widget",
+        "Alert box URL"
+      ],
       "aliases": [
         "Browser widget",
         "Alert box URL"
@@ -460,6 +910,12 @@
     {
       "id": "local-ingest",
       "term": "Local ingest",
+      "also_called": [],
+      "search_terms": [
+        "RTMP server on the phone",
+        "Network ingest",
+        "Local RTMP server"
+      ],
       "aliases": [
         "RTMP server on the phone",
         "Network ingest",
@@ -479,6 +935,10 @@
     {
       "id": "noalbs",
       "term": "NOALBS",
+      "also_called": [],
+      "search_terms": [
+        "nginx-obs-automatic-low-bitrate-switching"
+      ],
       "aliases": [
         "nginx-obs-automatic-low-bitrate-switching"
       ],
@@ -500,6 +960,12 @@
     {
       "id": "b-frames",
       "term": "B-frames",
+      "also_called": [
+        "Bidirectional frames"
+      ],
+      "search_terms": [
+        "B-frame count"
+      ],
       "aliases": [
         "Bidirectional frames",
         "B-frame count"
@@ -518,6 +984,12 @@
     {
       "id": "ingest-and-output",
       "term": "Ingest and output",
+      "also_called": [],
+      "search_terms": [
+        "Ingest",
+        "Output",
+        "Destination"
+      ],
       "aliases": [
         "Ingest",
         "Output",
@@ -538,6 +1010,13 @@
     {
       "id": "stats-url",
       "term": "Stats URL",
+      "also_called": [
+        "Stats address"
+      ],
+      "search_terms": [
+        "Stats page",
+        "Stats API"
+      ],
       "aliases": [
         "Stats address",
         "Stats page",
@@ -559,6 +1038,11 @@
     {
       "id": "server-type",
       "term": "Server type",
+      "also_called": [],
+      "search_terms": [
+        "Stream server kind",
+        "Kind"
+      ],
       "aliases": [
         "Stream server kind",
         "Kind"
@@ -578,6 +1062,10 @@
     {
       "id": "fix-feed",
       "term": "Fix feed",
+      "also_called": [],
+      "search_terms": [
+        "!fix"
+      ],
       "aliases": [
         "!fix"
       ],
@@ -595,6 +1083,11 @@
     {
       "id": "codec",
       "term": "Codec",
+      "also_called": [],
+      "search_terms": [
+        "Video codec",
+        "Video format"
+      ],
       "aliases": [
         "Video codec",
         "Video format"

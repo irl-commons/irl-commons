@@ -86,6 +86,7 @@ export function prBody(meta: Meta, check: { passed: boolean; output: string }): 
   if (r.kind === "confirm") out.push("**What they checked**", "", fenced(r.checked), "");
   else if (r.kind === "new") out.push("**Description from the form**", "", fenced(r.description), "");
   else out.push("**What changed, in their words**", "", fenced(r.changes), "");
+  if (r.productLabel) out.push("**The label their product uses, and why**", "", fenced(r.productLabel), "");
   if (r.kind === "maker") out.push("**Conflict of interest:** this is an edit request from the maker or a competitor. An independent steward reviews and merges it.", "", fenced(r.conflictDetails), "");
   else if (r.conflict) out.push("**Conflict of interest:** declared in the form. An independent steward reviews it.", "", fenced(r.conflictDetails), "");
   else out.push("**Conflict of interest:** none declared.", "");

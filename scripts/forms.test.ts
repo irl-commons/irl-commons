@@ -164,9 +164,21 @@ describe("writing the entry", () => {
     expect(change.summary).toContain("Sets `name` to the new name.");
     expect(change.summary.join(" ")).not.toContain("`url`");
   });
+  test("a label proposal keeps the product's label for the steward", () => {
+    const { request, change } = run("maker", "maker-label");
+    expect(request.productLabel).toBe('"Latency (ms)" inside the SRT section, because the section title already says SRT.');
+    expect(change.status).toBe("manual");
+  });
+  test("JSON can't set the generated aliases of a word", () => {
+    const { request } = run("maker", "maker-label");
+    expect(applyRequest({ ...request, fields: { aliases: ["x"] } }, data()).status).toBe("invalid");
+    const change = applyRequest({ ...request, fields: { search_terms: ["SRT latency setting"] } }, data());
+    expect(change.status).toBe("ready");
+    expect(change.after!.aliases).toContain("SRT latency setting");
+  });
   test("a new word is complete when the JSON gives the rest", () => {
     const { change } = run("new", "new-word");
-    expect(change.after).toMatchObject({ id: "keyframe-interval", term: "Keyframe interval", tier: "more", who: "helper", aliases: [], related: [], uncertain: true, source: "https://obsproject.com/kb/stream-connection-troubleshooting", checked_on: "2026-11-15" });
+    expect(change.after).toMatchObject({ id: "keyframe-interval", term: "Keyframe interval", tier: "more", who: "helper", also_called: [], search_terms: [], aliases: [], related: [], uncertain: true, source: "https://obsproject.com/kb/stream-connection-troubleshooting", checked_on: "2026-11-15" });
     expect(files.words.safeParse(change.doc).success).toBe(true);
     expect(change.notes.join(" ")).not.toContain("Still missing");
   });
@@ -210,6 +222,11 @@ describe("the pull request and the reply", () => {
     const body = prBody(meta, { passed: false, output: "$ bun scripts/check.ts\ndata/services.json: services.0.kind: missing" });
     expect(body).toContain("````text\n@everyone ```\n<script>x</script>\n````");
     expect(body).toContain("```text\ndata/services.json: services.0.kind: missing\n```");
+  });
+  test("a label proposal shows the product's label in its own code block", () => {
+    const { meta } = prepare(event("maker", "maker-rename"), TODAY, data());
+    meta.request!.productLabel = "Relay";
+    expect(prBody(meta, { passed: true, output: "" })).toContain("**The label their product uses, and why**\n\n```text\nRelay\n```");
   });
   test("a declared conflict and a maker request say who reviews", () => {
     expect(prBody(prepare(event("new", "new-service"), TODAY, data()).meta, { passed: false, output: "" })).toContain("declared in the form. An independent steward reviews it.");

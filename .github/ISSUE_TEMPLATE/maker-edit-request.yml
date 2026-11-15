@@ -9,6 +9,7 @@ body:
         Makers are welcome here. You know your product best, and the list should be right about it.
         Please link a public page that shows the change. An independent steward checks it against the source and decides.
         You can't approve or merge a change to your own entry or a competitor's.
+        Proposing a different label for a word in the naming guide? Write the entry as words/<id> and tell us the label your product uses below.
   - type: input
     id: entry
     attributes:
@@ -69,6 +70,13 @@ body:
       description: What is wrong or out of date, and what the source says now. Plain facts, no ranking or advertising.
     validations:
       required: true
+  - type: textarea
+    id: product_label
+    attributes:
+      label: The label your product uses, and why (optional)
+      description: For a word in the naming guide. The label as your settings show it, for example "SRT latency (ms)", and why it suits your users. A public page or screenshot that shows it helps.
+    validations:
+      required: false
   - type: textarea
     id: fields
     attributes:

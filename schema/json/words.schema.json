@@ -24,12 +24,27 @@
             "type": "string",
             "pattern": "\\S"
           },
-          "aliases": {
+          "also_called": {
             "type": "array",
             "items": {
               "type": "string",
               "pattern": "\\S"
             }
+          },
+          "search_terms": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\S"
+            }
+          },
+          "aliases": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "pattern": "\\S"
+            },
+            "deprecated": true
           },
           "tier": {
             "type": "string",
@@ -94,11 +109,250 @@
               ],
               "additionalProperties": false
             }
+          },
+          "naming": {
+            "type": "object",
+            "properties": {
+              "label": {
+                "type": "string",
+                "maxLength": 40,
+                "pattern": "\\S"
+              },
+              "short_label": {
+                "type": "string",
+                "maxLength": 20,
+                "pattern": "\\S"
+              },
+              "case": {
+                "type": "string",
+                "enum": [
+                  "sentence",
+                  "proper",
+                  "acronym"
+                ]
+              },
+              "plural": {
+                "type": "string",
+                "maxLength": 40,
+                "pattern": "\\S"
+              },
+              "scope": {
+                "type": "string",
+                "maxLength": 200,
+                "pattern": "\\S"
+              },
+              "why": {
+                "type": "string",
+                "maxLength": 300,
+                "pattern": "\\S"
+              },
+              "alternatives": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "term": {
+                      "type": "string",
+                      "maxLength": 60,
+                      "pattern": "\\S"
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "also-used",
+                        "narrower",
+                        "technical",
+                        "ambiguous"
+                      ]
+                    },
+                    "why": {
+                      "type": "string",
+                      "maxLength": 200,
+                      "pattern": "\\S"
+                    },
+                    "seen_in": {
+                      "minItems": 1,
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "pattern": "\\S"
+                      }
+                    }
+                  },
+                  "required": [
+                    "term",
+                    "status"
+                  ],
+                  "additionalProperties": false,
+                  "allOf": [
+                    {
+                      "if": {
+                        "properties": {
+                          "status": {
+                            "not": {
+                              "const": "also-used"
+                            }
+                          }
+                        }
+                      },
+                      "then": {
+                        "required": [
+                          "why"
+                        ]
+                      }
+                    },
+                    {
+                      "if": {
+                        "properties": {
+                          "status": {
+                            "const": "ambiguous"
+                          }
+                        }
+                      },
+                      "then": {
+                        "not": {
+                          "required": [
+                            "seen_in"
+                          ]
+                        }
+                      }
+                    }
+                  ]
+                }
+              },
+              "evidence": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "maker": {
+                      "type": "string",
+                      "maxLength": 60,
+                      "pattern": "\\S"
+                    },
+                    "url": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "read_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    },
+                    "note": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "unverified": {
+                      "type": "boolean",
+                      "const": true
+                    }
+                  },
+                  "required": [
+                    "maker",
+                    "url",
+                    "read_on",
+                    "note"
+                  ],
+                  "additionalProperties": false
+                }
+              },
+              "translation_note": {
+                "type": "string",
+                "maxLength": 300,
+                "pattern": "\\S"
+              },
+              "status": {
+                "type": "string",
+                "enum": [
+                  "draft",
+                  "reviewed"
+                ]
+              },
+              "reviewed_by": {
+                "type": "array",
+                "items": {
+                  "type": "string",
+                  "pattern": "^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$"
+                }
+              }
+            },
+            "required": [
+              "label",
+              "case",
+              "scope",
+              "why",
+              "alternatives",
+              "evidence",
+              "translation_note",
+              "status"
+            ],
+            "additionalProperties": false,
+            "allOf": [
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "reviewed"
+                    }
+                  }
+                },
+                "then": {
+                  "required": [
+                    "reviewed_by"
+                  ],
+                  "properties": {
+                    "reviewed_by": {
+                      "minItems": 2,
+                      "uniqueItems": true
+                    },
+                    "evidence": {
+                      "minItems": 2
+                    }
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "status": {
+                      "const": "draft"
+                    }
+                  }
+                },
+                "then": {
+                  "not": {
+                    "required": [
+                      "reviewed_by"
+                    ]
+                  }
+                }
+              },
+              {
+                "if": {
+                  "properties": {
+                    "case": {
+                      "const": "acronym"
+                    }
+                  }
+                },
+                "then": {
+                  "properties": {
+                    "label": {
+                      "pattern": "^[^a-z]*$"
+                    }
+                  }
+                }
+              }
+            ]
           }
         },
         "required": [
           "id",
           "term",
+          "also_called",
+          "search_terms",
           "aliases",
           "tier",
           "who",

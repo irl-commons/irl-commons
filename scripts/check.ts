@@ -1,7 +1,7 @@
 // Validate ../data with zod, run the cross-reference checks, make sure the
 // committed JSON Schema matches the zod schemas, and invalid fixtures are rejected. Exit 1 on any problem.
 import { readFileSync, readdirSync } from "node:fs";
-import { files, guideTitle, RolesByKind, type FileName } from "../schema/src/schema.ts";
+import { files, guideTitle, RolesByKind, wordAliases, type FileName } from "../schema/src/schema.ts";
 import { exported, partsJson } from "./export.ts";
 import { comparisonFacts } from "./stale.ts";
 
@@ -38,6 +38,8 @@ export function productPattern(name: string): RegExp {
 
 const COUNTRY_CODES = "AD AE AF AG AI AL AM AO AQ AR AS AT AU AW AX AZ BA BB BD BE BF BG BH BI BJ BL BM BN BO BQ BR BS BT BV BW BY BZ CA CC CD CF CG CH CI CK CL CM CN CO CR CU CV CW CX CY CZ DE DJ DK DM DO DZ EC EE EG EH ER ES ET FI FJ FK FM FO FR GA GB GD GE GF GG GH GI GL GM GN GP GQ GR GS GT GU GW GY HK HM HN HR HT HU ID IE IL IM IN IO IQ IR IS IT JE JM JO JP KE KG KH KI KM KN KP KR KW KY KZ LA LB LC LI LK LR LS LT LU LV LY MA MC MD ME MF MG MH MK ML MM MN MO MP MQ MR MS MT MU MV MW MX MY MZ NA NC NE NF NG NI NL NO NP NR NU NZ OM PA PE PF PG PH PK PL PM PN PR PS PT PW PY QA RE RO RS RU RW SA SB SC SD SE SG SH SI SJ SK SL SM SN SO SR SS ST SV SX SY SZ TC TD TF TG TH TJ TK TL TM TN TO TR TT TV TW TZ UA UG UM US UY UZ VA VC VE VG VI VN VU WF WS YE YT ZA ZM ZW";
 
+const stewards = new Set<string>(read(here("../stewards.json")).stewards.map((s: any) => s.github).filter(Boolean).map((s: string) => s.toLowerCase()));
+
 export function semantic(data: Record<FileName, any>): string[] {
   const out: string[] = hygiene(data);
   const today = new Date().toISOString().slice(0, 10);
@@ -55,6 +57,13 @@ export function semantic(data: Record<FileName, any>): string[] {
   dupes("words", data.words.words.map((w: any) => w.id));
   for (const w of data.words.words)
     for (const r of w.related) if (!wordIds.has(r)) out.push(`words: ${w.id}: related '${r}' is not in the list`);
+  // The naming guide: the deprecated aliases stay generated, evidence isn't dated ahead, reviewers are listed stewards.
+  for (const w of data.words.words) {
+    if (JSON.stringify(w.aliases) !== JSON.stringify(wordAliases(w))) out.push(`words: ${w.id}: aliases is stale: run bun run aliases`);
+    for (const e of w.naming?.evidence ?? []) if (e.read_on > today) out.push(`words: ${w.id}: evidence read_on is in the future`);
+    for (const r of w.naming?.reviewed_by ?? [])
+      if (!stewards.has(r.toLowerCase())) out.push(`words: ${w.id}: reviewed_by '${r}' is not a listed steward`);
+  }
   dupes("answers", data.answers.answers.map((a: any) => a.id));
   for (const a of data.answers.answers)
     for (const r of a.words) if (!wordIds.has(r)) out.push(`answers: ${a.id}: word '${r}' is not in words`);
@@ -128,7 +137,9 @@ export function semantic(data: Record<FileName, any>): string[] {
   // One thing, one definition: a standard that is also a glossary word points at the word and shares its id.
   const wordById = new Map<string, any>(data.words.words.map((w: any) => [w.id, w]));
   const wordByName = new Map<string, string>();
-  for (const w of data.words.words) for (const n of [w.term, ...w.aliases]) wordByName.set(n.toLowerCase(), w.id);
+  for (const w of data.words.words)
+    for (const n of [w.term, w.naming?.label, ...w.also_called, ...(w.naming?.alternatives ?? []).map((a: any) => a.term), ...w.search_terms])
+      if (n) wordByName.set(n.toLowerCase(), w.id);
   for (const x of data.standards.standards) {
     if (x.word !== undefined && !wordById.has(x.word)) out.push(`standards: ${x.id}: word '${x.word}' is not in words`);
     if (x.word !== undefined) continue;
@@ -241,7 +252,7 @@ for (const mutation of [
   (d: any) => { d.standards.standards.push(d.standards.standards[0]); },
   (d: any) => { d.standards.standards[0].id = data.words.words[0].id; },
   (d: any) => { d.standards.standards[0].name = data.words.words[0].term; },
-  (d: any) => { d.standards.standards[0].name = `${data.words.words[0].aliases[0]} (long name)`; },
+  (d: any) => { d.standards.standards[0].name = `${data.words.words[0].also_called[0]} (long name)`; },
   (d: any) => { const s = d.standards.standards[0]; s.id = "not-a-word"; s.word = "not-a-word"; delete s.description; },
 ]) {
   const bad = structuredClone(withStandard); mutation(bad);
@@ -285,6 +296,19 @@ for (const mutation of [
 ]) {
   const bad = structuredClone(data); mutation(bad);
   if (!semantic(bad).length) problems.push("invalid service class or hosting accepted");
+}
+// Naming guide: rules that need the other files (generated aliases, evidence dates, steward list).
+const named = data.words.words.findIndex((w: any) => w.naming);
+const reviewed = structuredClone(data);
+Object.assign(reviewed.words.words[named].naming, { status: "reviewed", reviewed_by: ["pjeweb", "sample-second-steward"] });
+if (!semantic(reviewed).some((p) => p.includes("not a listed steward"))) problems.push("a reviewer outside stewards.json was accepted");
+for (const mutation of [
+  (d: any) => { d.words.words[named].aliases.push("Something else"); },
+  (d: any) => { d.words.words[named].also_called.push("A new synonym"); },
+  (d: any) => { d.words.words[named].naming.evidence[0].read_on = "2999-01-01"; },
+]) {
+  const bad = structuredClone(data); mutation(bad);
+  if (!semantic(bad).length) problems.push("invalid naming data accepted");
 }
 const chat = "https://disco" + "rd.gg/example";
 if (files.services.safeParse({...data.services, services: [{...data.services.services[0], url: chat}]}).success)

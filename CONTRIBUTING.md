@@ -31,6 +31,17 @@ Run `bun install --frozen-lockfile`, `bun run check`, `bun run export` and
 and review the JSON Schema first, then repeat the drift check. Add invalid
 fixtures for new constraints. Keep ids stable and all cross-references valid.
 
+## Propose a different label
+
+The words in the naming guide recommend a label for one context; they don't
+say any other label is wrong. If your product uses another label, or you think
+a different one would serve streamers better, open "Fix or update an entry"
+(or "Edit request from the maker" if it's your product) with the entry
+`words/<id>`. Say what you suggest under "What changed", and use the optional
+field for the label your product uses and why. A public page or screenshot that
+shows the label is the best source. Write reasons about the word, not about
+another product. A steward adds what you show as evidence or as another name.
+
 ## No GitHub account?
 
 Write to hello@irlcommons.org, or post on Discord
