@@ -2183,15 +2183,15 @@
       "status": "proposed",
       "openness": "open",
       "licence": "MIT",
-      "maker": "OpenStreamBox Initiative",
-      "url": "https://github.com/openstreambox/stream-status",
+      "maker": "IRL Commons",
+      "url": "https://github.com/irl-commons/stream-status",
       "description": "A JSON format for live-stream findings: what's wrong, where, how sure, and whether the stream is still live.",
       "service_ids": [],
       "other_users": [],
       "sources": [
         {
           "label": "stream-status README",
-          "url": "https://github.com/openstreambox/stream-status"
+          "url": "https://github.com/irl-commons/stream-status"
         }
       ],
       "notes": "A v0 draft; field names can still change. No app writes or reads it yet."
@@ -2205,15 +2205,15 @@
       "status": "proposed",
       "openness": "open",
       "licence": "MIT",
-      "maker": "OpenStreamBox Initiative",
-      "url": "https://github.com/openstreambox/stream-session",
+      "maker": "IRL Commons",
+      "url": "https://github.com/irl-commons/stream-session",
       "description": "A format that lets the devices in a live show agree on which show it is, who is in it, which device is in charge and what each person shares.",
       "service_ids": [],
       "other_users": [],
       "sources": [
         {
           "label": "stream-session README",
-          "url": "https://github.com/openstreambox/stream-session"
+          "url": "https://github.com/irl-commons/stream-session"
         }
       ],
       "notes": "A v0 draft; field names can still change. No app writes or reads it yet."
@@ -2227,7 +2227,7 @@
       "status": "proposed",
       "openness": "open",
       "licence": "CC BY 4.0 (data); MIT (code)",
-      "maker": "irl-commons contributors (started by the OpenStreamBox Initiative)",
+      "maker": "IRL Commons contributors",
       "url": "https://github.com/irl-commons/irl-commons",
       "description": "Small curated datasets about IRL streaming: words, quick checks, services, guides and standards, with Zod and JSON Schema validation.",
       "service_ids": [],

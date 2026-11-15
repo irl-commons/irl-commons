@@ -20,7 +20,7 @@ approve a conflicted author's edit, or it waits, and an independent person
 presses merge.
 
 There is currently **one named steward** in `stewards.json`, `pjeweb`
-(affiliation: openstreambox); the second seat is pending and grants no access.
+(affiliation: irl-commons, the IRL Commons projects); the second seat is pending and grants no access.
 Launch needs two stewards; until the second is listed, the bootstrap clause
 below applies. Prices need three, one seat per company.
 The GitHub org and npm org each require **at least two org owners now**, and

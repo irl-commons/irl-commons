@@ -9,6 +9,14 @@ never change.
 
 ## Unreleased
 
+- The initiative that started this repository is now called IRL Commons.
+  `standards.json` names it as the maker of stream-status and stream-session,
+  which moved to [irl-commons/stream-status](https://github.com/irl-commons/stream-status)
+  and [irl-commons/stream-session](https://github.com/irl-commons/stream-session).
+  The credit line is now "Data from IRL Commons contributors". The steward
+  affiliation id `openstreambox` is now `irl-commons`; the rules are the same.
+- The sites that use the data are howtoirl.org (glossary, link list, guides)
+  and irlcommons.org (standards). Contact: hello@irlcommons.org.
 - Contributing: issue forms for a new entry, an edit, a confirmation and a
   maker's edit request. A steward can turn a filled-in form into a draft pull
   request with the `make-pr` label. People without a GitHub account can write

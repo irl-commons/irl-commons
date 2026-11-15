@@ -2,8 +2,8 @@
 
 ## Who uses this data?
 
-The glossary, quick checks, link list and guides on
-[openstreambox.org](https://openstreambox.org/) come from here. No other
+The glossary, link list and guides on [howtoirl.org](https://howtoirl.org/)
+and the standards on [irlcommons.org](https://irlcommons.org/) come from here. No other
 product is known to use it yet. If yours does, say so in
 [Discussions](https://github.com/irl-commons/irl-commons/discussions).
 
@@ -69,13 +69,13 @@ including conflicts of interest.
 
 ## What are stream-status and stream-session doing in `standards.json`?
 
-The OpenStreamBox Initiative started them, and it also stewards this
+IRL Commons started them, and it also stewards this
 repository. So they sit in the `steward-projects` group. They are kept apart from the other standards, so
 nobody takes them for something the scene already uses. How they fit together is on
-[openstreambox.org/open-standards.html](https://openstreambox.org/open-standards.html).
+[irlcommons.org/open-standards.html](https://irlcommons.org/open-standards.html).
 
 ## Where do I ask, or say what's missing?
 
 In [Discussions](https://github.com/irl-commons/irl-commons/discussions),
 or open an issue for a specific entry. If you'd rather not post in public,
-write to hello@openstreambox.org.
+write to hello@irlcommons.org.
