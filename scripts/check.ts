@@ -209,6 +209,9 @@ if (readFileSync(here("../schema/json/parts.json"), "utf8") !== partsJson()) pro
 if (!problems.length) problems.push(...semantic(data));
 
 // Fixtures: <file>--<what>.json, each must fail.
+// Documentation uses the same required provenance as tutorials.
+const docsGuide = {...data.guides.guides[0], kind: "docs"};
+if (!files.guides.safeParse({about: "", guides: [docsGuide]}).success) problems.push("valid docs guide rejected");
 let fixtures = 0;
 for (const f of readdirSync(here("../schema/fixtures/")).filter((f) => f.endsWith(".json")).sort()) {
   const name = f.split("--")[0] as FileName;
