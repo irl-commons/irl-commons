@@ -51,6 +51,36 @@
               "community"
             ]
           },
+          "class": {
+            "type": "string",
+            "enum": [
+              "phone-app",
+              "helper-app",
+              "connections",
+              "bonding",
+              "hardware",
+              "parts",
+              "store",
+              "cloud",
+              "production",
+              "building-block",
+              "docs"
+            ]
+          },
+          "hosting": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "self",
+                  "service"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
           "maker": {
             "type": "string",
             "pattern": "\\S"
@@ -193,6 +223,8 @@
           "name",
           "kind",
           "role",
+          "class",
+          "hosting",
           "maker",
           "url",
           "links",

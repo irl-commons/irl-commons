@@ -86,6 +86,23 @@ export const Role = z.enum([
   "relay", "hub", "production", "hardware", "community",
 ]);
 
+/** Which overview a product belongs in, as a streamer looks for it. One class per product.
+ *  phone-app: the app on a phone that sends the stream; helper-app: small apps around it (chat,
+ *  location, remote control, a camera into the phone); connections: ways to add another network;
+ *  bonding: receivers and relays that join a bonded stream back together, and bonding services;
+ *  hardware: backpacks, encoders and kits; parts: add-ons for a box or backpack; store: shops for
+ *  built backpacks, cases and parts; cloud: hosted production (cloud OBS, drop protection, restreaming);
+ *  production: OBS and tools on your own computer or in the browser; building-block: protocols,
+ *  libraries and general media servers that apps are built from; docs: community docs and wikis. */
+export const ServiceClass = z.enum([
+  "phone-app", "helper-app", "connections", "bonding", "hardware", "parts", "store", "cloud", "production",
+  "building-block", "docs",
+]);
+
+/** Who runs the server side. self: software you run on your own server or computer;
+ *  service: someone runs it for you, paid or free. Required for bonding and cloud; null where it doesn't apply. */
+export const Hosting = z.enum(["self", "service"]);
+
 /** Which roles each kind may take. */
 export const RolesByKind: Record<z.infer<typeof ServiceKind>, z.infer<typeof Role>[]> = {
   app: ["streaming-app", "extra-connections", "camera-capture", "remote-control", "chat-overlays", "other-app"],
@@ -102,6 +119,8 @@ export const Service = z.strictObject({
   name: Text,
   kind: ServiceKind,
   role: Role,
+  class: ServiceClass,
+  hosting: Hosting.nullable(),
   maker: Text,
   url: HttpsUrl,
   links: z.array(Link),
