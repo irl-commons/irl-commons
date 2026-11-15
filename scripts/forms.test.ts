@@ -173,7 +173,7 @@ describe("writing the entry", () => {
   test("a new service without JSON lists what a steward still fills in", () => {
     const { change } = run("new", "new-service");
     expect(change.after).toMatchObject({ id: "sample-relay", name: "Sample Relay", url: "https://relay.example.org/", links: [{ label: "relay.example.org", url: "https://relay.example.org/docs" }] });
-    expect(change.notes.join(" ")).toContain("`kind`, `role`, `maker`");
+    expect(change.notes.join(" ")).toContain("`kind`, `role`, `class`, `hosting`, `maker`");
     expect(files.services.safeParse(change.doc).success).toBe(false);
   });
   test("a new entry can't reuse an id, and an edit needs one that exists", () => {

@@ -66,6 +66,20 @@ const apps = services.filter((s) =>
 apps.map((s) => `${s.name} by ${s.maker}: ${s.url}`);
 ```
 
+For an overview the way a streamer looks for things, use `class` instead of
+`role`. Receivers and relays you can run yourself, apart from the hosted ones:
+
+```js
+const bonding = services.filter((s) => s.class === "bonding");
+const selfHosted = bonding.filter((s) => s.hosting === "self");
+const hosted = bonding.filter((s) => s.hosting === "service");
+```
+
+The classes are `phone-app`, `helper-app`, `connections`, `bonding`,
+`hardware`, `parts`, `store`, `cloud`, `production`, `building-block` and
+`docs`. `building-block` holds protocols, libraries and general media
+servers; most streamers won't need them.
+
 Other roles are `extra-connections`, `relay`, `hub`, `remote-control`,
 `camera-capture`, `chat-overlays`, `production`, `hardware` and
 `community`. The list has no ranking and no paid places. Keep it that way

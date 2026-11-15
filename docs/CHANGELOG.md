@@ -9,6 +9,13 @@ never change.
 
 ## Unreleased
 
+- `services.json`: two new fields on every entry. `class` puts each product
+  in one overview a streamer would look for: phone apps, helper apps,
+  connections, bonding (receivers, relays and bonding services), hardware,
+  parts, stores, cloud production, production on your own computer, building
+  blocks (protocols, libraries, general media servers) and docs. `hosting` is
+  `self` or `service` for things with a server side, and null otherwise; bonding
+  and cloud entries always set it.
 - The initiative that started this repository is now called IRL Commons.
   `standards.json` names it as the maker of stream-status and stream-session,
   which moved to [irl-commons/stream-status](https://github.com/irl-commons/stream-status)

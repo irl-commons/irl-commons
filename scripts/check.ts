@@ -75,6 +75,9 @@ export function semantic(data: Record<FileName, any>): string[] {
   for (const s of data.services.services) {
     const allowed: string[] = (RolesByKind as any)[s.kind] ?? [];
     if (!allowed.includes(s.role)) out.push(`services: ${s.id}: role '${s.role}' doesn't fit kind '${s.kind}' (allowed: ${allowed.join(", ")})`);
+    if ((s.kind === "community") !== (s.class === "docs")) out.push(`services: ${s.id}: class 'docs' is for community entries, and only them`);
+    if (["bonding", "cloud"].includes(s.class) && s.hosting === null) out.push(`services: ${s.id}: class '${s.class}' needs hosting: self or service`);
+    if (s.class === "cloud" && s.hosting === "self") out.push(`services: ${s.id}: class 'cloud' is hosted for you; software you run yourself is class 'production' or 'bonding'`);
     if (s.kind === "community") {
       if (s.part.length) out.push(`services: ${s.id}: a community entry has no part; name the products it documents in covers`);
       if (!s.covers.length) out.push(`services: ${s.id}: a community entry needs covers`);
@@ -270,6 +273,18 @@ for (const mutation of [
 ]) {
   const bad = structuredClone(withCodecs); mutation(bad);
   if (!semantic(bad).length) problems.push("invalid codec comparison accepted");
+}
+// Service classes and hosting: docs only for community entries; bonding and cloud say who runs them.
+const serviceAt = (cls: string) => data.services.services.findIndex((s: any) => s.class === cls);
+for (const mutation of [
+  (d: any) => { d.services.services[serviceAt("bonding")].hosting = null; },
+  (d: any) => { d.services.services[serviceAt("cloud")].hosting = null; },
+  (d: any) => { d.services.services[serviceAt("cloud")].hosting = "self"; },
+  (d: any) => { d.services.services[serviceAt("docs")].class = "production"; },
+  (d: any) => { d.services.services[serviceAt("phone-app")].class = "docs"; },
+]) {
+  const bad = structuredClone(data); mutation(bad);
+  if (!semantic(bad).length) problems.push("invalid service class or hosting accepted");
 }
 const chat = "https://disco" + "rd.gg/example";
 if (files.services.safeParse({...data.services, services: [{...data.services.services[0], url: chat}]}).success)
