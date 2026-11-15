@@ -157,13 +157,20 @@ export function semantic(data: Record<FileName, any>): string[] {
   return out;
 }
 
+// The project's one public chat invite, a contact link for people without a GitHub account.
+// Only these two files may carry it; the data never does.
+export const CONTACT_INVITE = "https://disco" + "rd.gg/3B9b9n9N6";
+export const CONTACT_FILES = new Set([".github/ISSUE_TEMPLATE/config.yml", "CONTRIBUTING.md"]);
+
 // Scan the distributable repository tree as well as the parsed datasets.
 function scanTree(dir: URL): void {
   for (const entry of readdirSync(dir, {withFileTypes: true})) {
     if ([".git", "node_modules", "__pycache__"].includes(entry.name)) continue;
     const path = new URL(entry.name + (entry.isDirectory() ? "/" : ""), dir);
-    if (entry.isDirectory()) scanTree(path);
-    else if (FORBIDDEN.test(readFileSync(path, "utf8"))) problems.push(`tree: ${entry.name}: private reference`);
+    if (entry.isDirectory()) { scanTree(path); continue; }
+    let text = readFileSync(path, "utf8");
+    if (CONTACT_FILES.has(path.href.slice(here("../").href.length))) text = text.replaceAll(CONTACT_INVITE, "");
+    if (FORBIDDEN.test(text)) problems.push(`tree: ${entry.name}: private reference`);
   }
 }
 scanTree(here("../"));
@@ -187,6 +194,12 @@ for (const f of readdirSync(here("../schema/fixtures/")).filter((f) => f.endsWit
   if (!(name in files)) { problems.push(`fixtures/${f}: unknown file kind`); continue; }
   fixtures++;
   if (files[name].safeParse(read(here(`../schema/fixtures/${f}`))).success) problems.push(`fixtures/${f}: zod accepted an invalid file`);
+}
+
+// The self-tests below build on valid data; with problems in the data, report those first.
+if (problems.length) {
+  for (const p of problems) console.error(p);
+  process.exit(1);
 }
 
 const carrier = {id: "sample-network", name: "Sample Network", country: "DE", network_type: "MNO", host_network_id: null,

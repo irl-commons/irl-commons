@@ -1,7 +1,7 @@
 # Contributing
 
-Propose an entry, correction or confirmation with a pull request or the matching
-issue template. Give the dataset and permanent id, public HTTPS primary source,
+Propose an entry, correction or confirmation with a pull request or one of the
+[issue forms](https://github.com/irl-commons/irl-commons/issues/new/choose). Give the dataset and permanent id, public HTTPS primary source,
 date you read it, and the specific claim or fields it supports. Use your own
 words, neutral descriptions and no rankings, paid placement or affiliate links.
 Do not copy community posts, private material or credentials.
@@ -30,3 +30,52 @@ Run `bun install --frozen-lockfile`, `bun run check`, `bun run export` and
 `git diff --exit-code -- schema/json`. For intentional schema changes, regenerate
 and review the JSON Schema first, then repeat the drift check. Add invalid
 fixtures for new constraints. Keep ids stable and all cross-references valid.
+
+## No GitHub account?
+
+Write to hello@openstreambox.org, or post on Discord
+(https://discord.gg/3B9b9n9N6). Say which entry it is about, what is wrong,
+missing or still right, the public page that shows it, and the date you read
+that page. A steward files the matching issue form for you and links it in the
+reply; the change then follows the same steps as any other.
+
+## How a form becomes a change
+
+There are four issue forms: suggest a new entry, fix or update an entry,
+confirm an entry still holds, and an edit request from the maker. Each one asks
+for the entry, the source, the date you read it and any conflict of interest.
+
+1. You fill in a form. A steward reads it and checks that the source is public
+   and says what the form says.
+2. The steward adds the `make-pr` label. The "Form to draft pull request"
+   workflow then checks that the person who added the label is a listed steward
+   or has write access, reads the form as plain text, writes the entry into the
+   right data file with `checked_on` set to the date you read the source, and
+   runs `bun run check`.
+3. It opens a draft pull request that links the issue and names you as
+   co-author. The issue gets a reply with the link. If the form can't be
+   written automatically (a change described only in words, or a problem in
+   the form), the reply says why, and the label comes off so it can be added
+   again after a fix.
+4. The steward compares the draft with the source and finishes anything still
+   missing on the same branch, for example the fields of a new entry that the
+   form doesn't ask for. Marking the pull request ready for review starts the
+   `validate` and `governance` checks. Merging follows the rules above and in
+   GOVERNANCE.md; the workflow can't bypass them.
+
+### Links that fill in a form
+
+A link can open a form with some fields already filled in, for example a
+"Confirm this entry" link next to each entry on a site:
+
+```
+https://github.com/irl-commons/irl-commons/issues/new?template=confirm-entry.yml&title=Confirm%3A%20services%2Fmoblin&entry=services%2Fmoblin&source=https%3A%2F%2Fgithub.com%2Feerimoq%2Fmoblin
+```
+
+`template` is the form file: `new-entry.yml`, `edit-entry.yml`,
+`confirm-entry.yml` or `maker-edit-request.yml`. Every other parameter is a
+field id; URL-encode each value. These fields can be filled: `entry` (written
+as dataset/id, so the dataset needs no separate choice), `name`, `link`,
+`source`, and the text boxes `description`, `checked` and `changes`. The
+dropdowns (dataset and conflict of interest) can't be filled by a link, and
+`read_on` is left for the person who reads the source.

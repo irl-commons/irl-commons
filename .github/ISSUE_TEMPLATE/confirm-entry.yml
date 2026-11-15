@@ -1,0 +1,71 @@
+name: Confirm an entry still holds
+description: You read the source again, and the entry is still right.
+title: "Confirm: "
+labels: ["form: confirm"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for checking. A confirmation moves the entry's check date forward, so people know it is still true.
+        A steward reads this form and can turn it into a draft pull request with you as co-author.
+  - type: input
+    id: entry
+    attributes:
+      label: Entry
+      description: The dataset and the id, for example services/moblin.
+      placeholder: services/moblin
+    validations:
+      required: true
+  - type: dropdown
+    id: dataset
+    attributes:
+      label: Dataset
+      description: Only needed when the entry above has no dataset in front of the id.
+      options:
+        - "words: the word list"
+        - "answers: quick checks for common problems"
+        - "services: apps, relays, receivers, hardware and communities"
+        - "guides: tutorials from the makers"
+        - "standards: shared formats and protocols"
+        - "plans: mobile carriers and their plans"
+    validations:
+      required: false
+  - type: input
+    id: source
+    attributes:
+      label: Source you read
+      description: A public https page from the maker, the standard or the platform. No chat links and no forum posts.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: read_on
+    attributes:
+      label: Date you read it
+      description: Year-month-day, for example 2026-11-15.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+  - type: textarea
+    id: checked
+    attributes:
+      label: What you checked
+      description: Which claims or fields you compared with the source, and whether each one still matches.
+    validations:
+      required: true
+  - type: dropdown
+    id: conflict
+    attributes:
+      label: Do you work for, get paid by, or own this product or a competing one?
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+  - type: textarea
+    id: conflict_details
+    attributes:
+      label: If yes, what is the connection?
+      description: For example "I work for the maker" or "I make a competing app". This is fine, it only means an independent steward reviews it.
+    validations:
+      required: false

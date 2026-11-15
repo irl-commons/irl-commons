@@ -9,6 +9,11 @@ never change.
 
 ## Unreleased
 
+- Contributing: issue forms for a new entry, an edit, a confirmation and a
+  maker's edit request. A steward can turn a filled-in form into a draft pull
+  request with the `make-pr` label. People without a GitHub account can write
+  to hello@openstreambox.org or post on Discord. See
+  [CONTRIBUTING.md](../CONTRIBUTING.md#how-a-form-becomes-a-change).
 - Docs for people who use the data: [Use the data](getting-started.md),
   [worked examples](examples.md) and an [FAQ](faq.md).
 - `standards.json`: stream-status and stream-session name the OpenStreamBox

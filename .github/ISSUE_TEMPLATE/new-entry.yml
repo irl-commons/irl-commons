@@ -1,0 +1,97 @@
+name: Suggest a new entry
+description: A word, product, guide, standard or carrier that is missing.
+title: "New: "
+labels: ["form: new entry"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thank you for the suggestion. Each entry needs a public source, and the description is written in your own words.
+        No rankings, no advertising and no affiliate links. A steward reads this form, fills in anything still missing,
+        and can turn it into a draft pull request with you as co-author.
+  - type: dropdown
+    id: dataset
+    attributes:
+      label: Dataset
+      description: Which list the new entry belongs in.
+      options:
+        - "words: the word list"
+        - "answers: quick checks for common problems"
+        - "services: apps, relays, receivers, hardware and communities"
+        - "guides: tutorials from the makers"
+        - "standards: shared formats and protocols"
+        - "plans: mobile carriers and their plans"
+    validations:
+      required: true
+  - type: input
+    id: entry
+    attributes:
+      label: Suggested id
+      description: Lowercase letters, numbers and single dashes, for example my-relay. The id never changes later.
+      placeholder: my-relay
+    validations:
+      required: true
+  - type: input
+    id: name
+    attributes:
+      label: Name
+      description: Write it the way the maker writes it. For a word, the word itself. For a guide, the page's own title.
+    validations:
+      required: true
+  - type: input
+    id: link
+    attributes:
+      label: Its own link
+      description: The product's or the page's own https link, if it has one.
+      placeholder: https://
+    validations:
+      required: false
+  - type: input
+    id: source
+    attributes:
+      label: Source you read
+      description: A public https page from the maker, the standard or the platform. No chat links and no forum posts.
+      placeholder: https://
+    validations:
+      required: true
+  - type: input
+    id: read_on
+    attributes:
+      label: Date you read it
+      description: Year-month-day, for example 2026-11-15.
+      placeholder: YYYY-MM-DD
+    validations:
+      required: true
+  - type: textarea
+    id: description
+    attributes:
+      label: Short description
+      description: One or two sentences in your own words. What is it, and who uses it?
+    validations:
+      required: true
+  - type: textarea
+    id: fields
+    attributes:
+      label: More fields as JSON (optional)
+      description: |
+        Only if you know the data format (see data/README.md), for example {"kind": "app", "platforms": ["android"]}.
+        Leave it empty if you are not sure. A steward can do this part.
+      render: json
+    validations:
+      required: false
+  - type: dropdown
+    id: conflict
+    attributes:
+      label: Do you work for, get paid by, or own this product or a competing one?
+      options:
+        - "No"
+        - "Yes"
+    validations:
+      required: true
+  - type: textarea
+    id: conflict_details
+    attributes:
+      label: If yes, what is the connection?
+      description: For example "I work for the maker" or "I make a competing app". This is fine, it only means an independent steward reviews it.
+    validations:
+      required: false

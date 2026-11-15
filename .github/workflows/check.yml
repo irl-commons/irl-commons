@@ -2,6 +2,8 @@ name: Validate datasets
 on:
   push:
   pull_request:
+    # ready_for_review: drafts opened by the form workflow get their checks when a steward marks them ready.
+    types: [opened, synchronize, reopened, ready_for_review]
 permissions:
   contents: read
 jobs:

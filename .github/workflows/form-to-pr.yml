@@ -1,0 +1,77 @@
+name: Form to draft pull request
+# A steward adds the make-pr label to an issue made from one of the issue forms.
+# The first job reads the form with read-only access and writes the entry; the second
+# opens a draft pull request from that result. Issue text is only ever read from the
+# event file as data, never placed in a command line.
+on:
+  issues:
+    types: [labeled]
+permissions: {}
+concurrency:
+  group: form-to-pr-${{ github.event.issue.number }}
+  cancel-in-progress: false
+jobs:
+  prepare:
+    if: github.event.label.name == 'make-pr' && github.event.issue.state == 'open'
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    env:
+      FORM_OUT: ${{ runner.temp }}/form
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+        with:
+          bun-version: 1.4.3
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - name: Check who added the label, read the form and write the entry
+        id: prepare
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: bun scripts/form-pr.ts prepare
+      - name: Run the data check
+        id: check
+        if: steps.prepare.outputs.status == 'ready'
+        run: |
+          if bun run check > "$FORM_OUT/check.txt" 2>&1; then
+            echo 'passed=true' >> "$GITHUB_OUTPUT"
+          else
+            echo 'passed=false' >> "$GITHUB_OUTPUT"
+          fi
+      - name: Write the pull request text
+        env:
+          CHECK_PASSED: ${{ steps.check.outputs.passed }}
+        run: bun scripts/form-pr.ts compose
+      - uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
+        with:
+          name: form
+          path: ${{ runner.temp }}/form/
+          retention-days: 1
+          if-no-files-found: error
+  open:
+    needs: prepare
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: write
+      pull-requests: write
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+          sparse-checkout: scripts
+      - uses: actions/download-artifact@9000827ccba6bdab643e8b6fd33ac0654aef8333 # v8.0.2
+        with:
+          name: form
+          path: ${{ runner.temp }}/form
+      - name: Open the draft pull request and reply on the issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          ISSUE: ${{ github.event.issue.number }}
+          FORM_DIR: ${{ runner.temp }}/form
+        run: node scripts/form-open.mjs
