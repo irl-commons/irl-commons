@@ -53,7 +53,9 @@ for the entry, the source, the date you read it and any conflict of interest.
    right data file with `checked_on` set to the date you read the source, and
    runs `bun run check`.
 3. It opens a draft pull request that links the issue and names you as
-   co-author. The issue gets a reply with the link. If the form can't be
+   co-author. The issue gets a reply with the link. If GitHub doesn't let the
+   workflow open the pull request, the reply links the ready branch instead,
+   and a steward opens the draft from there. If the form can't be
    written automatically (a change described only in words, or a problem in
    the form), the reply says why, and the label comes off so it can be added
    again after a fix.

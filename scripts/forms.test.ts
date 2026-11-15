@@ -3,7 +3,7 @@ import { readFileSync } from "node:fs";
 import { files, type FileName } from "../schema/src/schema.ts";
 import { applyRequest, fenced, formFor, loadForms, parseBody, readRequest, serialize, type Kind } from "./forms.ts";
 import { commitMessage, mayLabel, prBody, prepare, problemComment } from "./form-pr.ts";
-import { branchFor, readBundle } from "./form-open.mjs";
+import { branchFor, handOver, readBundle } from "./form-open.mjs";
 
 const TODAY = "2026-11-15";
 const forms = loadForms();
@@ -268,5 +268,8 @@ describe("the bundle the write job accepts", () => {
   });
   test("the branch name comes from the issue number only", () => {
     expect(branchFor(42)).toBe("form/issue-42");
+  });
+  test("when the pull request can't be opened, the reply links the ready branch", () => {
+    expect(handOver("irl-commons/irl-commons", "form/issue-42")).toContain("https://github.com/irl-commons/irl-commons/compare/main...form/issue-42?expand=1");
   });
 });
