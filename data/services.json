@@ -537,13 +537,18 @@
       "name": "OpenIRL srtla-receiver",
       "kind": "relay",
       "role": "relay",
-      "maker": "OpenIRL",
+      "maker": "SR Digital",
       "url": "https://github.com/OpenIRL/srtla-receiver",
-      "links": [],
+      "links": [
+        {
+          "label": "site",
+          "url": "https://www.openirl.net/"
+        }
+      ],
       "open_source": true,
       "licence": "GPL-3.0",
       "status": null,
-      "description": "A self-hosted SRTLA receiver with several streams, authentication and statistics, by the OpenIRL organisation (a different project from Halveknots' OpenIRL under Production).",
+      "description": "A self-hosted SRTLA receiver, the core of the OpenIRL toolkit: several streams with their own publish and play keys, set up in the browser, with a stats endpoint per stream that NOALBS supports. A different project from Halveknots' OpenIRL under Production.",
       "platforms": [
         "linux"
       ],
@@ -562,7 +567,7 @@
         "srtla",
         "relay"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-15"
     },
     {
       "id": "speedify",
