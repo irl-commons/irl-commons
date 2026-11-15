@@ -8,9 +8,13 @@ import { branchFor, handOver, readBundle } from "./form-open.mjs";
 const TODAY = "2026-11-15";
 const forms = loadForms();
 const fixture = (name: string) => readFileSync(new URL(`./fixtures/forms/${name}.md`, import.meta.url), "utf8");
+// The repository's data, with the check dates these tests rely on pinned: a merged
+// confirmation (the very thing the forms make) must not break the tests.
 const data = () => {
   const out = {} as Record<FileName, any>;
   for (const name of Object.keys(files) as FileName[]) out[name] = JSON.parse(readFileSync(new URL(`../data/${name}.json`, import.meta.url), "utf8"));
+  for (const id of ["moblin", "irl-pro", "obs-studio"]) out.services.services.find((s: any) => s.id === id).checked_on = "2026-11-14";
+  out.words.words.find((w: any) => w.id === "srt").checked_on = "2026-11-14";
   return out;
 };
 const form = (kind: Kind) => forms.find((f) => f.kind === kind)!;
