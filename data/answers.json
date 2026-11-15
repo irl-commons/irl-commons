@@ -1,5 +1,5 @@
 {
-  "about": "Quick checks for the questions that come up most about IRL streaming, written as checks along the chain: camera and mic, sender, connections, receiver, OBS, platform. Fields: id (an anchor), question, summary (which part most likely broke), checks (1 to 3; each has short plain text and optionally the part it looks at; no product names or product settings), words (ids in words.json), services (ids in services.json whose own docs and support channels help with the question), sources (the primary docs behind the checks; may be empty). Product specifics live in guides.json and services.json, never in the checks. Our own words only; no community posts quoted or linked. Validated by the zod schema in ../schema.",
+  "about": "Quick checks for the questions that come up most about IRL streaming, written as checks along the chain: camera and mic, sender, connections, receiver, OBS, platform. Fields: id (an anchor), question, summary (which part most likely broke), checks (1 to 3; each has short plain text and optionally the part it looks at; no product names or product settings), words (ids in words.json), services (ids in services.json whose own docs and support channels help with the question), sources (the primary docs behind the checks; at least one required). Product specifics live in guides.json and services.json, never in the checks. Our own words only; no community posts quoted or linked. Validated by the zod schema in ../schema.",
   "answers": [
     {
       "id": "live-not-on-platform",
@@ -83,7 +83,8 @@
           "label": "OpenIRL srtla-receiver",
           "url": "https://github.com/OpenIRL/srtla-receiver"
         }
-      ]
+      ],
+      "checked_on": "2026-11-14"
     },
     {
       "id": "switcher-no-stats",
@@ -206,24 +207,21 @@
           "label": "srtla",
           "url": "https://github.com/BELABOX/srtla"
         }
-      ]
+      ],
+      "checked_on": "2026-11-14"
     },
     {
       "id": "picture-frozen",
       "question": "The camera picture froze or stutters, but I'm still live",
-      "summary": "Find where it starts. If the preview on your phone or box already freezes, the break is between the camera and the sender, not the internet.",
+      "summary": "For OBS capture devices, check the selected device and supported video settings. If OBS reports dropped network frames, check the upload connection.",
       "checks": [
         {
-          "part": "camera",
-          "text": "Look at the preview on your phone or box. If it already freezes or stutters there, the camera's link is the cause."
-        },
-        {
-          "part": "camera",
-          "text": "Check that link: cable and capture card seated, or Wi-Fi close by and on 5 GHz if it can."
+          "part": "obs",
+          "text": "For an OBS capture source, select the intended device and a resolution and frame rate it supports."
         },
         {
           "part": "connections",
-          "text": "Preview smooth? Look at the bitrate going out. If that drops, the connections are the cause."
+          "text": "If OBS reports dropped network frames, lower the video bitrate to fit the stable upload speed."
         }
       ],
       "words": [
@@ -237,7 +235,17 @@
         "belabox",
         "ceralive"
       ],
-      "sources": []
+      "sources": [
+        {
+          "label": "OBS: Video capture sources",
+          "url": "https://obsproject.com/kb/video-capture-sources"
+        },
+        {
+          "label": "OBS: Stream connection troubleshooting",
+          "url": "https://obsproject.com/kb/stream-connection-troubleshooting"
+        }
+      ],
+      "checked_on": "2026-11-14"
     },
     {
       "id": "camera-black-preview",
@@ -304,7 +312,8 @@
           "label": "OBS IRL Source README",
           "url": "https://github.com/irlserver/obs-irl-source"
         }
-      ]
+      ],
+      "checked_on": "2026-11-14"
     },
     {
       "id": "camera-switch-drop",
@@ -337,7 +346,8 @@
           "label": "Kick: how to stream on Kick",
           "url": "https://help.kick.com/en/articles/7066931-how-to-stream-on-kick-com"
         }
-      ]
+      ],
+      "checked_on": "2026-11-14"
     },
     {
       "id": "destination-turns-off",

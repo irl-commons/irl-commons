@@ -3,7 +3,7 @@
   "configVersion": 1,
   "workspaces": {
     "": {
-      "name": "@openstreambox/irl-commons",
+      "name": "@irl-commons/data",
       "dependencies": {
         "zod": "4.6.7",
       },

@@ -33,7 +33,7 @@
         "srtla",
         "srt"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlplus-cast",
@@ -46,7 +46,7 @@
       "open_source": false,
       "licence": null,
       "status": "open testing",
-      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras, over SRT, RTMP, SRTLA or IRL+'s own BOND, with bonding across cellular and Wi-Fi and Moblink relays. Free.",
+      "description": "Android app for going live from the phone's cameras, USB cameras or network cameras, over SRT, RTMP, SRTLA or IRL+'s own BOND, with bonding across cellular and Wi-Fi and Moblink relays.",
       "platforms": [
         "android"
       ],
@@ -62,7 +62,7 @@
         "srt",
         "srtla"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlplus-chat",
@@ -86,7 +86,7 @@
       "support": [],
       "tags": [],
       "words": [],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irl-pro",
@@ -113,7 +113,7 @@
         "bonding",
         "srtla"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "larix-broadcaster",
@@ -149,7 +149,7 @@
       "words": [
         "srt"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "lifestreamer",
@@ -183,7 +183,7 @@
         "srtla",
         "local-ingest"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "mediasrvr",
@@ -214,7 +214,7 @@
       "words": [
         "local-ingest"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "moblin",
@@ -257,7 +257,7 @@
         "srtla",
         "adaptive-bitrate"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "moblink",
@@ -288,7 +288,7 @@
       "words": [
         "bonding"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "obs-blade",
@@ -324,7 +324,7 @@
       "words": [
         "scene"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "realtimeirl",
@@ -349,7 +349,7 @@
       "support": [],
       "tags": [],
       "words": [],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "tvu-go",
@@ -382,7 +382,7 @@
       "words": [
         "bonding"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "belabox-cloud",
@@ -409,7 +409,7 @@
         "relay",
         "srtla"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "doink-tv",
@@ -436,7 +436,7 @@
         "bonding",
         "drop-protection"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlplus-bond",
@@ -464,7 +464,7 @@
         "bonding",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irl-srt-server",
@@ -492,7 +492,7 @@
         "srtla",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "mediamtx",
@@ -530,7 +530,7 @@
         "srt",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "openirl-srtla-receiver",
@@ -562,7 +562,7 @@
         "srtla",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "speedify",
@@ -597,7 +597,7 @@
       "words": [
         "bonding"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "srt-protocol",
@@ -634,7 +634,7 @@
       "words": [
         "srt"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "srtla",
@@ -668,7 +668,7 @@
         "bonding",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "belabox",
@@ -705,7 +705,7 @@
         "encoder",
         "bonding"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "ceralive",
@@ -746,7 +746,7 @@
         "backpack",
         "encoder"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "dejero-engo",
@@ -779,7 +779,7 @@
         "bonding",
         "encoder"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "haivision-pro",
@@ -812,7 +812,7 @@
         "bonding",
         "encoder"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlplus-store",
@@ -843,7 +843,7 @@
       "words": [
         "backpack"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlbox",
@@ -875,7 +875,7 @@
         "encoder",
         "backpack"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "liveu-solo",
@@ -908,7 +908,7 @@
         "bonding",
         "encoder"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "starlink",
@@ -938,7 +938,7 @@
       ],
       "tags": [],
       "words": [],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "teradek-prism-mobile",
@@ -971,7 +971,7 @@
         "bonding",
         "encoder"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "tvu-one",
@@ -1008,7 +1008,7 @@
         "bonding",
         "encoder"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "unlimitedirl",
@@ -1039,7 +1039,7 @@
       "words": [
         "backpack"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "yolobox-ultra",
@@ -1072,7 +1072,7 @@
         "encoder",
         "bonding"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlplus-video-mixer",
@@ -1098,7 +1098,7 @@
       "words": [
         "scene"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlhosting",
@@ -1137,7 +1137,7 @@
         "drop-protection",
         "srtla"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irltoolkit",
@@ -1176,7 +1176,7 @@
         "cloud-obs",
         "drop-protection"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "noalbs-tool",
@@ -1211,7 +1211,7 @@
         "brb",
         "scene"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "obs-irl-source",
@@ -1245,7 +1245,7 @@
         "srt",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "obs-studio",
@@ -1283,7 +1283,7 @@
         "scene",
         "browser-source"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "openirl-halveknots",
@@ -1319,7 +1319,7 @@
         "scene",
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "streamer-bot",
@@ -1332,7 +1332,7 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Automation for live streams on Twitch, YouTube and Kick, with first-class OBS Studio support and Stream Deck control.",
+      "description": "Automation for live streams on Twitch, YouTube and Kick, with OBS Studio control (OBS WebSocket 4 and 5) and Stream Deck control.",
       "platforms": [
         "windows"
       ],
@@ -1350,7 +1350,7 @@
       "words": [
         "scene"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "belabox-wiki",
@@ -1376,7 +1376,7 @@
       "words": [
         "backpack"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "ceralive-docs",
@@ -1402,7 +1402,7 @@
       "words": [
         "backpack"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irltoolkit-kb",
@@ -1428,7 +1428,7 @@
       "words": [
         "cloud-obs"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "moblin-readme",
@@ -1452,7 +1452,7 @@
       "support": [],
       "tags": [],
       "words": [],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlwhatever",
@@ -1483,7 +1483,7 @@
         "adaptive-bitrate",
         "scene"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "irlrelays",
@@ -1521,7 +1521,7 @@
         "srtla",
         "stats-url"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "simplestreamer",
@@ -1550,7 +1550,7 @@
         "ingest-and-output",
         "srtla"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "nodrop",
@@ -1583,7 +1583,7 @@
         "drop-protection",
         "ingest-and-output"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "noalbs-cloud",
@@ -1627,7 +1627,7 @@
         "fix-feed",
         "brb"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "smooth-media-source",
@@ -1659,7 +1659,7 @@
         "relay",
         "fix-feed"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "moo-rist-receiver",
@@ -1690,7 +1690,7 @@
       "words": [
         "relay"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "librtmp2-server",
@@ -1722,7 +1722,7 @@
         "relay",
         "stats-url"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "vdo-ninja",
@@ -1766,7 +1766,7 @@
       "words": [
         "scene"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "belabot",
@@ -1799,7 +1799,7 @@
       "words": [
         "backpack"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     },
     {
       "id": "syncer-live",
@@ -1830,7 +1830,7 @@
       "words": [
         "latency"
       ],
-      "checked": "2026-11-14"
+      "checked_on": "2026-11-14"
     }
   ]
 }

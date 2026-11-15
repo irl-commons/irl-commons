@@ -1,0 +1,738 @@
+{
+  "about": "Formats and protocols that IRL streaming apps and services share, one entry per item. Each entry credits its maker; listing an item here does not mean this project makes, runs or endorses it. group: 'shared' when several makers' products write or read it; 'app-formats' for one app's own format that a named second product also writes or reads; 'steward-projects' for items made by people who steward this repository, kept apart so they are not mistaken for established standards. service_ids link products in services.json; other_users names products that are not catalogued. Descriptions are our own words; sources are public primary pages. checked_on is the day the entry was compared with its sources.",
+  "standards": [
+    {
+      "id": "srt",
+      "checked_on": "2026-11-14",
+      "name": "SRT (Secure Reliable Transport)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "MPL-2.0 (libsrt)",
+      "maker": "Haivision (SRT Alliance)",
+      "url": "https://github.com/Haivision/srt",
+      "description": "The open transport most IRL streams travel on between the sender and the receiver.",
+      "service_ids": [
+        "srt-protocol",
+        "obs-studio",
+        "moblin",
+        "larix-broadcaster",
+        "irl-pro",
+        "belabox",
+        "mediamtx",
+        "irl-srt-server",
+        "obs-irl-source"
+      ],
+      "other_users": [
+        "FFmpeg"
+      ],
+      "sources": [
+        {
+          "label": "libsrt repository",
+          "url": "https://github.com/Haivision/srt"
+        }
+      ],
+      "notes": "Support in each listed product follows its services.json entry."
+    },
+    {
+      "id": "srt-url",
+      "checked_on": "2026-11-14",
+      "name": "srt:// and srtla:// stream URLs",
+      "group": "shared",
+      "kind": "format",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "Haivision (srt://); srtla:// has no single maker",
+      "url": "https://github.com/Haivision/srt/blob/master/docs/apps/srt-live-transmit.md",
+      "description": "One line that holds the host, port, stream ID and options such as latency, which a relay hands out and an app pastes in.",
+      "service_ids": [
+        "srt-protocol",
+        "moblin",
+        "openirl-srtla-receiver",
+        "irlhosting"
+      ],
+      "other_users": [
+        "FFmpeg"
+      ],
+      "sources": [
+        {
+          "label": "srt-live-transmit: URI syntax",
+          "url": "https://github.com/Haivision/srt/blob/master/docs/apps/srt-live-transmit.md"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "OpenIRL srtla-receiver README",
+          "url": "https://github.com/OpenIRL/srtla-receiver"
+        },
+        {
+          "label": "IRLhosting tools",
+          "url": "https://irlhosting.com/tools/"
+        }
+      ],
+      "notes": "srtla:// borrows the srt:// shape, but no maker publishes its rules, and apps differ on which query options they accept."
+    },
+    {
+      "id": "srt-streamid",
+      "checked_on": "2026-11-14",
+      "name": "SRT Stream ID",
+      "group": "shared",
+      "kind": "format",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "Haivision (recommended syntax); each receiver sets its own keys",
+      "url": "https://github.com/Haivision/srt/blob/master/docs/features/access-control.md",
+      "description": "The text field that tells a receiver which stream you are publishing or playing.",
+      "service_ids": [
+        "irl-srt-server",
+        "openirl-srtla-receiver",
+        "belabox-cloud",
+        "moblin",
+        "lifestreamer"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "SRT access control (Stream ID)",
+          "url": "https://github.com/Haivision/srt/blob/master/docs/features/access-control.md"
+        },
+        {
+          "label": "irl-srt-server README",
+          "url": "https://github.com/irlserver/irl-srt-server"
+        },
+        {
+          "label": "OpenIRL srtla-receiver README",
+          "url": "https://github.com/OpenIRL/srtla-receiver"
+        }
+      ],
+      "notes": "The field is shared; the convention is not. Haivision recommends an optional '#!::' key=value syntax, while IRL receivers use their own keys (SRT Live Server style 'uplive.sls/live/<name>', OpenIRL 'live_<key>' and 'play_<key>')."
+    },
+    {
+      "id": "srtla",
+      "checked_on": "2026-11-14",
+      "name": "SRTLA (SRT link aggregation)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "AGPL-3.0 (BELABOX reference code)",
+      "maker": "BELABOX",
+      "url": "https://github.com/BELABOX/srtla",
+      "description": "Spreads one SRT stream over several connections (modems, Wi-Fi, phones) and puts it back together at the receiver.",
+      "service_ids": [
+        "srtla",
+        "belabox",
+        "belabox-cloud",
+        "ceralive",
+        "moblin",
+        "irl-pro",
+        "lifestreamer",
+        "bond-bunny",
+        "irlplus-cast",
+        "irlwhatever",
+        "openirl-srtla-receiver",
+        "irl-srt-server",
+        "irlrelays",
+        "simplestreamer"
+      ],
+      "other_users": [
+        "go-irl"
+      ],
+      "sources": [
+        {
+          "label": "BELABOX srtla README",
+          "url": "https://github.com/BELABOX/srtla"
+        },
+        {
+          "label": "go-irl README",
+          "url": "https://github.com/e04/go-irl"
+        },
+        {
+          "label": "OpenIRL srtla-receiver README",
+          "url": "https://github.com/OpenIRL/srtla-receiver"
+        }
+      ],
+      "notes": "The reference code and its README describe it; there is no separate spec. srtla2 is incompatible with earlier srtla. BELABOX marks its own receiver (srtla_rec) unsupported and points to BELABOX Cloud; the other receivers are independent implementations. Sender support follows the services.json entries."
+    },
+    {
+      "id": "moblink",
+      "checked_on": "2026-11-14",
+      "name": "Moblink",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "undocumented",
+      "licence": "MIT (code)",
+      "maker": "eerimoq (Moblin)",
+      "url": "https://github.com/eerimoq/Moblink",
+      "description": "Lets spare phones, or a router, lend their own mobile data to the streaming phone as extra bonding connections.",
+      "service_ids": [
+        "moblink",
+        "moblin",
+        "lifestreamer",
+        "irlplus-cast"
+      ],
+      "other_users": [
+        "Moblink Rust",
+        "moblink-openwrt"
+      ],
+      "sources": [
+        {
+          "label": "Moblink repository",
+          "url": "https://github.com/eerimoq/Moblink"
+        },
+        {
+          "label": "Moblink Rust README",
+          "url": "https://github.com/datagutt/moblink-rust"
+        },
+        {
+          "label": "moblink-openwrt README",
+          "url": "https://github.com/S1nGeN0r/moblink-openwrt"
+        },
+        {
+          "label": "LifeStreamer README",
+          "url": "https://github.com/dimadesu/LifeStreamer"
+        }
+      ],
+      "notes": "No written spec; the MIT code is the reference. IRL+ Cast support follows its services.json entry."
+    },
+    {
+      "id": "rist",
+      "checked_on": "2026-11-14",
+      "name": "RIST (Reliable Internet Stream Transport)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "VSF TR-06 specifications; librist BSD-2-Clause",
+      "maker": "Video Services Forum (RIST Activity Group); librist by VideoLAN",
+      "url": "https://vsf.tv/technical-recommendations/",
+      "description": "A broadcast-industry alternative to SRT for sending video over the internet, with its own multi-link bonding.",
+      "service_ids": [
+        "moblin",
+        "larix-broadcaster",
+        "irlbox",
+        "irlwhatever",
+        "moo-rist-receiver",
+        "obs-irl-source",
+        "smooth-media-source",
+        "irlrelays",
+        "noalbs-tool"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "VSF technical recommendations (TR-06)",
+          "url": "https://vsf.tv/technical-recommendations/"
+        },
+        {
+          "label": "librist",
+          "url": "https://code.videolan.org/rist/librist"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "NOALBS RIST stats parser",
+          "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/blob/v2/src/stream_servers/rist.rs"
+        }
+      ],
+      "notes": "Support in the other listed products follows their services.json entries."
+    },
+    {
+      "id": "whip",
+      "checked_on": "2026-11-14",
+      "name": "WHIP (WebRTC-HTTP Ingestion Protocol)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "open",
+      "licence": null,
+      "maker": "IETF (WISH working group)",
+      "url": "https://datatracker.ietf.org/doc/rfc9725/",
+      "description": "A standard way to send a WebRTC (very low latency) stream to a server with one HTTP request.",
+      "service_ids": [
+        "obs-studio",
+        "moblin",
+        "larix-broadcaster",
+        "mediamtx"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "RFC 9725",
+          "url": "https://datatracker.ietf.org/doc/rfc9725/"
+        },
+        {
+          "label": "OBS Studio WHIP output",
+          "url": "https://github.com/obsproject/obs-studio/tree/master/plugins/obs-webrtc"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "MediaMTX supported specifications",
+          "url": "https://github.com/bluenviron/mediamtx/blob/main/docs/8-misc/4-specifications.md"
+        },
+        {
+          "label": "Larix Grove",
+          "url": "https://softvelum.com/larix/grove/"
+        }
+      ],
+      "notes": "RFC 9725, a Proposed Standard published in March 2025."
+    },
+    {
+      "id": "whep",
+      "checked_on": "2026-11-14",
+      "name": "WHEP (WebRTC-HTTP Egress Protocol)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "proposed",
+      "openness": "open",
+      "licence": null,
+      "maker": "IETF (WISH working group)",
+      "url": "https://datatracker.ietf.org/doc/draft-ietf-wish-whep/",
+      "description": "The playback side of WHIP: watch a WebRTC stream with one HTTP request, for example as a low-latency preview.",
+      "service_ids": [
+        "mediamtx"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "WHEP Internet-Draft",
+          "url": "https://datatracker.ietf.org/doc/draft-ietf-wish-whep/"
+        },
+        {
+          "label": "MediaMTX supported specifications",
+          "url": "https://github.com/bluenviron/mediamtx/blob/main/docs/8-misc/4-specifications.md"
+        }
+      ],
+      "notes": "An Internet-Draft (draft-05, October 2026) in IESG evaluation; not an RFC yet."
+    },
+    {
+      "id": "enhanced-rtmp",
+      "checked_on": "2026-11-14",
+      "name": "Enhanced RTMP (E-RTMP)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "Apache-2.0",
+      "maker": "Veovera Software Organization",
+      "url": "https://github.com/veovera/enhanced-rtmp",
+      "description": "Brings modern codecs (HEVC, AV1, Opus), multitrack and reconnect to the old RTMP protocol.",
+      "service_ids": [
+        "obs-studio",
+        "librtmp2-server"
+      ],
+      "other_users": [
+        "FFmpeg",
+        "XSplit",
+        "YouTube",
+        "Twitch"
+      ],
+      "sources": [
+        {
+          "label": "Enhanced RTMP repository",
+          "url": "https://github.com/veovera/enhanced-rtmp"
+        },
+        {
+          "label": "librtmp2-server README",
+          "url": "https://github.com/OpenRTMP/librtmp2-server"
+        }
+      ],
+      "notes": "The adopters follow Veovera's own adoption list, not a test of each product."
+    },
+    {
+      "id": "obs-websocket",
+      "checked_on": "2026-11-14",
+      "name": "OBS WebSocket (v5)",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "GPL-2.0",
+      "maker": "OBS Project",
+      "url": "https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md",
+      "description": "The remote-control line into OBS: switch scenes, start and stop, read status. It never carries the video.",
+      "service_ids": [
+        "obs-studio",
+        "moblin",
+        "noalbs-tool",
+        "noalbs-cloud",
+        "streamer-bot",
+        "obs-blade"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "obs-websocket protocol",
+          "url": "https://github.com/obsproject/obs-websocket/blob/master/docs/generated/protocol.md"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        }
+      ],
+      "notes": "Built into OBS Studio since version 28. Client support follows the services.json entries."
+    },
+    {
+      "id": "receiver-stats",
+      "checked_on": "2026-11-14",
+      "name": "Receiver stats endpoints",
+      "group": "shared",
+      "kind": "format",
+      "status": "in-use",
+      "openness": "undocumented",
+      "licence": null,
+      "maker": "Each receiver's maker; NOALBS maintains the parsers",
+      "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/tree/v2/src/stream_servers",
+      "description": "The web address a receiver offers with live bitrate, round-trip time and lost packets, which scene switchers and overlays read.",
+      "service_ids": [
+        "noalbs-tool",
+        "noalbs-cloud",
+        "irlhosting",
+        "belabox-cloud",
+        "irl-srt-server",
+        "openirl-srtla-receiver",
+        "mediamtx",
+        "librtmp2-server"
+      ],
+      "other_users": [
+        "NGINX RTMP",
+        "Nimble Streamer",
+        "Node-Media-Server",
+        "Xiu",
+        "go-irl"
+      ],
+      "sources": [
+        {
+          "label": "NOALBS stream server parsers",
+          "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/tree/v2/src/stream_servers"
+        },
+        {
+          "label": "IRLhosting tools",
+          "url": "https://irlhosting.com/tools/"
+        }
+      ],
+      "notes": "Not one format but one shape per server: NOALBS keeps 14 parser modules, the nearest thing to a shared reference. Some receivers reuse another's shape; irl-srt-server keeps SRT Live Server's."
+    },
+    {
+      "id": "belabox-cloud-remote",
+      "checked_on": "2026-11-14",
+      "name": "BELABOX Cloud remote",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "undocumented",
+      "licence": "GPL-3.0 (belaUI code)",
+      "maker": "BELABOX",
+      "url": "https://github.com/BELABOX/belaUI",
+      "description": "The WebSocket through BELABOX Cloud that lets a bot, switcher or dashboard see and control a BELABOX from anywhere.",
+      "service_ids": [
+        "belabox-cloud",
+        "belabox",
+        "ceralive",
+        "belabot",
+        "noalbs-cloud"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "belaUI repository",
+          "url": "https://github.com/BELABOX/belaUI"
+        },
+        {
+          "label": "BelaBot repository",
+          "url": "https://github.com/NOALBS/belabot"
+        }
+      ],
+      "notes": "BELABOX runs the service; the other tools connect to it. There is no published protocol description, so clients follow belaUI's code."
+    },
+    {
+      "id": "rtirl",
+      "checked_on": "2026-11-14",
+      "name": "RealtimeIRL location API",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "documented-closed",
+      "licence": "MIT (@rtirl/api client); the service is closed",
+      "maker": "Muxable",
+      "url": "https://github.com/muxable/rtirl-obs",
+      "description": "A phone pushes its location to rtirl.com with a push key; map and speed overlays read it with a pull key.",
+      "service_ids": [
+        "realtimeirl",
+        "moblin"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "RealtimeIRL overlays README",
+          "url": "https://github.com/muxable/rtirl-obs"
+        },
+        {
+          "label": "Moblin RealtimeIRL settings",
+          "url": "https://github.com/eerimoq/moblin/tree/main/Moblin/View/Settings/Streams/Stream/RealtimeIrl"
+        }
+      ],
+      "notes": "The pull side and the client library are documented; the push call appears only in the apps' code."
+    },
+    {
+      "id": "dji-camera-ble",
+      "checked_on": "2026-11-14",
+      "name": "DJI camera Bluetooth control",
+      "group": "shared",
+      "kind": "protocol",
+      "status": "in-use",
+      "openness": "documented-closed",
+      "licence": null,
+      "maker": "DJI",
+      "url": "https://github.com/dji-sdk/Osmo-GPS-Controller-Demo",
+      "description": "Bluetooth commands to an Osmo camera, which IRL apps use to start the camera's own RTMP live stream.",
+      "service_ids": [
+        "moblin"
+      ],
+      "other_users": [
+        "dji-remote"
+      ],
+      "sources": [
+        {
+          "label": "DJI Osmo GPS controller demo",
+          "url": "https://github.com/dji-sdk/Osmo-GPS-Controller-Demo"
+        },
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "dji-remote README",
+          "url": "https://github.com/dimadesu/dji-remote"
+        }
+      ],
+      "notes": "DJI documents the protocol for recording, modes and GPS. The live-stream setup is Moblin's own work, which dji-remote ported; the video itself is plain RTMP. The licence of DJI's demo repository is unclear."
+    },
+    {
+      "id": "moblin-deeplink",
+      "checked_on": "2026-11-14",
+      "name": "Moblin settings link (moblin://)",
+      "group": "app-formats",
+      "kind": "settings",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "MIT",
+      "maker": "eerimoq (Moblin)",
+      "url": "https://github.com/eerimoq/moblin#import-settings-using-moblin-custom-url",
+      "description": "A link or QR code that adds a stream (URL, codec, OBS remote and more) to Moblin in one tap.",
+      "service_ids": [
+        "moblin",
+        "irlhosting"
+      ],
+      "other_users": [
+        "IAR1",
+        "Brix"
+      ],
+      "sources": [
+        {
+          "label": "Moblin README: moblin:// specification",
+          "url": "https://github.com/eerimoq/moblin#import-settings-using-moblin-custom-url"
+        },
+        {
+          "label": "IRLhosting setup QR code",
+          "url": "https://irlhosting.com/tools/moblin-qr-code/"
+        },
+        {
+          "label": "IAR1 repository",
+          "url": "https://github.com/sniffingpickles/IAR1"
+        },
+        {
+          "label": "Brix repository",
+          "url": "https://github.com/0rb1ta/Brix"
+        }
+      ],
+      "notes": "Other makers write it (IRLhosting, IAR1) and another app (Brix) reads it."
+    },
+    {
+      "id": "moblin-settings-export",
+      "checked_on": "2026-11-14",
+      "name": "Moblin settings export",
+      "group": "app-formats",
+      "kind": "settings",
+      "status": "in-use",
+      "openness": "undocumented",
+      "licence": "MIT (code)",
+      "maker": "eerimoq (Moblin)",
+      "url": "https://github.com/eerimoq/moblin#readme",
+      "description": "Moblin's full backup of streams, scenes, widgets and presets, which another tool can read to check a setup.",
+      "service_ids": [
+        "moblin",
+        "irlhosting"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "Moblin README",
+          "url": "https://github.com/eerimoq/moblin#readme"
+        },
+        {
+          "label": "IRLhosting Moblin settings viewer",
+          "url": "https://irlhosting.com/moblin/"
+        }
+      ],
+      "notes": "Moblin's internal settings JSON; it can change with any release. Scenes, widgets and presets live inside it, with no separate format of their own."
+    },
+    {
+      "id": "larix-grove",
+      "checked_on": "2026-11-14",
+      "name": "Larix Grove (larix://set/v1)",
+      "group": "app-formats",
+      "kind": "settings",
+      "status": "in-use",
+      "openness": "documented-closed",
+      "licence": null,
+      "maker": "Softvelum",
+      "url": "https://softvelum.com/larix/grove/",
+      "description": "A link or QR code that loads connections and encoder settings into Larix Broadcaster, and also into IRL Pro.",
+      "service_ids": [
+        "larix-broadcaster",
+        "irl-pro",
+        "irltoolkit",
+        "irlhosting"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "Larix Grove",
+          "url": "https://softvelum.com/larix/grove/"
+        },
+        {
+          "label": "IRLhosting setup QR code",
+          "url": "https://irlhosting.com/tools/moblin-qr-code/"
+        }
+      ],
+      "notes": "IRL Pro reading it is stated by IRLhosting and IRLToolkit, not on IRL Pro's own pages."
+    },
+    {
+      "id": "irlwhatever-import",
+      "checked_on": "2026-11-14",
+      "name": "IRLwhatever import link",
+      "group": "app-formats",
+      "kind": "settings",
+      "status": "in-use",
+      "openness": "undocumented",
+      "licence": null,
+      "maker": "IRLwhatever",
+      "url": "https://irlhosting.com/tools/moblin-qr-code/",
+      "description": "An irlwhatever://import/ link carrying a stream's name, URL and SRT latency.",
+      "service_ids": [
+        "irlwhatever",
+        "irlhosting"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "IRLhosting setup QR code",
+          "url": "https://irlhosting.com/tools/moblin-qr-code/"
+        }
+      ],
+      "notes": "No description from the maker was found; IRLhosting documents what its links carry."
+    },
+    {
+      "id": "noalbs-config",
+      "checked_on": "2026-11-14",
+      "name": "NOALBS config.json",
+      "group": "app-formats",
+      "kind": "settings",
+      "status": "in-use",
+      "openness": "open",
+      "licence": "MIT",
+      "maker": "NOALBS",
+      "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching#readme",
+      "description": "The scene switcher's settings file: which stats to read, which scenes to switch to, which chat to answer.",
+      "service_ids": [
+        "noalbs-tool",
+        "irlhosting"
+      ],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "NOALBS README",
+          "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching#readme"
+        },
+        {
+          "label": "IRLhosting tools",
+          "url": "https://irlhosting.com/tools/"
+        }
+      ],
+      "notes": "IRLhosting's config generator writes it and its config checker reads it."
+    },
+    {
+      "id": "stream-status",
+      "checked_on": "2026-11-14",
+      "name": "stream-status",
+      "group": "steward-projects",
+      "kind": "format",
+      "status": "proposed",
+      "openness": "open",
+      "licence": "MIT",
+      "maker": "openstreambox",
+      "url": "https://github.com/openstreambox/stream-status",
+      "description": "A JSON format for live-stream findings: what's wrong, where, how sure, and whether the stream is still live.",
+      "service_ids": [],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "stream-status README",
+          "url": "https://github.com/openstreambox/stream-status"
+        }
+      ],
+      "notes": "A v0 draft; field names can still change. No app writes or reads it yet."
+    },
+    {
+      "id": "stream-session",
+      "checked_on": "2026-11-14",
+      "name": "stream-session",
+      "group": "steward-projects",
+      "kind": "format",
+      "status": "proposed",
+      "openness": "not-public",
+      "licence": null,
+      "maker": "openstreambox",
+      "url": null,
+      "description": "A proposed format from openstreambox that has not been published yet.",
+      "service_ids": [],
+      "other_users": [],
+      "sources": [],
+      "notes": "Nothing public to check yet; this entry gains a link and sources once it is published."
+    },
+    {
+      "id": "irl-commons",
+      "checked_on": "2026-11-14",
+      "name": "irl-commons",
+      "group": "steward-projects",
+      "kind": "data",
+      "status": "proposed",
+      "openness": "open",
+      "licence": "CC BY 4.0 (data); MIT (code)",
+      "maker": "irl-commons contributors (started by openstreambox)",
+      "url": "https://github.com/irl-commons/irl-commons",
+      "description": "This catalogue: small curated datasets about IRL streaming, with Zod and JSON Schema validation.",
+      "service_ids": [],
+      "other_users": [],
+      "sources": [
+        {
+          "label": "irl-commons README",
+          "url": "https://github.com/irl-commons/irl-commons"
+        }
+      ],
+      "notes": "A v0 catalogue. No outside users are named yet, and the npm package is not published."
+    }
+  ]
+}

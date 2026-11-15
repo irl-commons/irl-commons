@@ -1,0 +1,91 @@
+name: Governance evidence
+on:
+  pull_request_target:
+    types: [opened, synchronize, reopened, ready_for_review, converted_to_draft, labeled, unlabeled]
+  workflow_run:
+    workflows: [Governance review trigger]
+    types: [completed]
+  schedule:
+    - cron: '41 9 * * *'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: governance-${{ github.event.pull_request.number || 'all' }}
+  cancel-in-progress: false
+jobs:
+  evaluate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+      pull-requests: read
+      issues: read
+    outputs:
+      reports: ${{ steps.evaluate.outputs.reports }}
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          ref: ${{ github.event.repository.default_branch }}
+          persist-credentials: false
+      - id: evaluate
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          if [ -f scripts/governance.py ]; then
+            python3 scripts/governance.py
+          else
+            echo 'Governance installation is not on the default branch yet; candidate logic is tested by validate.'
+            echo 'reports=[]' >> "$GITHUB_OUTPUT"
+          fi
+  report:
+    needs: evaluate
+    if: always()
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      checks: write
+      pull-requests: read
+    steps:
+      - name: Report required governance check on each PR head
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          REPORTS: ${{ needs.evaluate.outputs.reports }}
+          EVALUATION: ${{ needs.evaluate.result }}
+          PR_NUMBER: ${{ github.event.pull_request.number }}
+        run: |
+          node --input-type=module <<'JS'
+          let reports = JSON.parse(process.env.REPORTS || '[]');
+          async function api(path, method = 'GET', body) {
+            const result = await fetch(`https://api.github.com/repos/${process.env.GH_REPO}/${path}`, {
+              method, headers: {Authorization: `Bearer ${process.env.GH_TOKEN}`, Accept: 'application/vnd.github+json', 'X-GitHub-Api-Version': '2022-11-28'},
+              body: body ? JSON.stringify(body) : undefined
+            });
+            if (!result.ok) throw new Error(`GitHub API ${result.status}`);
+            return result.json();
+          }
+          if (process.env.EVALUATION !== 'success') {
+            const prs = [];
+            if (process.env.PR_NUMBER) prs.push(await api(`pulls/${process.env.PR_NUMBER}`));
+            else for (let page = 1; ; page++) {
+              const rows = await api(`pulls?state=open&per_page=100&page=${page}`);
+              prs.push(...rows);
+              if (rows.length < 100) break;
+            }
+            reports = prs.filter(p => p.base.ref === 'main').map(p => ({number: p.number, sha: p.head.sha, state: 'failure', title: 'Governance evidence unavailable', summary: 'Governance evidence could not be evaluated. Re-run after resolving the API or configuration error.'}));
+          }
+          for (const report of reports) {
+            const current = await api(`pulls/${report.number}`);
+            if (current.head.sha !== report.sha || current.state !== 'open') continue;
+            const runs = await api(`commits/${report.sha}/check-runs?check_name=governance&per_page=100`);
+            const existing = runs.check_runs.find(r => r.external_id === 'governance-policy' && r.app?.slug === 'github-actions');
+            const body = {name: 'governance', external_id: 'governance-policy',
+              status: report.state === 'pending' ? 'in_progress' : 'completed',
+              output: {title: report.title || 'Steward review and consensus window', summary: report.summary}};
+            if (report.state !== 'pending') { body.conclusion = report.state; body.completed_at = new Date().toISOString(); }
+            if (existing) await api(`check-runs/${existing.id}`, 'PATCH', body);
+            else await api('check-runs', 'POST', {...body, head_sha: report.sha});
+          }
+          JS

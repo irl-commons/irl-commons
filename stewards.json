@@ -1,0 +1,31 @@
+{
+  "approval_policy": {
+    "data": 1,
+    "rules": 2
+  },
+  "stewards": [
+    {
+      "github": "pjeweb",
+      "name": "pjeweb",
+      "affiliations": [
+        "openstreambox"
+      ]
+    },
+    {
+      "github": null,
+      "name": "Second steward — pending",
+      "affiliations": []
+    }
+  ],
+  "entries": {
+    "standards/stream-status": {
+      "maker": "openstreambox"
+    },
+    "standards/stream-session": {
+      "maker": "openstreambox"
+    },
+    "standards/irl-commons": {
+      "maker": "openstreambox"
+    }
+  }
+}

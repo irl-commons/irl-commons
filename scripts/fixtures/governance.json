@@ -1,0 +1,77 @@
+{
+  "config": {
+    "approval_policy": {
+      "data": 1,
+      "rules": 2
+    },
+    "stewards": [
+      {
+        "github": "steward-one",
+        "affiliations": [
+          "sample-maker"
+        ]
+      },
+      {
+        "github": "steward-two",
+        "affiliations": []
+      },
+      {
+        "github": "steward-three",
+        "affiliations": []
+      }
+    ],
+    "entries": {
+      "services/sample-entry": {
+        "maker": "sample-maker",
+        "competitors": [
+          "sample-rival"
+        ]
+      }
+    }
+  },
+  "pr": {
+    "user": {
+      "login": "contributor"
+    },
+    "head": {
+      "sha": "current"
+    },
+    "created_at": "2026-01-01T12:00:00Z",
+    "draft": false,
+    "labels": []
+  },
+  "reviews": [
+    {
+      "id": 1,
+      "user": {
+        "login": "steward-two"
+      },
+      "state": "APPROVED",
+      "commit_id": "current"
+    },
+    {
+      "id": 2,
+      "user": {
+        "login": "steward-three"
+      },
+      "state": "APPROVED",
+      "commit_id": "current"
+    }
+  ],
+  "events": [
+    {
+      "event": "ready_for_review",
+      "created_at": "2026-01-03T12:00:00Z"
+    }
+  ],
+  "live_rules": [
+    {
+      "type": "pull_request",
+      "parameters": {
+        "required_approving_review_count": 1,
+        "require_last_push_approval": true,
+        "require_code_owner_review": true
+      }
+    }
+  ]
+}

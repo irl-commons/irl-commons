@@ -1,1 +1,1 @@
-{"about": "", "answers": [{"id": "a", "question": "Q?", "summary": "S", "checks": ["one"], "words": [], "services": [], "sources": [{"label": "L", "url": "https://example.org/"}]}]}
+{"about": "", "answers": [{"id": "a", "question": "Q?", "summary": "S", "checks": ["one"], "words": [], "services": [], "sources": [{"label": "L", "url": "https://example.org/"}], "checked_on": "2026-11-14"}]}

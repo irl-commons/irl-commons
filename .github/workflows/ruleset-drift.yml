@@ -1,0 +1,24 @@
+name: Ruleset drift watch
+on:
+  schedule:
+    - cron: '13 10 * * 1'
+  workflow_dispatch:
+permissions: {}
+concurrency:
+  group: ruleset-drift
+  cancel-in-progress: false
+jobs:
+  drift:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      contents: read
+      issues: write
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: python3 scripts/ruleset_drift.py

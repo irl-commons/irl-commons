@@ -1,0 +1,24 @@
+{
+  "about": "A word list for IRL streaming, one entry per term. Fields: id (an anchor), term, aliases, tier (core | more), who (streamer | helper | both), heard_when, plain, related (ids), source, uncertain, and optional l10n: {<language tag>: {term, plain, heard_when}} such as es-419 or pt-BR. Translations keep the scene's English terms as the term and explain in the language, and are read by a native speaker before publishing. Validated by the zod schema in ../schema.",
+  "words": [
+    {
+      "id": "irl",
+      "term": "IRL",
+      "aliases": [
+        "in real life",
+        "IRL streaming"
+      ],
+      "tier": "core",
+      "who": "both",
+      "heard_when": "Streamers talk about going live from outside instead of from their desk.",
+      "plain": "Short for \"in real life\". It means streaming while you're out and about, not sitting at a desk.",
+      "related": [
+        "backpack",
+        "bonding"
+      ],
+      "source": "https://belabox.net/",
+      "uncertain": true,
+      "checked_on": "2026-02-30"
+    }
+  ]
+}
