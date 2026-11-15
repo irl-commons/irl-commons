@@ -2198,20 +2198,25 @@
     },
     {
       "id": "stream-session",
-      "checked_on": "2026-11-14",
+      "checked_on": "2026-11-15",
       "name": "stream-session",
       "group": "steward-projects",
       "kind": "format",
       "status": "proposed",
-      "openness": "not-public",
-      "licence": null,
+      "openness": "open",
+      "licence": "MIT",
       "maker": "openstreambox",
-      "url": null,
-      "description": "A proposed format from openstreambox that has not been published yet.",
+      "url": "https://github.com/openstreambox/stream-session",
+      "description": "A format that lets the devices in a live show agree on which show it is, who is in it, which device is in charge and what each person shares.",
       "service_ids": [],
       "other_users": [],
-      "sources": [],
-      "notes": "Nothing public to check yet; this entry gains a link and sources once it is published."
+      "sources": [
+        {
+          "label": "stream-session README",
+          "url": "https://github.com/openstreambox/stream-session"
+        }
+      ],
+      "notes": "A v0 draft; field names can still change. No app writes or reads it yet."
     },
     {
       "id": "irl-commons",
