@@ -1,6 +1,6 @@
 # IRL streaming data
 
-Six reviewed data files about streaming live from outside (IRL streaming):
+Six reviewed data files about IRL streaming (streaming your real life away from the desk, wherever that is):
 
 - `words.json`: a word list, one entry per term: a plain explanation, other names, who meets it, when it comes up, related terms, a public primary source, and an `uncertain` flag. Entries define; they don't give fix instructions. Optional `l10n` blocks hold translations by language tag (for example `es-419`, `pt-BR`); translations keep the scene's English terms as the term.
 - `answers.json`: quick checks for the questions that come up most, written along the chain a stream takes: camera and mic, sender, connections, receiver, OBS, platform. Each answer says which part most likely broke and gives 1 to 3 short checks in plain words, in the order worth trying, each optionally tagged with its part. Checks name no product and no product setting; products are linked as `services` (the makers' own docs and support) and through `guides.json`. Also related word ids and the public primary sources behind the checks.
