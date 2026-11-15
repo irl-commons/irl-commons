@@ -8,7 +8,7 @@
       "github": "pjeweb",
       "name": "pjeweb",
       "affiliations": [
-        "openstreambox"
+        "irl-commons"
       ]
     },
     {
@@ -19,13 +19,13 @@
   ],
   "entries": {
     "standards/stream-status": {
-      "maker": "openstreambox"
+      "maker": "irl-commons"
     },
     "standards/stream-session": {
-      "maker": "openstreambox"
+      "maker": "irl-commons"
     },
     "standards/irl-commons": {
-      "maker": "openstreambox"
+      "maker": "irl-commons"
     }
   }
 }

@@ -50,7 +50,7 @@ The data is under [CC BY 4.0](https://creativecommons.org/licenses/by/4.0/).
 Show this line near the data, for example under your glossary or in your
 app's credits:
 
-> Data from irl-commons contributors (initial data by the OpenStreamBox Initiative) — https://github.com/irl-commons/irl-commons — CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: none.
+> Data from IRL Commons contributors — https://github.com/irl-commons/irl-commons — CC BY 4.0 (https://creativecommons.org/licenses/by/4.0/). Changes: none.
 
 If you changed the wording, say so after "Changes:". For example:
 "Changes: shortened the explanations".

@@ -5,7 +5,7 @@ contact_links:
     about: Sources, check dates and conflicts of interest, before you open an issue.
   - name: No GitHub account? Write an email
     url: https://github.com/irl-commons/irl-commons/blob/main/CONTRIBUTING.md#no-github-account
-    about: Send the entry, the source and the date you read it to hello@openstreambox.org. A steward files it for you.
+    about: Send the entry, the source and the date you read it to hello@irlcommons.org. A steward files it for you.
   - name: No GitHub account? Ask on Discord
     url: https://discord.gg/3B9b9n9N6
     about: Post the entry, the source and the date you read it on Discord. A steward files it for you.
