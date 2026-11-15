@@ -61,6 +61,13 @@ export function semantic(data: Record<FileName, any>): string[] {
   for (const w of data.words.words) {
     if (JSON.stringify(w.aliases) !== JSON.stringify(wordAliases(w))) out.push(`words: ${w.id}: aliases is stale: run bun run aliases`);
     for (const e of w.naming?.evidence ?? []) if (e.read_on > today) out.push(`words: ${w.id}: evidence read_on is in the future`);
+    const owners = new Set<string>();
+    for (const e of w.naming?.evidence ?? []) {
+      const service = data.services.services.find((s: any) => s.id === e.service);
+      if (!service) out.push(`words: ${w.id}: evidence service '${e.service}' does not exist`);
+      else if (e.support === "direct") owners.add(service.maker.trim().toLowerCase());
+    }
+    if (w.naming?.status === "reviewed" && owners.size < 2) out.push(`words: ${w.id}: reviewed needs direct evidence from two distinct owning makers`);
     for (const r of w.naming?.reviewed_by ?? [])
       if (!stewards.has(r.toLowerCase())) out.push(`words: ${w.id}: reviewed_by '${r}' is not a listed steward`);
   }

@@ -88,39 +88,54 @@
           {
             "term": "SRTLA bonding",
             "status": "narrower",
-            "why": "One protocol for bonding. Useful where an app offers a choice of protocols.",
-            "seen_in": [
-              "IRL Pro"
-            ]
+            "why": "One protocol for bonding. Useful where an app offers a choice of protocols."
           },
           {
             "term": "Bond",
             "status": "narrower",
-            "why": "The group of connections in use, rather than the act of combining them. Works for a status such as \"in the bond\".",
-            "seen_in": [
-              "CeraLive"
-            ]
+            "why": "The group of connections in use, rather than the act of combining them. Works for a status such as \"in the bond\"."
           }
         ],
         "evidence": [
           {
-            "maker": "Moblin",
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/Rist/StreamRistSettingsView.swift#L17",
             "read_on": "2026-11-15",
-            "note": "Toggle labelled \"Bonding\" in the RIST stream settings."
+            "note": "Toggle labelled \"Bonding\" in the RIST stream settings.",
+            "service": "moblin",
+            "support": "direct",
+            "label": "Bonding"
           },
           {
-            "maker": "CeraLive",
             "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2169",
             "read_on": "2026-11-15",
-            "note": "\"Use for bonding\" on a network link; the same catalogue has \"Bonded Links\" and \"Enable Bond\"."
+            "note": "\"Use for bonding\" on a network link; the same catalogue has \"Bonded Links\" and \"Enable Bond\".",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Use for bonding"
           },
           {
-            "maker": "IRL Pro",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2169",
+            "read_on": "2026-11-15",
+            "note": "\"Use for bonding\" on a network link; the same catalogue has \"Bonded Links\" and \"Enable Bond\".",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Bonded Links"
+          },
+          {
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2169",
+            "read_on": "2026-11-15",
+            "note": "\"Use for bonding\" on a network link; the same catalogue has \"Bonded Links\" and \"Enable Bond\".",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Enable Bond"
+          },
+          {
             "url": "https://irlpro.app/",
             "read_on": "2026-11-15",
             "note": "Feature list on the app's page: \"SRTLA Bonding over multiple connections\". A feature name, not a settings screen.",
-            "unverified": true
+            "service": "irl-pro",
+            "support": "context-only",
+            "label": "SRTLA Bonding over multiple connections"
           }
         ],
         "translation_note": "If your language has no settled word, keep \"bonding\" and explain it once in a hint. Don't translate it as a word for glue or ties.",
@@ -169,10 +184,7 @@
           {
             "term": "Receiver",
             "status": "also-used",
-            "why": "The same thing, named from the receiving side. Common for a receiver you run yourself.",
-            "seen_in": [
-              "CeraLive"
-            ]
+            "why": "The same thing, named from the receiving side. Common for a receiver you run yourself."
           },
           {
             "term": "Bonding server",
@@ -181,10 +193,7 @@
           {
             "term": "SRTLA receiver",
             "status": "technical",
-            "why": "Names the protocol. Useful next to the address and port fields.",
-            "seen_in": [
-              "BELABOX"
-            ]
+            "why": "Names the protocol. Useful next to the address and port fields."
           },
           {
             "term": "Relay",
@@ -194,22 +203,44 @@
         ],
         "evidence": [
           {
-            "maker": "BELABOX",
             "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/index.html#L226",
             "read_on": "2026-11-15",
-            "note": "Field labels \"Relay server\" and \"SRTLA receiver address\" in the relay settings."
+            "note": "Field labels \"Relay server\" and \"SRTLA receiver address\" in the relay settings.",
+            "service": "belabox",
+            "support": "direct",
+            "label": "Relay server"
           },
           {
-            "maker": "CeraLive",
+            "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/index.html#L226",
+            "read_on": "2026-11-15",
+            "note": "Field labels \"Relay server\" and \"SRTLA receiver address\" in the relay settings.",
+            "service": "belabox",
+            "support": "direct",
+            "label": "SRTLA receiver address"
+          },
+          {
             "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2381",
             "read_on": "2026-11-15",
-            "note": "\"Relay Server\" (title case); the server dialog is titled \"Receiver Server\"."
+            "note": "\"Relay Server\" (title case); the server dialog is titled \"Receiver Server\".",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Relay Server"
           },
           {
-            "maker": "Moblin",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2381",
+            "read_on": "2026-11-15",
+            "note": "\"Relay Server\" (title case); the server dialog is titled \"Receiver Server\".",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Receiver Server"
+          },
+          {
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Moblink/MoblinkSettingsView.swift#L179",
             "read_on": "2026-11-15",
-            "note": "Section \"Relay\" for the device that adds an extra bonding connection, not a server."
+            "note": "Section \"Relay\" for the device that adds an extra bonding connection, not a server.",
+            "service": "moblin",
+            "support": "context-only",
+            "label": "Relay"
           }
         ],
         "translation_note": "Translate \"server\"; \"relay\" can stay in English if the local word sounds like an electrical relay.",
@@ -367,10 +398,20 @@
         ],
         "evidence": [
           {
-            "maker": "Moblin",
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/ObsRemoteControl/StreamObsRemoteControlSettingsView.swift#L64",
             "read_on": "2026-11-15",
-            "note": "\"BRB scene\" in the OBS remote control settings, and a toggle \"BRB scene when video source is broken\"."
+            "note": "\"BRB scene\" in the OBS remote control settings, and a toggle \"BRB scene when video source is broken\".",
+            "service": "moblin",
+            "support": "direct",
+            "label": "BRB scene"
+          },
+          {
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/ObsRemoteControl/StreamObsRemoteControlSettingsView.swift#L64",
+            "read_on": "2026-11-15",
+            "note": "\"BRB scene\" in the OBS remote control settings, and a toggle \"BRB scene when video source is broken\".",
+            "service": "moblin",
+            "support": "direct",
+            "label": "BRB scene when video source is broken"
           }
         ],
         "translation_note": "Keep BRB as written; it's chat shorthand. A translated name can follow it in a hint.",
@@ -413,7 +454,7 @@
             "status": "also-used",
             "why": "The same feature. A little longer.",
             "seen_in": [
-              "Moblin"
+              "moblin"
             ]
           },
           {
@@ -421,7 +462,7 @@
             "status": "narrower",
             "why": "The scene it switches to, not the whole feature.",
             "seen_in": [
-              "Moblin"
+              "moblin"
             ]
           },
           {
@@ -429,43 +470,63 @@
             "status": "narrower",
             "why": "The picture it switches to, not the whole feature.",
             "seen_in": [
-              "IRLToolkit"
+              "irltoolkit"
             ]
           },
           {
             "term": "Offline scene",
             "status": "narrower",
-            "why": "The scene shown while the feed is gone, not the switching itself.",
-            "seen_in": [
-              "NOALBS"
-            ]
+            "why": "The scene shown while the feed is gone, not the switching itself."
           }
         ],
         "evidence": [
           {
-            "maker": "IRL Server",
             "url": "https://irlserver.com/",
             "read_on": "2026-11-15",
             "note": "The product page lists \"drop protection\" and \"Drop protection with NOALBS\" as plan features. A feature name, not a settings screen.",
-            "unverified": true
+            "service": "irl-srt-server",
+            "support": "context-only",
+            "label": "drop protection"
           },
           {
-            "maker": "Moblin",
+            "url": "https://irlserver.com/",
+            "read_on": "2026-11-15",
+            "note": "The product page lists \"drop protection\" and \"Drop protection with NOALBS\" as plan features. A feature name, not a settings screen.",
+            "service": "irl-srt-server",
+            "support": "context-only",
+            "label": "Drop protection with NOALBS"
+          },
+          {
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
             "read_on": "2026-11-15",
-            "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\"."
+            "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\".",
+            "service": "moblin",
+            "support": "direct",
+            "label": "Disconnect protection"
           },
           {
-            "maker": "IRLToolkit",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
+            "read_on": "2026-11-15",
+            "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\".",
+            "service": "moblin",
+            "support": "direct",
+            "label": "Fallback scene"
+          },
+          {
             "url": "https://kb.irltoolkit.com/nodrop/0-QuickStart",
             "read_on": "2026-11-15",
-            "note": "The NoDrop guide names the setting \"Fallback Source\"."
+            "note": "The NoDrop guide names the setting \"Fallback Source\".",
+            "service": "irltoolkit",
+            "support": "direct",
+            "label": "Fallback Source"
           },
           {
-            "maker": "NOALBS",
             "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/blob/53bd883c75dedf858d5e0b17a59f894e9f82005a/README.md#L256",
             "read_on": "2026-11-15",
-            "note": "The config calls the scene used when the feed is gone the \"offline\" scene."
+            "note": "The config calls the scene used when the feed is gone the \"offline\" scene.",
+            "service": "noalbs-tool",
+            "support": "direct",
+            "label": "offline"
           }
         ],
         "translation_note": "Translate the meaning (protection when the connection drops), not the word \"drop\" literally.",
@@ -501,17 +562,16 @@
     {
       "id": "upload-speed",
       "term": "Upload speed",
-      "also_called": [
-        "Upload"
-      ],
+      "also_called": [],
       "search_terms": [
         "Upstream",
-        "Speed test"
+        "Speed test",
+        "Upload"
       ],
       "aliases": [
-        "Upload",
         "Upstream",
-        "Speed test"
+        "Speed test",
+        "Upload"
       ],
       "tier": "more",
       "who": "both",
@@ -566,8 +626,8 @@
             "status": "narrower",
             "why": "The upper limit when the app changes the bitrate by itself.",
             "seen_in": [
-              "BELABOX",
-              "CeraLive"
+              "belabox",
+              "ceralive"
             ]
           },
           {
@@ -575,34 +635,50 @@
             "status": "narrower",
             "why": "Only the picture. Use it where an audio bitrate sits next to it.",
             "seen_in": [
-              "OBS Studio"
+              "obs-studio"
             ]
           }
         ],
         "evidence": [
           {
-            "maker": "BELABOX",
             "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/script.js#L1741",
             "read_on": "2026-11-15",
-            "note": "Slider value shown as \"Max bitrate: … Kbps\"."
+            "note": "Slider value shown as \"Max bitrate: … Kbps\".",
+            "service": "belabox",
+            "support": "direct",
+            "label": "Max bitrate"
           },
           {
-            "maker": "CeraLive",
             "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2073",
             "read_on": "2026-11-15",
-            "note": "\"Bitrate (Kbps)\" in the encoder dialog; \"Max bitrate\" on the go-live card."
+            "note": "\"Bitrate (Kbps)\" in the encoder dialog; \"Max bitrate\" on the go-live card.",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Bitrate (Kbps)"
           },
           {
-            "maker": "Moblin",
+            "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2073",
+            "read_on": "2026-11-15",
+            "note": "\"Bitrate (Kbps)\" in the encoder dialog; \"Max bitrate\" on the go-live card.",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Max bitrate"
+          },
+          {
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/Video/StreamVideoSettingsView.swift#L151",
             "read_on": "2026-11-15",
-            "note": "Picker labelled \"Bitrate\" in the video settings of a stream."
+            "note": "Picker labelled \"Bitrate\" in the video settings of a stream.",
+            "service": "moblin",
+            "support": "direct",
+            "label": "Bitrate"
           },
           {
-            "maker": "OBS Studio",
             "url": "https://obsproject.com/kb/stream-connection-troubleshooting",
             "read_on": "2026-11-15",
-            "note": "The knowledge base names the setting \"Video Bitrate\" under Settings → Output."
+            "note": "The knowledge base names the setting \"Video Bitrate\" under Settings → Output.",
+            "service": "obs-studio",
+            "support": "direct",
+            "label": "Video Bitrate"
           }
         ],
         "translation_note": "Many languages keep \"bitrate\" as a loanword. Keep the unit as kbit/s or Mbit/s; don't translate it.",
@@ -662,18 +738,19 @@
     {
       "id": "srt-latency",
       "term": "SRT latency",
-      "also_called": [],
+      "also_called": [
+        "Latency (SRT)"
+      ],
       "search_terms": [
-        "Latency (SRT)",
         "Latency (ms)",
         "latency= in an SRT address"
       ],
       "aliases": [
+        "Latency (SRT)",
         "Latency",
         "Receive buffer",
         "SRT buffer",
         "Buffer",
-        "Latency (SRT)",
         "Latency (ms)",
         "latency= in an SRT address"
       ],
@@ -714,26 +791,36 @@
             "term": "Buffer",
             "status": "ambiguous",
             "why": "Many settings are buffers: audio, jitter, recording."
+          },
+          {
+            "term": "Latency (SRT)",
+            "status": "also-used"
           }
         ],
         "evidence": [
           {
-            "maker": "BELABOX",
             "url": "https://github.com/BELABOX/belaUI/blob/665930824abd6e74638f4b4726b84fc9a88cfb60/public/script.js#L1783",
             "read_on": "2026-11-15",
-            "note": "Slider value shown as \"SRT latency: … ms\"."
+            "note": "Slider value shown as \"SRT latency: … ms\".",
+            "service": "belabox",
+            "support": "direct",
+            "label": "SRT latency"
           },
           {
-            "maker": "Moblin",
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Streams/Stream/Srt/StreamSrtSettingsView.swift#L54",
             "read_on": "2026-11-15",
-            "note": "\"Latency\" inside the SRT settings of a stream, shown in ms."
+            "note": "\"Latency\" inside the SRT settings of a stream, shown in ms.",
+            "service": "moblin",
+            "support": "direct",
+            "label": "Latency"
           },
           {
-            "maker": "CeraLive",
             "url": "https://github.com/CERALIVE/CeraUI/blob/39bd58f1fa2aaf7e40e847e82f554bfc6918d1e5/packages/i18n/messages/en.json#L2259",
             "read_on": "2026-11-15",
-            "note": "\"Latency\" in the latency section of the server dialog."
+            "note": "\"Latency\" in the latency section of the server dialog.",
+            "service": "ceralive",
+            "support": "direct",
+            "label": "Latency"
           }
         ],
         "translation_note": "Keep \"SRT\" as written. Translate \"latency\" with the word your language uses for delay in network settings.",
@@ -935,10 +1022,10 @@
     {
       "id": "noalbs",
       "term": "NOALBS",
-      "also_called": [],
-      "search_terms": [
+      "also_called": [
         "nginx-obs-automatic-low-bitrate-switching"
       ],
+      "search_terms": [],
       "aliases": [
         "nginx-obs-automatic-low-bitrate-switching"
       ],
@@ -1038,9 +1125,10 @@
     {
       "id": "server-type",
       "term": "Server type",
-      "also_called": [],
+      "also_called": [
+        "Stream server kind"
+      ],
       "search_terms": [
-        "Stream server kind",
         "Kind"
       ],
       "aliases": [
@@ -1083,9 +1171,10 @@
     {
       "id": "codec",
       "term": "Codec",
-      "also_called": [],
+      "also_called": [
+        "Video codec"
+      ],
       "search_terms": [
-        "Video codec",
         "Video format"
       ],
       "aliases": [

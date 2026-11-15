@@ -36,8 +36,10 @@ export const Alternative = z.strictObject({
   status: NamingStatus,
   /** Why it isn't the recommended label here, about the word. Required unless the status is also-used. */
   why: Text.max(200).optional(),
-  /** Products whose own settings show this name; each must be a maker in the word's evidence. Never on ambiguous items. */
-  seen_in: z.array(Text).min(1).optional(),
+  /** The word normally named by an ambiguous or narrower alternative. */
+  see: Id.optional(),
+  /** Service ids with direct evidence for this exact alternative. Never on ambiguous items. */
+  seen_in: z.array(Id).min(1).optional(),
 }).superRefine((a, ctx) => {
   if (a.status !== "also-used" && a.why === undefined)
     ctx.addIssue({ code: "custom", path: ["why"], message: "give a reason unless the status is also-used" });
@@ -50,14 +52,14 @@ export const Alternative = z.strictObject({
   ],
 });
 
-/** One public page that shows a product's own label, read on a given day. `note` quotes the label as shown.
- *  unverified: true when the page doesn't settle it (for example a feature list rather than a settings screen). */
+/** A public source, its observed label, and whether it directly supports this meaning. */
 export const Evidence = z.strictObject({
-  maker: Text.max(60),
+  service: Id,
+  label: Text,
+  support: z.enum(["direct", "context-only"]),
   url: HttpsUrl,
   read_on: Day,
   note: Text.max(300),
-  unverified: z.literal(true).optional(),
 });
 
 export const Naming = z.strictObject({
@@ -76,14 +78,13 @@ export const Naming = z.strictObject({
   reviewed_by: z.array(Login).optional(),
 }).superRefine((n, ctx) => {
   const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
-  const makers = new Set(n.evidence.filter((e) => !e.unverified).map((e) => e.maker.toLowerCase()));
-  if (n.status === "reviewed" && makers.size < 2) issue("evidence", "reviewed needs verified evidence from at least two makers");
+  const makers = new Set(n.evidence.filter((e) => e.support === "direct").map((e) => e.service));
+  if (n.status === "reviewed" && makers.size < 2) issue("evidence", "reviewed needs direct evidence from at least two services (distinct owners checked across files)");
   if (n.status === "reviewed" && new Set((n.reviewed_by ?? []).map((x) => x.toLowerCase())).size < 2)
     issue("reviewed_by", "reviewed needs a second steward");
   if (n.status === "draft" && n.reviewed_by !== undefined) issue("reviewed_by", "only reviewed entries list reviewers");
-  const all = new Set(n.evidence.map((e) => e.maker.toLowerCase()));
   n.alternatives.forEach((a, i) => {
-    for (const m of a.seen_in ?? []) if (!all.has(m.toLowerCase())) issue("alternatives", `alternatives[${i}].seen_in: '${m}' has no evidence`);
+    for (const m of a.seen_in ?? []) if (!n.evidence.some((e) => e.service === m && e.support === "direct" && e.label.toLowerCase() === a.term.toLowerCase())) issue("alternatives", `alternatives[${i}].seen_in: '${m}' has no evidence`);
     if (a.term.toLowerCase() === n.label.toLowerCase()) issue("alternatives", `alternatives[${i}] repeats the label`);
   });
   const terms = n.alternatives.map((a) => a.term.toLowerCase());
@@ -153,7 +154,7 @@ export const WordsFile = z.strictObject({
   about: z.string(),
   words: z.array(Word).min(1),
 }).superRefine((f, ctx) => {
-  // One recommended label per thing: labels are unique, and no word lists another word's label as an alternative.
+  // Recommended labels stay unique; ambiguous/narrower collisions require a resolving see.
   const labels = new Map<string, string>();
   f.words.forEach((w, i) => {
     if (!w.naming) return;
@@ -161,11 +162,20 @@ export const WordsFile = z.strictObject({
     if (labels.has(key)) ctx.addIssue({ code: "custom", path: ["words", i, "naming", "label"], message: `'${w.naming.label}' is already the label of ${labels.get(key)}` });
     else labels.set(key, w.id);
   });
-  f.words.forEach((w, i) => w.naming?.alternatives.forEach((a, j) => {
-    const other = labels.get(a.term.toLowerCase());
-    if (other && other !== w.id)
-      ctx.addIssue({ code: "custom", path: ["words", i, "naming", "alternatives", j, "term"], message: `'${a.term}' is the label of ${other}` });
-  }));
+  f.words.forEach((w, i) => {
+    for (const name of w.also_called) {
+      const other = labels.get(name.toLowerCase());
+      if (other && other !== w.id) ctx.addIssue({ code: "custom", path: ["words", i, "also_called"], message: `'${name}' is the label of ${other}` });
+    }
+    w.naming?.alternatives.forEach((a, j) => {
+      const other = labels.get(a.term.toLowerCase());
+      const issue = (message: string) => ctx.addIssue({ code: "custom", path: ["words", i, "naming", "alternatives", j], message });
+      if (a.see && (!["ambiguous", "narrower"].includes(a.status) || !f.words.some((target) => target.id === a.see && target.id !== w.id && (target.naming?.label ?? target.term).toLowerCase() === a.term.toLowerCase())))
+        issue("see must resolve to the word normally named by an ambiguous or narrower alternative");
+      if (other && other !== w.id && (!["ambiguous", "narrower"].includes(a.status) || a.see !== other))
+        issue(`'${a.term}' is the label of ${other}; ambiguous or narrower needs see: ${other}`);
+    });
+  });
 });
 
 // ---------- Answers (quick checks) ----------
