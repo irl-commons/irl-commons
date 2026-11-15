@@ -20,5 +20,6 @@ jobs:
           persist-credentials: false
       - env:
           GH_TOKEN: ${{ github.token }}
+          RULESET_READ_TOKEN: ${{ secrets.RULESET_READ_TOKEN }}
           GH_REPO: ${{ github.repository }}
         run: python3 scripts/ruleset_drift.py
