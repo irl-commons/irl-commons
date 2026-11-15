@@ -1,11 +1,21 @@
 """Compare committed rules with live rules; update one issue, never settings."""
 import json
+import os
 from pathlib import Path
 import subprocess
 
 
-def gh(*args):
-    return subprocess.check_output(['gh', *args], text=True)
+def gh(*args, token=None):
+    env = dict(os.environ, GH_TOKEN=token) if token else None
+    return subprocess.check_output(['gh', *args], text=True, env=env)
+
+
+def rules_token():
+    """Ruleset reads need a token that can see bypass_actors (Administration: read).
+
+    Without RULESET_READ_TOKEN the default token hides that field and the check
+    reports drift, which is the safe answer."""
+    return os.environ.get('RULESET_READ_TOKEN') or None
 
 
 def project(actual, expected):
@@ -23,9 +33,9 @@ def project(actual, expected):
 def run():
     expected = json.loads(Path('.github/rulesets/main.json').read_text())
     wanted = dict(expected, rules=sorted(expected['rules'], key=lambda x: x['type']))
-    rulesets = json.loads(gh('api', '--paginate', '--slurp', 'repos/{owner}/{repo}/rulesets?per_page=100'))
+    rulesets = json.loads(gh('api', '--paginate', '--slurp', 'repos/{owner}/{repo}/rulesets?per_page=100', token=rules_token()))
     candidates = [x for page in rulesets for x in page if x['name'] == expected['name']]
-    matches = len(candidates) == 1 and project(json.loads(gh('api', f'repos/{{owner}}/{{repo}}/rulesets/{candidates[0]["id"]}')), expected) == wanted
+    matches = len(candidates) == 1 and project(json.loads(gh('api', f'repos/{{owner}}/{{repo}}/rulesets/{candidates[0]["id"]}', token=rules_token())), expected) == wanted
     marker = '<!-- rolling-ruleset-drift -->'
     body = marker + '\n\n' + ('Live rules match the committed ruleset.' if matches else
         'The live main ruleset is missing, duplicated or differs from `.github/rulesets/main.json`. Review repository settings and the committed policy. This workflow never changes settings.')
