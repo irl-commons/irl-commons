@@ -1,6 +1,6 @@
 # irl-commons
 
-Small, reusable datasets about streaming live from outside (IRL streaming), maintained by irl-commons. This is v0: curated by hand, incomplete, and subject to corrections and schema changes. Entries carry source-check dates where a content review is recorded; undated words and answers have unknown freshness. Links and service features can change.
+Small, reusable datasets about IRL streaming (streaming your real life away from the desk, wherever that is), maintained by irl-commons. This is v0: curated by hand, incomplete, and subject to corrections and schema changes. Entries carry source-check dates where a content review is recorded; undated words and answers have unknown freshness. Links and service features can change.
 
 **New here?** [Use the data](docs/getting-started.md) in your own app or site in about ten minutes, then read the [worked examples](docs/examples.md) and the [FAQ](docs/faq.md). What changed is in the [changelog](docs/CHANGELOG.md). Questions and ideas go to [Discussions](https://github.com/irl-commons/irl-commons/discussions). How this fits with the open standards for IRL streaming: [openstreambox.org/open-standards.html](https://openstreambox.org/open-standards.html).
 
