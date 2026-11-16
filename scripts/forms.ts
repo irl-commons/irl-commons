@@ -260,7 +260,7 @@ export function applyRequest(request: Request, data: Record<FileName, any>): Cha
   } else {
     if (request.name && request.name !== before[map.name]) { entry[map.name] = request.name; summary.push(`Sets \`${map.name}\` to the new name.`); }
     if (request.link && map.link && request.link !== before[map.link]) { entry[map.link] = request.link; summary.push(`Sets \`${map.link}\` to the new link.`); }
-    if (request.link && !map.link) notes.push(`${dataset} entries have no main link; the new link from the form is left for the steward.`);
+    if (request.link && !map.link) notes.push(`${dataset} entries have no official link; the new link from the form is left for the steward.`);
     if (request.tags.length && dataset !== "services") notes.push(`Tags are only for apps and services; the ticked boxes are left out.`);
     else if (request.tags.length) {
       const added = request.tags.filter((t) => !(entry.tags as string[]).includes(t));

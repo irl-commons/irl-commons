@@ -55,12 +55,12 @@ class GovernanceTests(unittest.TestCase):
         self.f['reviews'] = []
         self.f['config']['stewards'] = self.f['config']['stewards'][:1]
         self.assertEqual(self.check(paths=['data/words.json'])['state'], 'success')
-        self.assertIn('Review count: not active (bootstrap)', self.check()['summary'])
+        self.assertIn('are off (bootstrap)', self.check()['summary'])
         self.f['config']['stewards'].append({'github': 'other', 'affiliations': []})
-        self.assertIn('N=1', self.check()['summary'])
+        self.assertIn('needs 1 independent approval;', self.check()['summary'])
         self.f['config']['stewards'].append({'github': 'third', 'affiliations': []})
         for path in ['scripts/stale.ts', 'scripts/check.ts', 'package.json', 'bun.lock', 'README.md', 'NPM-PUBLISHING.md', 'data/README.md', 'schema/src/schema.ts', 'LICENSE-DATA', 'stewards.json', '.github/workflows/governance.yml']:
-            self.assertIn('N=2', self.check(paths=[path])['summary'])
+            self.assertIn('needs 2 independent approvals;', self.check(paths=[path])['summary'])
 
     def test_steady_gate_fails_closed(self):
         for live in [None, [], [{'type': 'pull_request', 'parameters': {'required_approving_review_count': 0}}]]:
@@ -95,18 +95,17 @@ class GovernanceTests(unittest.TestCase):
             self.f['pr']['draft'] = draft
             result = self.check(now=early)
             self.assertEqual(result['state'], 'success')
-            self.assertIn('Review count: not active (bootstrap)', result['summary'])
-            self.assertIn('Seven-day window: not active (bootstrap)', result['summary'])
-            self.assertEqual(result['title'], 'Bootstrap: review counts and window not active')
-        self.assertNotIn('Seven-day window', self.check(paths=['data/words.json'], now=early)['summary'])
+            self.assertIn('review counts and the seven-day wait are off (bootstrap)', result['summary'])
+            self.assertEqual(result['title'], 'Bootstrap: one steward, no review count or wait')
+        self.assertNotIn('seven-day', self.check(paths=['data/words.json'], now=early)['summary'])
         self.f['pr']['draft'] = False
         self.f['config']['stewards'].append({'github': 'steward-two', 'affiliations': []})
         result = self.check(now=early)
         self.assertEqual(result['state'], 'failure')
-        self.assertIn('N=1 (rules)', result['summary'])
-        self.assertIn('Window ends 2026-01-10T12:00:00+00:00', result['summary'])
+        self.assertIn('This rules change needs 1 independent approval;', result['summary'])
+        self.assertIn('The wait ends 2026-01-10T12:00:00+00:00', result['summary'])
         self.assertNotIn('bootstrap', result['summary'])
-        self.assertEqual(result['title'], 'Steward review and consensus window')
+        self.assertEqual(result['title'], 'Steward review and seven-day wait')
         self.f['reviews'] = [{'id': 1, 'user': {'login': 'steward-two'}, 'state': 'APPROVED', 'commit_id': 'current'}]
         self.assertEqual(self.check(now=early)['state'], 'pending')
         self.assertEqual(self.check()['state'], 'success')

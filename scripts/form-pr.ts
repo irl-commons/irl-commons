@@ -81,30 +81,30 @@ export function prBody(meta: Meta, check: { passed: boolean; output: string }): 
   const r = meta.request!;
   const who = LOGIN.test(meta.author.login) ? `@${meta.author.login}` : "the person who filled it in";
   const out: string[] = [];
-  out.push(`This draft comes from the form in #${meta.issue}, filled in by ${who}. Thank you!`, "");
+  out.push(`From the form in #${meta.issue} by ${who}. Thank you!`, "");
   out.push("**What it changes**", "", ...meta.summary.map((s) => `- ${s}`), "");
   out.push(`**Source:** ${link(r.source)}, read on ${r.readOn}${r.readOnFromIssue ? " (the form left the date empty, so this is the day the issue was opened)" : ""}.`, "");
   if (r.kind === "confirm") out.push("**What they checked**", "", fenced(r.checked), "");
   else if (r.kind === "new") out.push("**Description from the form**", "", fenced(r.description), "");
   else out.push("**What changed, in their words**", "", fenced(r.changes), "");
   if (r.productLabel) out.push("**The label their product uses, and why**", "", fenced(r.productLabel), "");
-  if (r.kind === "maker") out.push("**Conflict of interest:** this is an edit request from the maker or a competitor. An independent steward reviews and merges it.", "", fenced(r.conflictDetails), "");
+  if (r.kind === "maker") out.push("**Conflict of interest:** edit request from the maker or a competitor. An independent steward reviews it.", "", fenced(r.conflictDetails), "");
   else if (r.conflict) out.push("**Conflict of interest:** declared in the form. An independent steward reviews it.", "", fenced(r.conflictDetails), "");
   else out.push("**Conflict of interest:** none declared.", "");
   if (check.passed) out.push("**Data check:** passes.", "");
   else {
     const lines = check.output.split("\n").filter((l) => l.trim() && !l.startsWith("$ ") && !l.startsWith("error: script ")).slice(0, 30);
-    out.push("**Data check:** doesn't pass yet. A steward fills in or fixes these on this branch:", "", fenced(lines.join("\n")), "");
+    out.push("**Data check:** fails. A steward fixes these on this branch:", "", fenced(lines.join("\n")), "");
   }
   if (meta.notes.length) out.push("**Notes**", "", ...meta.notes.map((n) => `- ${n}`), "");
-  out.push("**For the steward:** compare the change with the source and finish anything missing on this branch. Then mark the pull request ready for review: that starts the validate and governance checks, and the usual merge rules apply.", "");
+  out.push("**For the steward:** compare with the source and finish anything missing on this branch. Then mark it ready for review to start the checks.", "");
   out.push(`Closes #${meta.issue}`);
   return out.join("\n") + "\n";
 }
 
 export function problemComment(meta: Meta): string {
   if (meta.status === "manual")
-    return "Thank you! The form is complete, but this change can't be written into the data automatically. A steward makes it by hand and links the pull request here.\n";
+    return "Thank you! A steward makes this change by hand and links the pull request here.\n";
   return [
     "Thank you! This form can't be turned into a change yet:", "",
     ...meta.problems.map((p) => `- ${p}`), "",

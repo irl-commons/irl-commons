@@ -1,4 +1,4 @@
-name: Weekly source review
+name: Weekly link and freshness check
 on:
   schedule:
     - cron: '23 8 * * 1'
