@@ -10,10 +10,38 @@ Six reviewed data files about IRL streaming (streaming your real life away from 
 
 Descriptions and definitions are written for this list. Sources and links point to public primary pages only (makers' own pages, standards, platform help); no chat invites, private links or community posts. The schemas in `../schema` (zod, with exported JSON Schema) validate every file; see that folder's README.
 
-- `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. See the root README for field conventions and attribution.
+- `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. Field rules for carriers and plans are in [CONTRIBUTING](../CONTRIBUTING.md#carriers-and-plans).
 - `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, Moblink, RIST, WHIP and OBS WebSocket. Each entry credits its maker, says how open it is (a public spec, documented by a closed product, code only, or not public yet), and names the products that write or read it: catalogued ones by `service_ids`, the rest in `other_users`. Entries sit in one of three groups. `shared` is for items several makers' products use. `app-formats` is for one app's own export or setup format, listed only when a named second product writes or reads it. `hardware-codecs` holds the video and audio codecs (H.264, HEVC, AV1, AAC, Opus) and the camera interfaces (UVC, HDMI, SDI). `steward-projects` holds items made by people who steward this repository, kept apart so they're never mistaken for established standards. Codec and transport entries also carry comparison facts: how they're licensed (as the licensors put it), efficiency only from a published comparison, hardware encode and decode on common IRL gear, bonding, latency, loss recovery, and ingest on Twitch, YouTube and Kick. Every fact names its own sources and `checked_on` date. An entry that is also a glossary word (SRT, SRTLA) uses the same id, points at it with `word`, and leaves the definition to `words.json`. Listing an item doesn't mean this project makes, runs or endorses it.
 
-All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the attribution format in `../README.md`.
+All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the credit line in [Getting started](../docs/getting-started.md#3-give-credit). Retain supplied attribution and modification notices, link the source and licence, and identify your changes. Data is supplied without warranties. Links do not license the linked third-party material or imply endorsement.
+
+## Freshness
+
+Services, guides, standards, carriers and nested plans require a `checked_on` ISO date; words
+and answers may omit it when no content review is recorded. When present it is:
+the day its content was checked against its public primary source. A successful
+link request alone is not a content check. Preserve actual dates; never infer one from link health or a bulk import.
+See [source-check provenance](#source-check-provenance) for the recorded 2026-11-14 content review.
+
+| Dataset or field | Stale after |
+| --- | --- |
+| Words | 18 calendar months |
+| Answers | 12 calendar months |
+| Guides | 9 calendar months |
+| Services | 6 calendar months |
+| Standards | 6 calendar months |
+| Standards comparison facts (each by its own `checked_on`) | 6 calendar months |
+| Carrier records | 6 calendar months |
+| Plan prices, caps and fair-use rules; service `status` | 90 days |
+
+Undated entries have unknown freshness and must not be presented as fresh.
+Consumers compute staleness from `checked_on` and today's UTC date; data stores
+only dates, never a stale flag. An entry is stale on its due date. Calendar
+months clamp to the final day of the target month. Show stale entries with their
+date; hide stale plan prices/caps/fair-use figures and service status while
+keeping the carrier/service and source visible. Nested plans use their own date.
+Run `bun scripts/stale.ts [YYYY-MM-DD]` for a Markdown report. Weekly automation
+checks links and updates one freshness issue; it never edits data.
 
 ## Source-check provenance
 

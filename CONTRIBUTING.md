@@ -26,10 +26,22 @@ conflict in the PR, and the governance check shows it without blocking. They
 switch on automatically once a second steward is listed in `stewards.json`.
 See GOVERNANCE.md for the exact rules.
 
-Run `bun install --frozen-lockfile`, `bun run check`, `bun run export` and
-`git diff --exit-code -- schema/json`. For intentional schema changes, regenerate
+Run the checks with Bun 1.4.3:
+
+```sh
+bun install --frozen-lockfile
+bun run check
+bun run export
+git diff --exit-code -- schema/json
+```
+
+The check validates all six files, cross-references, generated titles, privacy rules, schema drift and rejection fixtures. Carrier checks also exercise a valid synthetic network and virtual operator, missing hosts, country mismatches and duplicates. Run `bun run titles` after changing the service names or relationships used by guide titles, and `bun run aliases` after changing a word's names. For intentional schema changes, regenerate
 and review the JSON Schema first, then repeat the drift check. Add invalid
 fixtures for new constraints. Keep ids stable and all cross-references valid.
+
+## Carriers and plans
+
+Carrier submissions must support every populated field with official sources. Use ISO 3166-1 alpha-2 country codes, `MNO` or `MVNO`, a null host for an MNO and a same-country MNO id for an MVNO. `sources` backs carrier properties; each plan has its own source and checked date. A null data cap means unlimited, while null throttle and tethering values mean unknown. Data caps use decimal GB and throttles use kbit/s. Roaming routing is `home-routed`, `local-breakout` or `unknown`. Do not infer routing from marketing claims.
 
 ## Propose a different label
 
@@ -92,3 +104,7 @@ as dataset/id, so the dataset needs no separate choice), `name`, `link`,
 `source`, and the text boxes `description`, `checked` and `changes`. The
 dropdowns (dataset and conflict of interest) can't be filled by a link, and
 `read_on` is left for the person who reads the source.
+
+## Releases
+
+Release setup and the one-time npm package bootstrap are documented in [NPM-PUBLISHING.md](NPM-PUBLISHING.md).
