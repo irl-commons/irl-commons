@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
-import { files, type FileName } from "../schema/src/schema.ts";
+import { ServiceTag, files, type FileName } from "../schema/src/schema.ts";
 import { applyRequest, fenced, formFor, loadForms, parseBody, readRequest, serialize, type Kind } from "./forms.ts";
 import { commitMessage, mayLabel, prBody, prepare, problemComment } from "./form-pr.ts";
 import { branchFor, handOver, readBundle } from "./form-open.mjs";
@@ -145,6 +145,10 @@ describe("checking the values", () => {
     expect(change.status).toBe("ready");
     expect(change.after!.tags).toEqual(["multi-camera", "camera-in"]);
     expect(change.summary).toContain("Adds the tag `camera-in`.");
+  });
+  test("the edit form has a tick box for every tag", () => {
+    const yml = readFileSync(new URL("../.github/ISSUE_TEMPLATE/edit-entry.yml", import.meta.url), "utf8");
+    for (const tag of ServiceTag.options) expect(yml).toContain(`- label: "${tag}: `);
   });
   test("a tag box the form doesn't offer is refused", () => {
     const values = parseBody(form("edit"), fixture("edit-tags").replace("- [X] multi-camera:", "- [X] dslr:")).values;

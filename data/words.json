@@ -940,6 +940,84 @@
       "checked_on": "2026-11-14"
     },
     {
+      "id": "hub",
+      "checked_on": "2026-11-16",
+      "term": "Hub",
+      "also_called": [],
+      "search_terms": [
+        "Hubs",
+        "Cloud hub"
+      ],
+      "aliases": [
+        "Hubs",
+        "Cloud hub"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Switching between your desktop and IRL in one stream; hosted hubs and cloud OBS",
+      "plain": "A server or an OBS instance that lets you switch between different sources. Only the hub goes live on the platform.",
+      "related": [
+        "source",
+        "scene",
+        "ingest",
+        "cloud-obs",
+        "drop-protection"
+      ],
+      "source": "https://obsproject.com/kb/obs-studio-overview",
+      "uncertain": true
+    },
+    {
+      "id": "source",
+      "checked_on": "2026-11-16",
+      "term": "Source",
+      "also_called": [],
+      "search_terms": [
+        "Sources"
+      ],
+      "aliases": [
+        "Sources"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "OBS Sources dock; adding your phone's stream or a webcam to a scene",
+      "plain": "One thing a scene shows or plays: a camera, a screen capture, a phone's stream, a mic, an image.",
+      "related": [
+        "scene",
+        "hub",
+        "browser-source"
+      ],
+      "source": "https://obsproject.com/kb/obs-studio-overview",
+      "uncertain": false
+    },
+    {
+      "id": "ingest",
+      "checked_on": "2026-11-16",
+      "term": "Ingest",
+      "also_called": [],
+      "search_terms": [
+        "Ingests",
+        "Ingest server",
+        "Ingest URL"
+      ],
+      "aliases": [
+        "Ingests",
+        "Ingest server",
+        "Ingest URL"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Setting up where your app sends; a hub or relay showing you its ingest address",
+      "plain": "The address where a server or app takes in your stream. Your phone sends to it.",
+      "related": [
+        "hub",
+        "relay",
+        "local-ingest",
+        "ingest-and-output"
+      ],
+      "source": "https://github.com/eerimoq/moblin",
+      "uncertain": false
+    },
+    {
       "id": "big-packets",
       "term": "Big packets",
       "also_called": [
@@ -1130,12 +1208,10 @@
       "term": "Ingest and output",
       "also_called": [],
       "search_terms": [
-        "Ingest",
         "Output",
         "Destination"
       ],
       "aliases": [
-        "Ingest",
         "Output",
         "Destination"
       ],
@@ -1146,7 +1222,8 @@
       "related": [
         "cloud-obs",
         "drop-protection",
-        "relay"
+        "relay",
+        "ingest"
       ],
       "source": "https://kb.irltoolkit.com/cloudobs/0-QuickStart",
       "uncertain": false
