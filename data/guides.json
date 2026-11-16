@@ -585,6 +585,30 @@
       ],
       "words": [],
       "answers": []
+    },
+    {
+      "id": "belabox-obs-audio-glitching",
+      "title": "OBS Media Source SRT live stream audio stuttering / glitching",
+      "title_display": "OBS Studio with BELABOX: set up OBS and switching",
+      "url": "https://belabox.net/obs-audio-glitching.html",
+      "creator": "BELABOX",
+      "publisher": "belabox",
+      "language": "en",
+      "kind": "article",
+      "published": null,
+      "checked_on": "2026-11-16",
+      "covers": [
+        "belabox",
+        "obs-studio"
+      ],
+      "part": [
+        "obs",
+        "receiver"
+      ],
+      "words": [
+        "srt"
+      ],
+      "answers": []
     }
   ]
 }

@@ -52,8 +52,18 @@ export const Alternative = z.strictObject({
   ],
 });
 
-/** A public source, its observed label, and whether it directly supports this meaning. */
+/** Source provenance; omitted kind on older evidence means public primary. */
+export const SourceKind = z.enum(["public primary", "behind login (supplied by a user)"]);
+export const Source = z.strictObject({
+  kind: SourceKind,
+  url: HttpsUrl,
+  read_on: Day,
+  note: Text.max(300),
+});
+
+/** A source, its observed label, and whether it directly supports this meaning. */
 export const Evidence = z.strictObject({
+  kind: SourceKind.optional(),
   service: Id,
   label: Text,
   support: z.enum(["direct", "context-only"]),
@@ -273,6 +283,7 @@ export const Service = z.strictObject({
   licence: Text.nullable(),
   status: Text.nullable(),
   description: Text,
+  sources: z.array(Source).min(1).optional(),
   platforms: z.array(Platform).min(1),
   /** Where along the chain it sits, the main part first. Empty only for community entries. */
   part: z.array(Part).max(3),

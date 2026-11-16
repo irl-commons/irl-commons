@@ -229,6 +229,13 @@
                 "items": {
                   "type": "object",
                   "properties": {
+                    "kind": {
+                      "type": "string",
+                      "enum": [
+                        "public primary",
+                        "behind login (supplied by a user)"
+                      ]
+                    },
                     "service": {
                       "type": "string",
                       "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"

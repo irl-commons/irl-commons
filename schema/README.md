@@ -36,3 +36,12 @@ Run `bun scripts/stale.ts [YYYY-MM-DD]` for a Markdown report. Weekly automation
 checks links and updates one freshness issue; it never edits data.
 
 Schema `$id` values use the public `irl-commons/irl-commons` repository. The npm package is `@irl-commons/data`.
+
+## Source provenance
+
+When a feature is only described behind a login, a steward may record a dated, user-supplied description; no keys, secret URLs or account data.
+Services may record `sources` with `kind`, public `url`, `read_on` and `note`;
+naming evidence uses the same optional `kind` (omitted means public primary).
+For `behind login (supplied by a user)`, use only the public login page URL and
+say in the note that the description is behind login. The date records when
+the text was supplied, not an independent account check.

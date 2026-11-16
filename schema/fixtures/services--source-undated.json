@@ -1,0 +1,38 @@
+{
+  "about": "",
+  "services": [
+    {
+      "id": "belabox-remotes",
+      "name": "BELABOX remotes",
+      "kind": "app",
+      "role": "remote-control",
+      "class": "helper-app",
+      "hosting": "service",
+      "maker": "BELABOX",
+      "url": "https://cloud.belabox.net/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Controls a BELABOX encoder over the internet without a direct local network connection.",
+      "sources": [
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "note": "Account feature description behind login, supplied by a user on 16 November 2026; the URL is the public login page."
+        }
+      ],
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [],
+      "checked_on": "2026-11-16"
+    }
+  ]
+}
