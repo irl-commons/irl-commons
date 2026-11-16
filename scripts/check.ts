@@ -9,10 +9,10 @@ const here = (p: string) => new URL(p, import.meta.url);
 const problems: string[] = [];
 const read = (p: URL) => JSON.parse(readFileSync(p, "utf8"));
 
-// Shared data must stay public and site-free: no chat invites, preview hosts,
+// Shared data must stay public and site-free: no preview hosts,
 // private paths, tracking references or insecure URLs.
 const FORBIDDEN = new RegExp([
-  "disco" + "rd\\.(?:gg|com)|disco" + "rdapp", "preview" + "\\.openstreambox",
+  "preview" + "\\.openstreambox",
   "\\.ts\\.net|tail" + "net|local" + "host|127\\.0\\.0\\.1",
   "/ho" + "me/|/s" + "rv/|/Us" + "ers/",
   "no" + "tes/|\\.lo" + "cal/|\\bT\\d+\\b|\\bA\\d{3}\\b",
@@ -53,6 +53,9 @@ export function semantic(data: Record<FileName, any>): string[] {
   for (const service of data.services.services)
     for (const source of service.sources ?? [])
       if (source.read_on > today) out.push(`services: ${service.id}: source read_on is in the future`);
+  for (const service of data.services.services)
+    for (const channel of service.support)
+      if (channel.checked_on > today) out.push(`services: ${service.id}: support checked_on is in the future`);
   const dupes = (where: string, ids: string[]) => {
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) out.push(`${where}: duplicate id ${id}`);
   };
@@ -182,7 +185,7 @@ export function semantic(data: Record<FileName, any>): string[] {
 }
 
 // The project's one public chat invite, a contact link for people without a GitHub account.
-// Only these files may carry it; the data never does.
+// Support channel invites have their own schema and evidence requirements.
 export const CONTACT_INVITE = "https://disco" + "rd.gg/KChVwU6fjk";
 export const CONTACT_FILES = new Set(["README.md", "CONTRIBUTING.md"]);
 

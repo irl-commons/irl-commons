@@ -2,7 +2,7 @@
 
 ## What a change needs
 
-- **A public source:** the maker's own page, the standard, or the platform's help. No chat invites, community posts or private material.
+- **A public source:** the maker's own page, the standard, or the platform's help. Discord invites must be published on the maker’s own site or README, with a source and checked date. No unofficial invites, community posts or private material.
 - **The date you read it.** It becomes the entry's `checked_on`. A link that loads is not a check.
 - **Your own words:** neutral, with no rankings, paid placement or affiliate links.
 - **Any connection** to the product or a competitor: work, payment or ownership. That's fine; it only means an independent steward reviews it.

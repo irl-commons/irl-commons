@@ -253,22 +253,75 @@
               "properties": {
                 "label": {
                   "type": "string",
-                  "pattern": "\\S",
-                  "description": "What the page is, in a few words."
+                  "pattern": "\\S"
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
-                  "description": "The page's https address."
+                  "pattern": "^https:\\/\\/\\S+$"
+                },
+                "kind": {
+                  "type": "string",
+                  "enum": [
+                    "discord",
+                    "forum",
+                    "help",
+                    "docs",
+                    "contact",
+                    "github"
+                  ]
+                },
+                "checked_on": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                },
+                "source": {
+                  "description": "The maker's public page or README that publishes this channel.",
+                  "type": "string",
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
                 }
               },
               "required": [
                 "label",
                 "url"
               ],
-              "additionalProperties": false
+              "additionalProperties": false,
+              "allOf": [
+                {
+                  "if": {
+                    "required": [
+                      "kind"
+                    ]
+                  },
+                  "then": {
+                    "required": [
+                      "checked_on",
+                      "source"
+                    ]
+                  }
+                },
+                {
+                  "if": {
+                    "properties": {
+                      "url": {
+                        "pattern": "[dD][iI][sS][cC][oO][rR][dD](?:[aA][pP][pP])?\\.(?:[gG][gG]|[cC][oO][mM])"
+                      }
+                    }
+                  },
+                  "then": {
+                    "required": [
+                      "kind"
+                    ],
+                    "properties": {
+                      "kind": {
+                        "const": "discord"
+                      }
+                    }
+                  }
+                }
+              ]
             },
-            "description": "Official public help: help centres, docs, issue trackers, contact pages. No chat invites."
+            "description": "Official support channels, including Discord invites published by the maker. Typed channels carry their own checked date and source."
           },
           "tags": {
             "type": "array",
