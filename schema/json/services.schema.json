@@ -3,7 +3,8 @@
   "type": "object",
   "properties": {
     "about": {
-      "type": "string"
+      "type": "string",
+      "description": "What this file holds, in a sentence or two, with a link to the docs."
     },
     "services": {
       "minItems": 1,
@@ -13,16 +14,19 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Permanent id, used as an anchor and in links from other files."
           },
           "checked_on": {
             "type": "string",
             "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The day the entry was compared with its public source."
           },
           "name": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "The name as the maker writes it."
           },
           "kind": {
             "type": "string",
@@ -33,7 +37,8 @@
               "hardware",
               "production",
               "community"
-            ]
+            ],
+            "description": "What kind of product it is. The kind limits which roles it can have."
           },
           "role": {
             "type": "string",
@@ -49,7 +54,8 @@
               "production",
               "hardware",
               "community"
-            ]
+            ],
+            "description": "What it is for, as a reader picks it. streaming-app: sends your stream. extra-connections: adds a network path. camera-capture: brings a camera or screen in. remote-control: runs OBS or the sender from another device. chat-overlays: chat, alerts, overlays and location. other-app: an app that fits none of these. relay: relays, receivers and protocols. hub: hosted hubs that go out to the platform. production: OBS and its tools. hardware: encoders, backpacks and parts. community: docs and wikis."
           },
           "class": {
             "type": "string",
@@ -65,7 +71,8 @@
               "production",
               "building-block",
               "docs"
-            ]
+            ],
+            "description": "Which overview it belongs in, as a streamer looks for it. phone-app: the phone app that sends the stream. helper-app: small apps around it (chat, location, remote control, a camera into the phone). connections: ways to add another network. bonding: receivers and relays that join a bonded stream, and bonding services. hardware: backpacks, encoders and kits. parts: add-ons for a box or backpack. store: shops for built backpacks, cases and parts. cloud: hosted production (cloud OBS, drop protection, restreaming). production: OBS and tools on your own computer or in the browser. building-block: protocols, libraries and media servers that apps are built from. docs: community docs and wikis."
           },
           "hosting": {
             "anyOf": [
@@ -74,20 +81,24 @@
                 "enum": [
                   "self",
                   "service"
-                ]
+                ],
+                "description": "self: software you run on your own server or computer. service: someone runs it for you, paid or free."
               },
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Who runs the server side. Set for bonding and cloud entries; null where it doesn't apply."
           },
           "maker": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "The maker or organisation that owns it."
           },
           "url": {
             "type": "string",
-            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+            "description": "The maker's own page."
           },
           "links": {
             "type": "array",
@@ -96,11 +107,13 @@
               "properties": {
                 "label": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "What the page is, in a few words."
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The page's https address."
                 }
               },
               "required": [
@@ -108,9 +121,11 @@
                 "url"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Other official pages."
           },
           "open_source": {
+            "description": "True when the code is open source. Null when unknown.",
             "type": [
               "boolean",
               "null"
@@ -125,7 +140,8 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "The licence, or null."
           },
           "status": {
             "anyOf": [
@@ -136,13 +152,16 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "A release stage the maker states, such as beta or pre-release. Null for a normal release."
           },
           "description": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "What it is, in a sentence or two, written for this list."
           },
           "sources": {
+            "description": "Sources for claims the maker's page doesn't show, such as a description behind a login.",
             "minItems": 1,
             "type": "array",
             "items": {
@@ -153,21 +172,25 @@
                   "enum": [
                     "public primary",
                     "behind login (supplied by a user)"
-                  ]
+                  ],
+                  "description": "Where the claim comes from. Left out on older evidence, which means public primary."
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The public page. For a description behind a login, the public login page."
                 },
                 "read_on": {
                   "type": "string",
                   "format": "date",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "description": "The day it was read, or the day a description was supplied."
                 },
                 "note": {
                   "type": "string",
                   "maxLength": 300,
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "What the page shows, in a sentence or two."
                 }
               },
               "required": [
@@ -193,8 +216,10 @@
                 "web",
                 "hardware",
                 "service"
-              ]
-            }
+              ],
+              "description": "Where it runs. hardware: its own device. service: a hosted service."
+            },
+            "description": "Where it runs."
           },
           "part": {
             "maxItems": 3,
@@ -208,15 +233,18 @@
                 "receiver",
                 "obs",
                 "platform"
-              ]
-            }
+              ],
+              "description": "Where along the chain: camera (camera and mic into the sender), sender (the app or box), connections, receiver, obs, platform."
+            },
+            "description": "Where along the chain it sits, the main part first. Empty only for community entries."
           },
           "covers": {
             "type": "array",
             "items": {
               "type": "string",
               "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-            }
+            },
+            "description": "For community entries (docs, wikis): the products they document. Empty otherwise."
           },
           "support": {
             "type": "array",
@@ -225,11 +253,13 @@
               "properties": {
                 "label": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "What the page is, in a few words."
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The page's https address."
                 }
               },
               "required": [
@@ -237,7 +267,8 @@
                 "url"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Official public help: help centres, docs, issue trackers, contact pages. No chat invites."
           },
           "tags": {
             "type": "array",
@@ -247,7 +278,8 @@
                 "camera-in",
                 "multi-camera",
                 "scene-control"
-              ]
+              ],
+              "description": "camera-in: takes the picture from a standalone camera (a DSLR, mirrorless or action camera) over HDMI, USB or the network. multi-camera: shows several cameras in one scene at once. scene-control: switches the scenes in OBS or a hub from outside it, by remote, chat commands or on its own."
             },
             "uniqueItems": true
           },
@@ -256,7 +288,8 @@
             "items": {
               "type": "string",
               "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-            }
+            },
+            "description": "Ids of related words in words.json."
           }
         },
         "required": [

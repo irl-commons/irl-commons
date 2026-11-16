@@ -1,4 +1,4 @@
 {
-  "about": "Carrier and optional plan records. Empty until primary sources support every populated field.",
+  "about": "Mobile carriers and their data plans. Empty until official sources back every field. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
   "carriers": []
 }

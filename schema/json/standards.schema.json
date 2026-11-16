@@ -4,7 +4,8 @@
   "properties": {
     "about": {
       "type": "string",
-      "pattern": "\\S"
+      "pattern": "\\S",
+      "description": "What this file holds, in a sentence or two, with a link to the docs."
     },
     "standards": {
       "minItems": 1,
@@ -14,16 +15,19 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Permanent id, used as an anchor and in links from other files."
           },
           "checked_on": {
             "type": "string",
             "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The day the entry was compared with its public source."
           },
           "name": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "The name as the maker writes it."
           },
           "group": {
             "type": "string",
@@ -32,7 +36,8 @@
               "app-formats",
               "hardware-codecs",
               "steward-projects"
-            ]
+            ],
+            "description": "shared: several makers' products write or read it. app-formats: one app's own format that a named second product also writes or reads. hardware-codecs: codecs and camera interfaces. steward-projects: made by stewards of this repository, listed apart so they are not mistaken for established standards."
           },
           "kind": {
             "type": "string",
@@ -43,14 +48,16 @@
               "data",
               "codec",
               "interface"
-            ]
+            ],
+            "description": "protocol: two programs speak it over a network or link. format: a file, URL or message shape. settings: a setup link or settings file one app imports. data: a dataset. codec: a way to compress video or audio. interface: a cable or bus that carries a camera's picture."
           },
           "status": {
             "type": "string",
             "enum": [
               "in-use",
               "proposed"
-            ]
+            ],
+            "description": "in-use, or proposed."
           },
           "openness": {
             "type": "string",
@@ -59,7 +66,8 @@
               "documented-closed",
               "undocumented",
               "not-public"
-            ]
+            ],
+            "description": "open: a public spec, or open-licensed code whose docs describe it. documented-closed: the maker describes it publicly, but the spec is partial or the product closed. undocumented: no written description; public code, if any, is the only reference. not-public: not published yet."
           },
           "licence": {
             "anyOf": [
@@ -70,11 +78,13 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "A short licence line. Null when codec or transport facts carry the licensing."
           },
           "maker": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "Who makes or maintains it. The credit belongs to them, not to this list."
           },
           "url": {
             "anyOf": [
@@ -85,14 +95,17 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "The page that best describes it, the maker's own where one exists. Null only when not public."
           },
           "description": {
+            "description": "One line written for this list. Left out when word is set.",
             "type": "string",
             "maxLength": 200,
             "pattern": "\\S"
           },
           "word": {
+            "description": "The words.json id of the same thing, when it is also a glossary word. Equal to this entry's id; the glossary explanation is used instead of a description.",
             "type": "string",
             "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
           },
@@ -101,14 +114,16 @@
             "items": {
               "type": "string",
               "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-            }
+            },
+            "description": "Catalogued products that write or read it, as service ids."
           },
           "other_users": {
             "type": "array",
             "items": {
               "type": "string",
               "pattern": "\\S"
-            }
+            },
+            "description": "Named products that write or read it but are not in services.json."
           },
           "sources": {
             "type": "array",
@@ -117,11 +132,13 @@
               "properties": {
                 "label": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "What the page is, in a few words."
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The page's https address."
                 }
               },
               "required": [
@@ -129,7 +146,8 @@
                 "url"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Public sources for the claims. Empty only when not public."
           },
           "notes": {
             "anyOf": [
@@ -140,9 +158,11 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "Anything else worth knowing, or null."
           },
           "codec": {
+            "description": "Comparison facts, for codecs.",
             "type": "object",
             "properties": {
               "media": {
@@ -150,7 +170,8 @@
                 "enum": [
                   "video",
                   "audio"
-                ]
+                ],
+                "description": "video or audio."
               },
               "licensing": {
                 "type": "object",
@@ -163,12 +184,14 @@
                       "open-spec",
                       "open-code",
                       "proprietary"
-                    ]
+                    ],
+                    "description": "How it may be used, as its licensors describe it: royalty-free patent licences, patent pools, an open spec, open-source code without a separate spec, or a proprietary SDK. Not legal advice."
                   },
                   "text": {
                     "type": "string",
                     "maxLength": 240,
-                    "pattern": "\\S"
+                    "pattern": "\\S",
+                    "description": "The claim, written for this list."
                   },
                   "sources": {
                     "minItems": 1,
@@ -178,11 +201,13 @@
                       "properties": {
                         "label": {
                           "type": "string",
-                          "pattern": "\\S"
+                          "pattern": "\\S",
+                          "description": "What the page is, in a few words."
                         },
                         "url": {
                           "type": "string",
-                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                          "description": "The page's https address."
                         }
                       },
                       "required": [
@@ -190,14 +215,17 @@
                         "url"
                       ],
                       "additionalProperties": false
-                    }
+                    },
+                    "description": "Public pages that support the claim."
                   },
                   "checked_on": {
                     "type": "string",
                     "format": "date",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "The day the sources were read."
                   },
                   "unverified": {
+                    "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                     "type": "boolean",
                     "const": true
                   }
@@ -208,7 +236,8 @@
                   "sources",
                   "checked_on"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "How it may be used."
               },
               "efficiency": {
                 "anyOf": [
@@ -226,7 +255,8 @@
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -236,11 +266,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -248,14 +280,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -271,7 +306,8 @@
                   {
                     "type": "null"
                   }
-                ]
+                ],
+                "description": "Efficiency, only from a published comparison with the codecs in compared_with. Null when none is listed."
               },
               "hardware": {
                 "anyOf": [
@@ -288,7 +324,8 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "decode": {
                             "type": "string",
@@ -297,12 +334,14 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "text": {
                             "type": "string",
                             "maxLength": 240,
-                            "pattern": "\\S"
+                            "pattern": "\\S",
+                            "description": "The claim, written for this list."
                           },
                           "sources": {
                             "minItems": 1,
@@ -312,11 +351,13 @@
                               "properties": {
                                 "label": {
                                   "type": "string",
-                                  "pattern": "\\S"
+                                  "pattern": "\\S",
+                                  "description": "What the page is, in a few words."
                                 },
                                 "url": {
                                   "type": "string",
-                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                                  "description": "The page's https address."
                                 }
                               },
                               "required": [
@@ -324,14 +365,17 @@
                                 "url"
                               ],
                               "additionalProperties": false
-                            }
+                            },
+                            "description": "Public pages that support the claim."
                           },
                           "checked_on": {
                             "type": "string",
                             "format": "date",
-                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                            "description": "The day the sources were read."
                           },
                           "unverified": {
+                            "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                             "type": "boolean",
                             "const": true
                           }
@@ -343,7 +387,8 @@
                           "sources",
                           "checked_on"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": false,
+                        "description": "Hardware encode and decode on this kind of gear, from the chip or platform maker's docs."
                       },
                       "android": {
                         "type": "object",
@@ -355,7 +400,8 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "decode": {
                             "type": "string",
@@ -364,12 +410,14 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "text": {
                             "type": "string",
                             "maxLength": 240,
-                            "pattern": "\\S"
+                            "pattern": "\\S",
+                            "description": "The claim, written for this list."
                           },
                           "sources": {
                             "minItems": 1,
@@ -379,11 +427,13 @@
                               "properties": {
                                 "label": {
                                   "type": "string",
-                                  "pattern": "\\S"
+                                  "pattern": "\\S",
+                                  "description": "What the page is, in a few words."
                                 },
                                 "url": {
                                   "type": "string",
-                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                                  "description": "The page's https address."
                                 }
                               },
                               "required": [
@@ -391,14 +441,17 @@
                                 "url"
                               ],
                               "additionalProperties": false
-                            }
+                            },
+                            "description": "Public pages that support the claim."
                           },
                           "checked_on": {
                             "type": "string",
                             "format": "date",
-                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                            "description": "The day the sources were read."
                           },
                           "unverified": {
+                            "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                             "type": "boolean",
                             "const": true
                           }
@@ -410,7 +463,8 @@
                           "sources",
                           "checked_on"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": false,
+                        "description": "Hardware encode and decode on this kind of gear, from the chip or platform maker's docs."
                       },
                       "rk3588": {
                         "type": "object",
@@ -422,7 +476,8 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "decode": {
                             "type": "string",
@@ -431,12 +486,14 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "text": {
                             "type": "string",
                             "maxLength": 240,
-                            "pattern": "\\S"
+                            "pattern": "\\S",
+                            "description": "The claim, written for this list."
                           },
                           "sources": {
                             "minItems": 1,
@@ -446,11 +503,13 @@
                               "properties": {
                                 "label": {
                                   "type": "string",
-                                  "pattern": "\\S"
+                                  "pattern": "\\S",
+                                  "description": "What the page is, in a few words."
                                 },
                                 "url": {
                                   "type": "string",
-                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                                  "description": "The page's https address."
                                 }
                               },
                               "required": [
@@ -458,14 +517,17 @@
                                 "url"
                               ],
                               "additionalProperties": false
-                            }
+                            },
+                            "description": "Public pages that support the claim."
                           },
                           "checked_on": {
                             "type": "string",
                             "format": "date",
-                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                            "description": "The day the sources were read."
                           },
                           "unverified": {
+                            "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                             "type": "boolean",
                             "const": true
                           }
@@ -477,7 +539,8 @@
                           "sources",
                           "checked_on"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": false,
+                        "description": "Hardware encode and decode on this kind of gear, from the chip or platform maker's docs."
                       },
                       "intel": {
                         "type": "object",
@@ -489,7 +552,8 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "decode": {
                             "type": "string",
@@ -498,12 +562,14 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "text": {
                             "type": "string",
                             "maxLength": 240,
-                            "pattern": "\\S"
+                            "pattern": "\\S",
+                            "description": "The claim, written for this list."
                           },
                           "sources": {
                             "minItems": 1,
@@ -513,11 +579,13 @@
                               "properties": {
                                 "label": {
                                   "type": "string",
-                                  "pattern": "\\S"
+                                  "pattern": "\\S",
+                                  "description": "What the page is, in a few words."
                                 },
                                 "url": {
                                   "type": "string",
-                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                                  "description": "The page's https address."
                                 }
                               },
                               "required": [
@@ -525,14 +593,17 @@
                                 "url"
                               ],
                               "additionalProperties": false
-                            }
+                            },
+                            "description": "Public pages that support the claim."
                           },
                           "checked_on": {
                             "type": "string",
                             "format": "date",
-                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                            "description": "The day the sources were read."
                           },
                           "unverified": {
+                            "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                             "type": "boolean",
                             "const": true
                           }
@@ -544,7 +615,8 @@
                           "sources",
                           "checked_on"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": false,
+                        "description": "Hardware encode and decode on this kind of gear, from the chip or platform maker's docs."
                       },
                       "nvidia": {
                         "type": "object",
@@ -556,7 +628,8 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "decode": {
                             "type": "string",
@@ -565,12 +638,14 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "text": {
                             "type": "string",
                             "maxLength": 240,
-                            "pattern": "\\S"
+                            "pattern": "\\S",
+                            "description": "The claim, written for this list."
                           },
                           "sources": {
                             "minItems": 1,
@@ -580,11 +655,13 @@
                               "properties": {
                                 "label": {
                                   "type": "string",
-                                  "pattern": "\\S"
+                                  "pattern": "\\S",
+                                  "description": "What the page is, in a few words."
                                 },
                                 "url": {
                                   "type": "string",
-                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                                  "description": "The page's https address."
                                 }
                               },
                               "required": [
@@ -592,14 +669,17 @@
                                 "url"
                               ],
                               "additionalProperties": false
-                            }
+                            },
+                            "description": "Public pages that support the claim."
                           },
                           "checked_on": {
                             "type": "string",
                             "format": "date",
-                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                            "description": "The day the sources were read."
                           },
                           "unverified": {
+                            "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                             "type": "boolean",
                             "const": true
                           }
@@ -611,7 +691,8 @@
                           "sources",
                           "checked_on"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": false,
+                        "description": "Hardware encode and decode on this kind of gear, from the chip or platform maker's docs."
                       },
                       "apple_mac": {
                         "type": "object",
@@ -623,7 +704,8 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "decode": {
                             "type": "string",
@@ -632,12 +714,14 @@
                               "some",
                               "no",
                               "unknown"
-                            ]
+                            ],
+                            "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                           },
                           "text": {
                             "type": "string",
                             "maxLength": 240,
-                            "pattern": "\\S"
+                            "pattern": "\\S",
+                            "description": "The claim, written for this list."
                           },
                           "sources": {
                             "minItems": 1,
@@ -647,11 +731,13 @@
                               "properties": {
                                 "label": {
                                   "type": "string",
-                                  "pattern": "\\S"
+                                  "pattern": "\\S",
+                                  "description": "What the page is, in a few words."
                                 },
                                 "url": {
                                   "type": "string",
-                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                                  "description": "The page's https address."
                                 }
                               },
                               "required": [
@@ -659,14 +745,17 @@
                                 "url"
                               ],
                               "additionalProperties": false
-                            }
+                            },
+                            "description": "Public pages that support the claim."
                           },
                           "checked_on": {
                             "type": "string",
                             "format": "date",
-                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                            "description": "The day the sources were read."
                           },
                           "unverified": {
+                            "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                             "type": "boolean",
                             "const": true
                           }
@@ -678,7 +767,8 @@
                           "sources",
                           "checked_on"
                         ],
-                        "additionalProperties": false
+                        "additionalProperties": false,
+                        "description": "Hardware encode and decode on this kind of gear, from the chip or platform maker's docs."
                       }
                     },
                     "required": [
@@ -694,7 +784,8 @@
                   {
                     "type": "null"
                   }
-                ]
+                ],
+                "description": "Hardware encode and decode on common IRL gear. Null for audio."
               },
               "ingest": {
                 "type": "object",
@@ -709,12 +800,14 @@
                           "some",
                           "no",
                           "unknown"
-                        ]
+                        ],
+                        "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                       },
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -724,11 +817,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -736,14 +831,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -766,12 +864,14 @@
                           "some",
                           "no",
                           "unknown"
-                        ]
+                        ],
+                        "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                       },
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -781,11 +881,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -793,14 +895,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -823,12 +928,14 @@
                           "some",
                           "no",
                           "unknown"
-                        ]
+                        ],
+                        "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                       },
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -838,11 +945,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -850,14 +959,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -876,7 +988,8 @@
                   "youtube",
                   "kick"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "Ingest on Twitch, YouTube and Kick."
               }
             },
             "required": [
@@ -889,6 +1002,7 @@
             "additionalProperties": false
           },
           "transport": {
+            "description": "Comparison facts, for transport protocols.",
             "type": "object",
             "properties": {
               "bonding": {
@@ -905,7 +1019,8 @@
                   "text": {
                     "type": "string",
                     "maxLength": 240,
-                    "pattern": "\\S"
+                    "pattern": "\\S",
+                    "description": "The claim, written for this list."
                   },
                   "sources": {
                     "minItems": 1,
@@ -915,11 +1030,13 @@
                       "properties": {
                         "label": {
                           "type": "string",
-                          "pattern": "\\S"
+                          "pattern": "\\S",
+                          "description": "What the page is, in a few words."
                         },
                         "url": {
                           "type": "string",
-                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                          "description": "The page's https address."
                         }
                       },
                       "required": [
@@ -927,14 +1044,17 @@
                         "url"
                       ],
                       "additionalProperties": false
-                    }
+                    },
+                    "description": "Public pages that support the claim."
                   },
                   "checked_on": {
                     "type": "string",
                     "format": "date",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "The day the sources were read."
                   },
                   "unverified": {
+                    "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                     "type": "boolean",
                     "const": true
                   }
@@ -945,7 +1065,8 @@
                   "sources",
                   "checked_on"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "Bonding: built into the protocol, through an add-on protocol, or not at all."
               },
               "latency": {
                 "type": "object",
@@ -961,7 +1082,8 @@
                   "text": {
                     "type": "string",
                     "maxLength": 240,
-                    "pattern": "\\S"
+                    "pattern": "\\S",
+                    "description": "The claim, written for this list."
                   },
                   "sources": {
                     "minItems": 1,
@@ -971,11 +1093,13 @@
                       "properties": {
                         "label": {
                           "type": "string",
-                          "pattern": "\\S"
+                          "pattern": "\\S",
+                          "description": "What the page is, in a few words."
                         },
                         "url": {
                           "type": "string",
-                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                          "description": "The page's https address."
                         }
                       },
                       "required": [
@@ -983,14 +1107,17 @@
                         "url"
                       ],
                       "additionalProperties": false
-                    }
+                    },
+                    "description": "Public pages that support the claim."
                   },
                   "checked_on": {
                     "type": "string",
                     "format": "date",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "The day the sources were read."
                   },
                   "unverified": {
+                    "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                     "type": "boolean",
                     "const": true
                   }
@@ -1001,7 +1128,8 @@
                   "sources",
                   "checked_on"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "Latency: a receive buffer you set, real-time by design, or whatever TCP gives."
               },
               "loss_recovery": {
                 "type": "object",
@@ -1017,7 +1145,8 @@
                   "text": {
                     "type": "string",
                     "maxLength": 240,
-                    "pattern": "\\S"
+                    "pattern": "\\S",
+                    "description": "The claim, written for this list."
                   },
                   "sources": {
                     "minItems": 1,
@@ -1027,11 +1156,13 @@
                       "properties": {
                         "label": {
                           "type": "string",
-                          "pattern": "\\S"
+                          "pattern": "\\S",
+                          "description": "What the page is, in a few words."
                         },
                         "url": {
                           "type": "string",
-                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                          "description": "The page's https address."
                         }
                       },
                       "required": [
@@ -1039,14 +1170,17 @@
                         "url"
                       ],
                       "additionalProperties": false
-                    }
+                    },
+                    "description": "Public pages that support the claim."
                   },
                   "checked_on": {
                     "type": "string",
                     "format": "date",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "The day the sources were read."
                   },
                   "unverified": {
+                    "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                     "type": "boolean",
                     "const": true
                   }
@@ -1057,7 +1191,8 @@
                   "sources",
                   "checked_on"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "Loss recovery: resends, resends plus error correction, or TCP's own resends."
               },
               "licensing": {
                 "type": "object",
@@ -1070,12 +1205,14 @@
                       "open-spec",
                       "open-code",
                       "proprietary"
-                    ]
+                    ],
+                    "description": "How it may be used, as its licensors describe it: royalty-free patent licences, patent pools, an open spec, open-source code without a separate spec, or a proprietary SDK. Not legal advice."
                   },
                   "text": {
                     "type": "string",
                     "maxLength": 240,
-                    "pattern": "\\S"
+                    "pattern": "\\S",
+                    "description": "The claim, written for this list."
                   },
                   "sources": {
                     "minItems": 1,
@@ -1085,11 +1222,13 @@
                       "properties": {
                         "label": {
                           "type": "string",
-                          "pattern": "\\S"
+                          "pattern": "\\S",
+                          "description": "What the page is, in a few words."
                         },
                         "url": {
                           "type": "string",
-                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                          "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                          "description": "The page's https address."
                         }
                       },
                       "required": [
@@ -1097,14 +1236,17 @@
                         "url"
                       ],
                       "additionalProperties": false
-                    }
+                    },
+                    "description": "Public pages that support the claim."
                   },
                   "checked_on": {
                     "type": "string",
                     "format": "date",
-                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                    "description": "The day the sources were read."
                   },
                   "unverified": {
+                    "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                     "type": "boolean",
                     "const": true
                   }
@@ -1115,7 +1257,8 @@
                   "sources",
                   "checked_on"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "How it may be used."
               },
               "ingest": {
                 "type": "object",
@@ -1130,12 +1273,14 @@
                           "some",
                           "no",
                           "unknown"
-                        ]
+                        ],
+                        "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                       },
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -1145,11 +1290,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -1157,14 +1304,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -1187,12 +1337,14 @@
                           "some",
                           "no",
                           "unknown"
-                        ]
+                        ],
+                        "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                       },
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -1202,11 +1354,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -1214,14 +1368,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -1244,12 +1401,14 @@
                           "some",
                           "no",
                           "unknown"
-                        ]
+                        ],
+                        "description": "yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way."
                       },
                       "text": {
                         "type": "string",
                         "maxLength": 240,
-                        "pattern": "\\S"
+                        "pattern": "\\S",
+                        "description": "The claim, written for this list."
                       },
                       "sources": {
                         "minItems": 1,
@@ -1259,11 +1418,13 @@
                           "properties": {
                             "label": {
                               "type": "string",
-                              "pattern": "\\S"
+                              "pattern": "\\S",
+                              "description": "What the page is, in a few words."
                             },
                             "url": {
                               "type": "string",
-                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                              "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                              "description": "The page's https address."
                             }
                           },
                           "required": [
@@ -1271,14 +1432,17 @@
                             "url"
                           ],
                           "additionalProperties": false
-                        }
+                        },
+                        "description": "Public pages that support the claim."
                       },
                       "checked_on": {
                         "type": "string",
                         "format": "date",
-                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                        "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                        "description": "The day the sources were read."
                       },
                       "unverified": {
+                        "description": "True when the makers' and platforms' own pages don't confirm it. The text then says what is known.",
                         "type": "boolean",
                         "const": true
                       }
@@ -1297,7 +1461,8 @@
                   "youtube",
                   "kick"
                 ],
-                "additionalProperties": false
+                "additionalProperties": false,
+                "description": "Ingest on Twitch, YouTube and Kick."
               }
             },
             "required": [

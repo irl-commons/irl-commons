@@ -1,5 +1,5 @@
 {
-  "about": "A word list for IRL streaming, one entry per term. Fields: id (an anchor), term, also_called (true synonyms), search_terms (search only), aliases (deprecated, generated from the fields before it), tier (core | more), who (streamer | helper | both), heard_when, plain, related (ids), source, uncertain, optional l10n: {<language tag>: {term, plain, heard_when}} such as es-419 or pt-BR, and optional naming: a naming guide for app makers (recommended label, other names with a status, dated evidence). Translations keep the scene's English terms as the term and explain in the language, and are read by a native speaker before publishing. Validated by the zod schema in ../schema.",
+  "about": "IRL streaming terms, explained in simple language. Some carry a naming guide for app makers. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
   "words": [
     {
       "id": "irl",
