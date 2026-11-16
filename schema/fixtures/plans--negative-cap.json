@@ -21,12 +21,61 @@
         {
           "id": "sample-plan",
           "name": "Sample Plan",
-          "data_cap_gb": -1,
-          "throttle_after_cap_kbps": null,
-          "tethering_allowed": null,
-          "roaming_routing": "unknown",
-          "source_url": "https://example.org/plan",
-          "checked_on": "2026-11-14"
+          "data_cap_gb": {
+            "value": -1,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "max_down_mbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "max_up_mbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "throttle_down_kbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "throttle_up_kbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "priority": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "hotspot": {
+            "value": "unknown",
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "hotspot_gb": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "router_or_modem": {
+            "value": "unknown",
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "continuous_video": {
+            "value": "unknown",
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "roaming_routing": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          }
         }
       ]
     }

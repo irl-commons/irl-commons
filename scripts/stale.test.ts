@@ -7,10 +7,10 @@ test("calendar months clamp and day windows cross leap day", () => {
   expect(due("2024-01-01", { days: 90 })).toBe("2024-03-31");
 });
 test("field deadlines and nested plan dates are independent", () => {
-  const data = { words: {words: []}, answers: {answers: []}, guides: {guides: []}, services: {services: [{id: "sample", checked_on: "2026-01-01", status: "beta"}]}, plans: {carriers: [{id: "network", checked_on: "2026-03-01", plans: [{id: "plan", checked_on: "2026-01-01"}]}]}, standards: {standards: []} };
+  const data = { words: {words: []}, answers: {answers: []}, guides: {guides: []}, services: {services: [{id: "sample", checked_on: "2026-01-01", status: "beta"}]}, plans: {carriers: [{id: "network", checked_on: "2026-03-01", plans: [{id: "plan", data_cap_gb: {value: 50, checked_on: "2026-01-01"}, max_up_mbps: {value: 25, checked_on: "2026-03-01"}}]}]}, standards: {standards: []} };
   expect(staleRows(data, "2026-03-31")).toEqual([]);
-  expect(staleRows(data, "2026-04-01").map(x => x.split(":")[0])).toEqual(["- services/sample status", "- plans/network/plan prices, caps and fair-use rules"]);
-  expect(staleRows(data, "2026-07-01")).toHaveLength(3);
+  expect(staleRows(data, "2026-04-01").map(x => x.split(":")[0])).toEqual(["- services/sample status", "- plans/network/plan data_cap_gb"]);
+  expect(staleRows(data, "2026-07-01")).toHaveLength(4);
 });
 
 test("undated content is unknown freshness, never silently fresh", () => {

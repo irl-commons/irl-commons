@@ -1324,6 +1324,34 @@
       ],
       "source": "https://support.google.com/youtube/answer/2853702",
       "uncertain": false
+    },
+    {
+      "id": "sim",
+      "term": "SIM",
+      "also_called": [
+        "SIM card"
+      ],
+      "search_terms": [
+        "SIMs",
+        "USIM",
+        "UICC"
+      ],
+      "aliases": [
+        "SIM card",
+        "SIMs",
+        "USIM",
+        "UICC"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Choosing a mobile plan or connecting a phone, modem or router to a mobile network.",
+      "plain": "Short for Subscriber Identity Module: what lets a phone, modem or router sign in to a mobile network as your subscription. People often call the small removable card a SIM. The standards separate the card (UICC) from the application on it (USIM); the card can also be built into the device.",
+      "related": [
+        "data-cap"
+      ],
+      "source": "https://www.etsi.org/deliver/etsi_tr/121900_121999/121905/19.02.00_60/tr_121905v190200p.pdf",
+      "checked_on": "2026-11-16",
+      "uncertain": false
     }
   ]
 }

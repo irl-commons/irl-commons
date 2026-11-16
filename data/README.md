@@ -6,7 +6,7 @@ Six files. Each has a short `about` and one list. The JSON Schemas in [`../schem
 
 - `words.json`: IRL streaming terms, explained in simple language, with other names, related words and a source. Some words also have a naming guide for app makers: a recommended label for one screen or setting, other names with a status, and dated evidence from apps' own settings. The guide is advice, not the only right name.
 - `answers.json`: quick checks for common problems, along the chain a stream takes: camera and mic, sender, connections, receiver, OBS, platform. Each answer says which part most likely broke and gives up to three checks. Checks name no products; products are linked instead.
-- `plans.json`: mobile carriers and their data plans. Empty until official sources back every field.
+- `plans.json`: mobile carriers and their data plans. Dated examples backed by the carriers’ own pages, without prices or rankings.
 
 ## Directories
 
@@ -33,9 +33,9 @@ Entries have a `checked_on` date: the day someone compared the entry with its pu
 | Standards | 6 calendar months |
 | Standards comparison facts (each by its own `checked_on`) | 6 calendar months |
 | Carrier records | 6 calendar months |
-| Plan prices, caps and fair-use rules; service `status` | 90 days |
+| Each plan fact; service `status` | 90 days |
 
-Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan prices, caps, fair-use figures and service status, but keep the carrier or service and its source visible. Each plan uses its own date. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data. Past source-check rounds are logged in the [Source checks](https://github.com/irl-commons/irl-commons/discussions/47) discussion.
+Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan facts and service status, but keep the carrier or service and its source visible. Each plan fact uses its own date; a recheck of one fact does not refresh the others. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data. Past source-check rounds are logged in the [Source checks](https://github.com/irl-commons/irl-commons/discussions/47) discussion.
 
 ## Support links
 

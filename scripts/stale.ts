@@ -1,5 +1,5 @@
 import { readFileSync } from "node:fs";
-import { Day } from "../schema/src/schema.ts";
+import { Day, planFacts } from "../schema/src/schema.ts";
 
 export const months = { words: 18, answers: 12, guides: 9, services: 6, plans: 6, standards: 6 } as const;
 export function due(checked: string, window: { months: number } | { days: number }): string {
@@ -42,7 +42,8 @@ export function staleRows(data: Record<string, any>, today: string): string[] {
       add(`${dataset}/${entry.id}`, entry, { months: count });
       if (dataset === "standards") for (const [where, fact] of comparisonFacts(entry)) add(`standards/${entry.id} ${where}`, fact, { months: count });
       if (dataset === "services" && entry.status !== null) add(`services/${entry.id} status`, entry, { days: 90 });
-      for (const plan of entry.plans ?? []) add(`plans/${entry.id}/${plan.id} prices, caps and fair-use rules`, plan, { days: 90 });
+      for (const plan of entry.plans ?? [])
+        for (const [field, fact] of planFacts(plan)) add(`plans/${entry.id}/${plan.id} ${field}`, fact, { days: 90 });
     }
   }
   return rows;
