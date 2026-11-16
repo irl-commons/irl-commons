@@ -1666,7 +1666,7 @@
       "open_source": false,
       "licence": null,
       "status": null,
-      "description": "Hosted relays that carry your stream to your own OBS, over SRT, SRTLA, RIST or RTMP, with stats a scene switcher can read. The region can change and the relay ID stays. Paid.",
+      "description": "Hosted receivers that carry your stream to your own OBS, over SRT, SRTLA, RIST or RTMP, with stats a scene switcher can read. The region can change and the relay ID stays. Paid.",
       "platforms": [
         "service"
       ],
