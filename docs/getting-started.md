@@ -1,9 +1,7 @@
 # Use the data
 
 This guide is for people who make an IRL streaming app, a help page, a bot
-or a website. In about ten minutes you show an entry from irl-commons in
-your own product, with the credit the licence asks for, and you know how to
-tell when an entry is old.
+or a website.
 
 The data is plain JSON. You don't need an account or a server.
 
