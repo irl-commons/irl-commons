@@ -33,8 +33,8 @@ export const branchFor = (issue) => `form/issue-${issue}`;
 
 /** The reply when the branch exists but the pull request couldn't be opened automatically. */
 export const handOver = (repo, branch) =>
-  `Thank you! The change is ready on the branch \`${branch}\`, but the pull request couldn't be opened automatically. ` +
-  `A steward opens it here as a draft: https://github.com/${repo}/compare/main...${branch}?expand=1`;
+  `Thank you! The change is ready on the branch \`${branch}\`. ` +
+  `A steward opens the pull request from here: https://github.com/${repo}/compare/main...${branch}?expand=1`;
 
 async function main() {
   const issue = Number(process.env.ISSUE);
@@ -90,7 +90,7 @@ async function main() {
     throw new Error(`GitHub API ${opened.status} opening the pull request; the branch ${branch} is ready`);
   }
   const pr = opened.json;
-  await comment(`Thank you! The draft pull request is #${pr.number}. A steward checks it against the source, finishes anything missing and then marks it ready for review.`);
+  await comment(`Thank you! The draft pull request is #${pr.number}. A steward checks it against the source and finishes it.`);
   await unlabel();
   console.log(`Opened draft #${pr.number} for issue #${issue}`);
 }

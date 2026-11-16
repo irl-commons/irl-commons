@@ -189,7 +189,7 @@ describe("the pull request and the reply", () => {
       "Confirm services/moblin against its source\n\nFrom the form in #42. The source was read on 2026-11-15.\n\n" +
       "Co-authored-by: sample-user <1234+sample-user@users.noreply.github.com>\n");
     const body = prBody(meta, { passed: true, output: "" });
-    expect(body).toStartWith("This draft comes from the form in #42, filled in by @sample-user. Thank you!");
+    expect(body).toStartWith("From the form in #42 by @sample-user. Thank you!");
     expect(body).toContain("**Conflict of interest:** none declared.");
     expect(body).toContain("**Data check:** passes.");
     expect(body).toEndWith("Closes #42\n");
