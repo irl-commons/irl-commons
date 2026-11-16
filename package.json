@@ -1,7 +1,7 @@
 {
   "name": "@irl-commons/data",
   "version": "0.1.0",
-  "description": "Small curated datasets and schemas for IRL streaming.",
+  "description": "Open data for IRL streaming: a glossary, troubleshooting checks, apps and services, guides, and formats and protocols. JSON Schemas included.",
   "type": "module",
   "license": "(MIT AND CC-BY-4.0)",
   "repository": {
