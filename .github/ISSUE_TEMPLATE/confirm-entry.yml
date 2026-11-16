@@ -6,8 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for checking. A confirmation moves the entry's check date forward, so people know it is still true.
-        A steward reads this form and can turn it into a draft pull request with you as co-author.
+        A confirmation updates the entry's check date, so people know it is still up to date.
   - type: input
     id: entry
     attributes:
