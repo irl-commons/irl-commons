@@ -434,28 +434,30 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Choosing cloud production or a hosted relay; NOALBS switching to a BRB scene when the feed drops",
-      "plain": "When your connection drops, viewers see a waiting screen instead of the stream ending. It switches back by itself when you return.",
+      "plain": "Your setup switches to your BRB scene when the connection drops, then back when it returns. There is no time limit.",
       "related": [
         "brb",
         "cloud-obs",
-        "relay"
+        "relay",
+        "disconnect-protection"
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
       "uncertain": false,
-      "checked_on": "2026-11-14",
+      "checked_on": "2026-11-16",
       "naming": {
         "label": "Drop protection",
         "case": "sentence",
-        "scope": "A feature that shows a waiting screen while the incoming stream is gone and switches back when it returns.",
+        "scope": "Automatic switching to your own BRB scene and back in your production setup, without a time limit.",
         "why": "Names the whole feature in two words, and \"drop\" is what streamers call losing the signal.",
         "alternatives": [
           {
             "term": "Disconnect protection",
             "status": "also-used",
-            "why": "The same feature. A little longer.",
+            "why": "Moblin uses the same name as Twitch's platform feature.",
             "seen_in": [
               "moblin"
-            ]
+            ],
+            "see": "disconnect-protection"
           },
           {
             "term": "Fallback scene",
@@ -482,7 +484,7 @@
         "evidence": [
           {
             "url": "https://irlserver.com/",
-            "read_on": "2026-11-15",
+            "read_on": "2026-11-16",
             "note": "The product page lists \"drop protection\" and \"Drop protection with NOALBS\" as plan features. A feature name, not a settings screen.",
             "service": "irl-srt-server",
             "support": "context-only",
@@ -490,7 +492,7 @@
           },
           {
             "url": "https://irlserver.com/",
-            "read_on": "2026-11-15",
+            "read_on": "2026-11-16",
             "note": "The product page lists \"drop protection\" and \"Drop protection with NOALBS\" as plan features. A feature name, not a settings screen.",
             "service": "irl-srt-server",
             "support": "context-only",
@@ -498,7 +500,7 @@
           },
           {
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
-            "read_on": "2026-11-15",
+            "read_on": "2026-11-16",
             "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\".",
             "service": "moblin",
             "support": "direct",
@@ -506,7 +508,7 @@
           },
           {
             "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
-            "read_on": "2026-11-15",
+            "read_on": "2026-11-16",
             "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\".",
             "service": "moblin",
             "support": "direct",
@@ -514,7 +516,7 @@
           },
           {
             "url": "https://kb.irltoolkit.com/nodrop/0-QuickStart",
-            "read_on": "2026-11-15",
+            "read_on": "2026-11-16",
             "note": "The NoDrop guide names the setting \"Fallback Source\".",
             "service": "irltoolkit",
             "support": "direct",
@@ -522,7 +524,7 @@
           },
           {
             "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/blob/53bd883c75dedf858d5e0b17a59f894e9f82005a/README.md#L256",
-            "read_on": "2026-11-15",
+            "read_on": "2026-11-16",
             "note": "The config calls the scene used when the feed is gone the \"offline\" scene.",
             "service": "noalbs-tool",
             "support": "direct",
@@ -530,6 +532,52 @@
           }
         ],
         "translation_note": "Translate the meaning (protection when the connection drops), not the word \"drop\" literally.",
+        "status": "draft"
+      }
+    },
+    {
+      "id": "disconnect-protection",
+      "term": "Disconnect protection",
+      "also_called": [],
+      "search_terms": [],
+      "aliases": [
+        "Drop protection"
+      ],
+      "tier": "more",
+      "who": "both",
+      "heard_when": "Turning on Twitch's backup screen for a lost connection",
+      "plain": "Twitch keeps your broadcast open for up to 90 seconds when your connection drops, showing its own waiting screen. If you do not return, the broadcast ends.",
+      "related": [
+        "drop-protection",
+        "brb"
+      ],
+      "source": "https://help.twitch.tv/s/article/Disconnect-Protection",
+      "uncertain": false,
+      "checked_on": "2026-11-16",
+      "naming": {
+        "label": "Disconnect protection",
+        "case": "sentence",
+        "scope": "The platform holds a broadcast open briefly after the incoming connection drops.",
+        "why": "Twitch's name for its platform-side hold.",
+        "alternatives": [
+          {
+            "term": "Drop protection",
+            "status": "ambiguous",
+            "why": "The streamer’s own setup switches scenes rather than the platform holding the broadcast open.",
+            "see": "drop-protection"
+          }
+        ],
+        "evidence": [
+          {
+            "service": "twitch",
+            "label": "Disconnect Protection",
+            "support": "direct",
+            "url": "https://se.blog.twitch.tv/en/2026/05/11/the-irl-takeover-is-here/",
+            "read_on": "2026-11-16",
+            "note": "Twitch describes its Disconnect Protection feature: viewers see a BRB screen for up to 90 seconds while the mobile streamer reconnects."
+          }
+        ],
+        "translation_note": "Keep the distinction between the platform hold and switching scenes in the streamer’s own setup.",
         "status": "draft"
       }
     },

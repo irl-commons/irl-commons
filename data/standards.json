@@ -883,13 +883,13 @@
       "description": "Brings modern codecs (HEVC, AV1, Opus), multitrack and reconnect to the old RTMP protocol.",
       "service_ids": [
         "obs-studio",
-        "librtmp2-server"
+        "librtmp2-server",
+        "twitch"
       ],
       "other_users": [
         "FFmpeg",
         "XSplit",
-        "YouTube",
-        "Twitch"
+        "YouTube"
       ],
       "sources": [
         {
@@ -1328,10 +1328,10 @@
         "moblin",
         "belabox",
         "obs-studio",
-        "simplestreamer"
+        "simplestreamer",
+        "twitch"
       ],
       "other_users": [
-        "Twitch",
         "YouTube",
         "Kick"
       ],

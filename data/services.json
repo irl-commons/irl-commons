@@ -1983,6 +1983,39 @@
         "latency"
       ],
       "checked_on": "2026-11-14"
+    },
+    {
+      "id": "twitch",
+      "name": "Twitch",
+      "kind": "production",
+      "role": "production",
+      "class": "production",
+      "hosting": null,
+      "maker": "Twitch",
+      "url": "https://www.twitch.tv/",
+      "links": [],
+      "open_source": false,
+      "licence": null,
+      "status": null,
+      "description": "Live streaming platform that receives broadcasts and shows them to viewers.",
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "platform"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Help",
+          "url": "https://help.twitch.tv/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "disconnect-protection"
+      ],
+      "checked_on": "2026-11-16"
     }
   ]
 }
