@@ -2047,6 +2047,87 @@
         "disconnect-protection"
       ],
       "checked_on": "2026-11-16"
+    },
+    {
+      "id": "belabox-cloud-stream-servers",
+      "name": "BELABOX cloud stream servers",
+      "kind": "hub",
+      "role": "hub",
+      "class": "cloud",
+      "hosting": "service",
+      "maker": "BELABOX",
+      "url": "https://cloud.belabox.net/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Hosted production with transcoding, drop protection, web overlays, scene switching and picture-in-picture, streaming to platforms without running OBS.",
+      "sources": [
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "read_on": "2026-11-16",
+          "note": "Account feature description behind login, supplied by a user on 16 November 2026; the URL is the public login page."
+        },
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "read_on": "2026-11-16",
+          "note": "Maintainer announcement dated 13 November 2026, supplied by a user; describes cloud production and picture-in-picture. The feature is behind login; the URL is the public login page."
+        }
+      ],
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver",
+        "obs",
+        "platform"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [
+        "multi-camera"
+      ],
+      "words": [
+        "drop-protection",
+        "scene"
+      ],
+      "checked_on": "2026-11-16"
+    },
+    {
+      "id": "belabox-remotes",
+      "name": "BELABOX remotes",
+      "kind": "app",
+      "role": "remote-control",
+      "class": "helper-app",
+      "hosting": "service",
+      "maker": "BELABOX",
+      "url": "https://cloud.belabox.net/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Controls a BELABOX encoder over the internet without a direct local network connection.",
+      "sources": [
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "read_on": "2026-11-16",
+          "note": "Account feature description behind login, supplied by a user on 16 November 2026; the URL is the public login page."
+        }
+      ],
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [],
+      "tags": [],
+      "words": [],
+      "checked_on": "2026-11-16"
     }
   ]
 }

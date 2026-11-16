@@ -6,6 +6,11 @@ date you read it, and the specific claim or fields it supports. Use your own
 words, neutral descriptions and no rankings, paid placement or affiliate links.
 Do not copy community posts, private material or credentials.
 
+When a feature is only described behind a login, a steward may record a dated, user-supplied description; no keys, secret URLs or account data.
+Use source kind `behind login (supplied by a user)`, the date supplied, and a
+neutral paraphrase; link only to the public login page and note that the text
+is behind login.
+
 A confirmation must say what you actually checked and whether each claim still
 matches. Set `checked_on` to that source-check date, never just the day a link
 returned success. Preserve uncertainty; do not invent historical check dates.

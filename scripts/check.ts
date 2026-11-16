@@ -50,6 +50,9 @@ export function semantic(data: Record<FileName, any>): string[] {
         if (row.checked_on > today) out.push(`${dataset}: ${row.id}: checked_on is in the future`);
     }
   }
+  for (const service of data.services.services)
+    for (const source of service.sources ?? [])
+      if (source.read_on > today) out.push(`services: ${service.id}: source read_on is in the future`);
   const dupes = (where: string, ids: string[]) => {
     for (const id of new Set(ids.filter((x, i) => ids.indexOf(x) !== i))) out.push(`${where}: duplicate id ${id}`);
   };

@@ -529,6 +529,15 @@
             "service": "noalbs-tool",
             "support": "direct",
             "label": "offline"
+          },
+          {
+            "kind": "behind login (supplied by a user)",
+            "url": "https://cloud.belabox.net/",
+            "read_on": "2026-11-16",
+            "note": "Behind-login feature text supplied on 16 November 2026 uses this label for cloud production; it does not specify BRB return behaviour or a time limit. URL: public login page.",
+            "service": "belabox-cloud-stream-servers",
+            "label": "disconnection protection",
+            "support": "context-only"
           }
         ],
         "translation_note": "Translate the meaning (protection when the connection drops), not the word \"drop\" literally.",
