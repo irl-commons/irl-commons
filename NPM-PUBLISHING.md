@@ -101,6 +101,17 @@ An npm org owner performs these interactive steps near release time, in order:
     npx npm@11.21.2 trust list @irl-commons/data
     ```
 
+    If `npm trust` needs a one-time password, supply it through the
+    `npm_config_otp` environment variable for that command. The `trust`
+    command does not accept `--otp`. Keep the code out of shell history:
+
+    ```sh
+    read -r -s -p "npm one-time password: " npm_config_otp; printf "\n"
+    export npm_config_otp
+    npx npm@11.21.2 trust github @irl-commons/data --file publish.yml --repo irl-commons/irl-commons --env npm-release --allow-stage-publish
+    unset npm_config_otp
+    ```
+
     Do not pass `--allow-publish`. The read-back must show repository
     `irl-commons/irl-commons`, workflow `publish.yml` and environment
     `npm-release`. On npmjs.com the same settings are under package
@@ -124,8 +135,10 @@ An npm org owner performs these interactive steps near release time, in order:
     npx npm@11.21.2 view @irl-commons/data versions dist-tags --json
     ```
 
-    The read-back must list only real versions, with no `bootstrap` tag. After
-    72 hours, deprecate the placeholder instead.
+    The read-back must list the real release versions and `0.0.0-stage`,
+    with no `bootstrap` tag. `0.0.0-stage` is npm's own staging placeholder;
+    leave it in place. Only remove the `0.0.0-bootstrap.0` version created
+    above. After 72 hours, deprecate that bootstrap version instead.
 
 13. Log out:
 
