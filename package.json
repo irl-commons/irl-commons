@@ -26,7 +26,8 @@
     "schema/fixtures/*.json",
     "NPM-PUBLISHING.md",
     "GOVERNANCE.md",
-    "CONTRIBUTING.md"
+    "CONTRIBUTING.md",
+    ".nvmrc"
   ],
   "exports": {
     "./data/*.json": "./data/*.json",
@@ -45,5 +46,9 @@
   },
   "publishConfig": {
     "access": "public"
+  },
+  "engines": {
+    "node": ">=22.14.0",
+    "bun": ">=1.4.3"
   }
 }

@@ -14,7 +14,7 @@ publish**. Require 2FA and disallow publishing tokens in npm publishing access.
 Tests, dependency installation (scripts disabled), ancestry, version and schema
 drift checks run in a read-only verify job. Only the separate staging job has
 `id-token: write`. It checks out the reviewed tag, installs no dependencies and
-runs no tests or lifecycle scripts. It uses Node 24, a staging-capable npm CLI,
+runs no tests or lifecycle scripts. It uses the Node version in [`.nvmrc`](.nvmrc), its bundled staging-capable npm CLI,
 and `npm stage publish --ignore-scripts --provenance --access public`.
 A steward approves the staged release interactively on npmjs.com with 2FA.
 No long-lived npm token is used.
@@ -24,12 +24,13 @@ No long-lived npm token is used.
 The package must already exist before a trusted publisher can be configured.
 An npm org owner performs these interactive steps near release time, in order:
 
-1. Use npm 11.15.0 or newer with Node 22.14.0 or newer; npm 10.9 has no `stage`
-   command. Every npm command below runs a pinned CLI through `npx`. Check it:
+1. Use the Node version in [`.nvmrc`](.nvmrc) (`nvm install && nvm use`)
+   and its bundled npm; older npm releases may have no `stage`
+   command. The bundled CLI supports staging, so no separate npm pin is needed. Check it:
 
    ```sh
-   npx npm@11.21.2 --version
-   npx npm@11.21.2 stage --help
+   npm --version
+   npm stage --help
    ```
 
 2. Enable 2FA on the npm account. Confirm the `irl-commons` npm org has at least
@@ -37,7 +38,7 @@ An npm org owner performs these interactive steps near release time, in order:
 3. Log in:
 
    ```sh
-   npx npm@11.21.2 login
+   npm login
    ```
 
 4. In a new empty directory, create exactly two files. `package.json`:
@@ -56,14 +57,14 @@ An npm org owner performs these interactive steps near release time, in order:
    with version `0.0.0-bootstrap.0`:
 
    ```sh
-   npx npm@11.21.2 pack --dry-run
+   npm pack --dry-run
    ```
 
 6. Publish it directly under the `bootstrap` dist-tag (prompts for 2FA). A
    prerelease version needs an explicit tag:
 
    ```sh
-   npx npm@11.21.2 publish --access public --tag bootstrap --ignore-scripts
+   npm publish --access public --tag bootstrap --ignore-scripts
    ```
 
    Do not stage the placeholder and then reject it. For a new package,
@@ -76,7 +77,7 @@ An npm org owner performs these interactive steps near release time, in order:
    here and configure nothing.
 
    ```sh
-   npx npm@11.21.2 view @irl-commons/data versions dist-tags --json
+   npm view @irl-commons/data versions dist-tags --json
    ```
 
 8. Create the `npm-release` GitHub environment, restricted to `v*` tags,
@@ -97,8 +98,8 @@ An npm org owner performs these interactive steps near release time, in order:
     then read it back:
 
     ```sh
-    npx npm@11.21.2 trust github @irl-commons/data --file publish.yml --repo irl-commons/irl-commons --env npm-release --allow-stage-publish
-    npx npm@11.21.2 trust list @irl-commons/data
+    npm trust github @irl-commons/data --file publish.yml --repo irl-commons/irl-commons --env npm-release --allow-stage-publish
+    npm trust list @irl-commons/data
     ```
 
     If `npm trust` needs a one-time password, supply it through the
@@ -108,7 +109,7 @@ An npm org owner performs these interactive steps near release time, in order:
     ```sh
     read -r -s -p "npm one-time password: " npm_config_otp; printf "\n"
     export npm_config_otp
-    npx npm@11.21.2 trust github @irl-commons/data --file publish.yml --repo irl-commons/irl-commons --env npm-release --allow-stage-publish
+    npm trust github @irl-commons/data --file publish.yml --repo irl-commons/irl-commons --env npm-release --allow-stage-publish
     unset npm_config_otp
     ```
 
@@ -131,8 +132,8 @@ An npm org owner performs these interactive steps near release time, in order:
     `0.0.0-bootstrap.1`.
 
     ```sh
-    npx npm@11.21.2 unpublish @irl-commons/data@0.0.0-bootstrap.0
-    npx npm@11.21.2 view @irl-commons/data versions dist-tags --json
+    npm unpublish @irl-commons/data@0.0.0-bootstrap.0
+    npm view @irl-commons/data versions dist-tags --json
     ```
 
     The read-back must list the real release versions and `0.0.0-stage`,
@@ -143,7 +144,7 @@ An npm org owner performs these interactive steps near release time, in order:
 13. Log out:
 
     ```sh
-    npx npm@11.21.2 logout
+    npm logout
     ```
 
 This procedure documents setup; it does not authorize a tag or release.

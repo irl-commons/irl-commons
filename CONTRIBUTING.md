@@ -36,7 +36,8 @@ Right now one steward is listed, so the counts and the seven-day wait are off (b
 
 ## Checks
 
-Run the checks with Bun 1.4.3:
+Use the Bun version in [`package.json`](package.json) (`packageManager`); CI reads it too.
+Run the checks:
 
 ```sh
 bun install --frozen-lockfile
