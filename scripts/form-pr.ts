@@ -46,7 +46,8 @@ export function prepare(event: any, today: string, data: Record<FileName, any>):
   if (typeof form === "string") return fail([form]);
   const parsed = parseBody(form, String(issue.body ?? ""));
   if (parsed.problems.length) return fail(parsed.problems);
-  const read = readRequest(form, parsed.values, today);
+  const opened = String(issue.created_at ?? "").slice(0, 10) || today;
+  const read = readRequest(form, parsed.values, today, opened);
   if (!read.request) return fail(read.problems);
   const change = applyRequest(read.request, data);
   return {
@@ -82,7 +83,7 @@ export function prBody(meta: Meta, check: { passed: boolean; output: string }): 
   const out: string[] = [];
   out.push(`This draft comes from the form in #${meta.issue}, filled in by ${who}. Thank you!`, "");
   out.push("**What it changes**", "", ...meta.summary.map((s) => `- ${s}`), "");
-  out.push(`**Source:** ${link(r.source)}, read on ${r.readOn}.`, "");
+  out.push(`**Source:** ${link(r.source)}, read on ${r.readOn}${r.readOnFromIssue ? " (the form left the date empty, so this is the day the issue was opened)" : ""}.`, "");
   if (r.kind === "confirm") out.push("**What they checked**", "", fenced(r.checked), "");
   else if (r.kind === "new") out.push("**Description from the form**", "", fenced(r.description), "");
   else out.push("**What changed, in their words**", "", fenced(r.changes), "");
