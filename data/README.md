@@ -35,7 +35,7 @@ Entries have a `checked_on` date: the day someone compared the entry with its pu
 | Carrier records | 6 calendar months |
 | Each plan fact; service `status` | 90 days |
 
-Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan prices, caps, fair-use figures and service status, but keep the carrier or service and its source visible. Each plan fact uses its own date; a recheck of one fact does not refresh the others. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data. Past source-check rounds are logged in the [Source checks](https://github.com/irl-commons/irl-commons/discussions/47) discussion.
+Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan facts and service status, but keep the carrier or service and its source visible. Each plan fact uses its own date; a recheck of one fact does not refresh the others. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data. Past source-check rounds are logged in the [Source checks](https://github.com/irl-commons/irl-commons/discussions/47) discussion.
 
 ## Support links
 

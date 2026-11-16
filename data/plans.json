@@ -37,12 +37,14 @@
           "max_down_mbps": {
             "value": 300,
             "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
-            "checked_on": "2026-11-16"
+            "checked_on": "2026-11-16",
+            "note": "The sheet gives this as the estimated maximum rate for domestic data (Geschätzter Maximalwert)."
           },
           "max_up_mbps": {
             "value": 50,
             "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
-            "checked_on": "2026-11-16"
+            "checked_on": "2026-11-16",
+            "note": "The sheet gives this as the estimated maximum rate for domestic data (Geschätzter Maximalwert)."
           },
           "throttle_down_kbps": {
             "value": 64,
@@ -151,7 +153,7 @@
             "note": "The 4 Mbps after 500 GB limit has no explicit direction, so no upload value is inferred."
           },
           "priority": {
-            "value": "During congestion, smartphone and purchased hotspot data on 5G or LTE may be slower than other traffic.",
+            "value": "During congestion, smartphone and purchased hotspot data on 5G or LTE may be temporarily slower than other traffic.",
             "source": "https://www.verizon.com/support/important-plan-information/",
             "checked_on": "2026-11-16"
           },
@@ -165,7 +167,8 @@
           "hotspot_gb": {
             "value": null,
             "source": "https://www.verizon.com/support/important-plan-information/",
-            "checked_on": "2026-11-16"
+            "checked_on": "2026-11-16",
+            "note": "No hotspot data is included; a 100 GB hotspot allowance is sold separately."
           },
           "router_or_modem": {
             "value": "banned",

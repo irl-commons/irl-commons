@@ -1,8 +1,7 @@
 // Validate ../data with zod, run the cross-reference checks, make sure the
 // committed JSON Schema matches the zod schemas, and invalid fixtures are rejected. Exit 1 on any problem.
 import { readFileSync, readdirSync } from "node:fs";
-import { planFacts } from "../schema/src/schema.ts";
-import { files, guideTitle, RolesByKind, wordAliases, type FileName } from "../schema/src/schema.ts";
+import { files, guideTitle, planFacts, RolesByKind, wordAliases, type FileName } from "../schema/src/schema.ts";
 import { exported, partsJson } from "./export.ts";
 import { comparisonFacts } from "./stale.ts";
 

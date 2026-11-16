@@ -332,7 +332,7 @@ export const PlanFact = <T extends z.ZodType>(value: T) => z.strictObject({
   note: Text.optional().describe("Scope or uncertainty, in our own words."),
   checked_on: Day,
 });
-export const PlanRule = z.enum(["allowed", "limited", "banned", "unknown"]);
+export const PlanRule = z.enum(["allowed", "limited", "banned", "unknown"]).describe("unknown: the source addresses the rule but leaves it unclear. Null: the source does not address it.");
 export const Plan = z.strictObject({
   id: Id.describe("Permanent id, unique within the carrier."),
   name: Text.describe("The plan's name, as the carrier writes it."),

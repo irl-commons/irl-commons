@@ -1345,7 +1345,7 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Choosing a mobile plan or connecting a phone, modem or router to a mobile network.",
-      "plain": "The subscriber identity used to access a mobile network. People often call the small removable card a SIM. The standards distinguish the card (UICC) from the application on it (USIM); the card can also be embedded in the device.",
+      "plain": "Short for Subscriber Identity Module: what lets a phone, modem or router sign in to a mobile network as your subscription. People often call the small removable card a SIM. The standards separate the card (UICC) from the application on it (USIM); the card can also be built into the device.",
       "related": [
         "data-cap"
       ],

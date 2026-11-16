@@ -6,10 +6,11 @@ each checked against a carrier page on its own date.
 
 Every fact has `value`, `source` (an https URL) and `checked_on` (YYYY-MM-DD).
 `source_quote` is an optional short excerpt, limited to 300 characters; `note`
-records scope or uncertainty in original words. Null means the cited page did
+records scope or uncertainty in your own words. Null means the cited page did
 not establish the value. It never means permission or an unlimited allowance.
-A rule can also explicitly say `unknown`. Required fact objects prevent an
-omitted field from silently becoming permission.
+A use rule can instead say `unknown` when the page addresses it but leaves the
+answer unclear or contradictory; show both as not known. Required fact objects
+prevent an omitted field from silently becoming permission.
 
 `data_cap_gb` is the monthly domestic allowance in decimal GB, or the literal
 `"unlimited"` when the carrier explicitly says so. That does not promise full
@@ -38,7 +39,7 @@ local rows should use these rules, then validate and recheck their sources:
 | --- | --- |
 | `data_cap_gb` | Wrap in a fact; v1 null meant unlimited, so use `value: "unlimited"` only if the source supports it. Otherwise null. |
 | `throttle_after_cap_kbps` | Recheck its direction before filling `throttle_down_kbps`; never invent an upload value. |
-| `tethering_allowed` | Map true/false/null to `hotspot` allowed/banned/unknown. This establishes neither router nor broadcast permission. |
+| `tethering_allowed` | Map true/false to `hotspot` allowed/banned, and null to null. This establishes neither router nor broadcast permission. |
 | `roaming_routing` | Wrap a known value; old unknown becomes null. Hub breakout is now distinct. |
 | `source_url`, plan `checked_on` | Copy to each fact only where that source and date actually support the fact. Remove the old plan-level fields. |
 | New ceiling, priority, hotspot allowance and use-rule fields | Read an official source. Use null with that source and the actual check date where it establishes no value. |
@@ -54,8 +55,8 @@ The two examples are a small, unranked source sample, not a market survey or
 buying recommendation. Sources were read on 2026-11-16; no prices are recorded.
 
 - Telekom MagentaMobil L: the linked product sheet is version 2025-04-01 and
-  states 100 GB, ceilings of 300/50 Mbit/s and post-allowance speeds of 64/16
-  kbit/s (download/upload). It establishes none of the three use permissions.
+  states 100 GB, estimated maximum rates of 300/50 Mbit/s and post-allowance
+  speeds of 64/16 kbit/s (download/upload). It establishes none of the three use permissions.
   This describes that sheet, not every promotion or account variant.
 - Verizon Unlimited Welcome: the plan-information page restricts unlimited
   data to smartphones and offers hotspot separately. Its network-dependent

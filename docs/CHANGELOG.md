@@ -9,6 +9,17 @@ never change.
 
 ## Unreleased
 
+- `plans.json`: plans v2, a breaking change. Every plan term is a fact with
+  its own `value`, `source` and `checked_on`, so each one goes stale on its
+  own. Upload and download ceilings and post-allowance speeds are separate
+  fields. Phone sharing (`hotspot`), using the SIM in a router or modem and
+  continuous video uploading are three separate rules. A null value means
+  the source did not establish it; an unlimited allowance is the explicit
+  value `"unlimited"`. `throttle_after_cap_kbps`, `tethering_allowed`, the
+  plan-level `source_url` and `checked_on`, and the `unknown` roaming value
+  are gone. The file has its first two examples, without prices. See
+  [plans v2](plans-v2.md) for the migration.
+- `words.json`: a new word, SIM.
 - `services.json`: a third tag, `scene-control`: the product switches the
   scenes in OBS or a hub from outside it, by remote, chat commands or on its
   own. The "Fix or update an entry" form has a tick box for it.

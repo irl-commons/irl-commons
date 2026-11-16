@@ -377,7 +377,8 @@
                             "limited",
                             "banned",
                             "unknown"
-                          ]
+                          ],
+                          "description": "unknown: the source addresses the rule but leaves it unclear. Null: the source does not address it."
                         },
                         {
                           "type": "null"
@@ -466,7 +467,8 @@
                             "limited",
                             "banned",
                             "unknown"
-                          ]
+                          ],
+                          "description": "unknown: the source addresses the rule but leaves it unclear. Null: the source does not address it."
                         },
                         {
                           "type": "null"
@@ -513,7 +515,8 @@
                             "limited",
                             "banned",
                             "unknown"
-                          ]
+                          ],
+                          "description": "unknown: the source addresses the rule but leaves it unclear. Null: the source does not address it."
                         },
                         {
                           "type": "null"
