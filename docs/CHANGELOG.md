@@ -7,7 +7,7 @@ has them, with their sources.
 The data is v0. Fields can still change before the first npm release. Ids
 never change.
 
-## Unreleased
+## 0.3.0 — 16 November 2026
 
 - `plans.json`: plans v2, a breaking change. Every plan term is a fact with
   its own `value`, `source` and `checked_on`, so each one goes stale on its
@@ -20,6 +20,12 @@ never change.
   are gone. The file has its first two examples, without prices. See
   [plans v2](plans-v2.md) for the migration.
 - `words.json`: a new word, SIM.
+- `services.json`: official support channels with channel kind, source and
+  check date. Previously listed links keep migration provenance where they
+  have not been rechecked.
+
+## Earlier changes
+
 - `services.json`: a third tag, `scene-control`: the product switches the
   scenes in OBS or a hub from outside it, by remote, chat commands or on its
   own. The "Fix or update an entry" form has a tick box for it.
