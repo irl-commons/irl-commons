@@ -13,5 +13,4 @@ This covers, for example:
 Wrong or outdated data is not a security problem. Open an issue or a pull request
 for it, as described in [CONTRIBUTING.md](CONTRIBUTING.md).
 
-You'll get an answer from a steward. Nothing here is a bug bounty, and the project
-can't pay for reports.
+You'll get an answer from a steward. There is no bug bounty.
