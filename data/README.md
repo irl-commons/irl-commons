@@ -35,43 +35,9 @@ Entries have a `checked_on` date: the day someone compared the entry with its pu
 | Carrier records | 6 calendar months |
 | Plan prices, caps and fair-use rules; service `status` | 90 days |
 
-Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan prices, caps, fair-use figures and service status, but keep the carrier or service and its source visible. Each plan uses its own date. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data.
+Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan prices, caps, fair-use figures and service status, but keep the carrier or service and its source visible. Each plan uses its own date. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data. Past source-check rounds are logged in the [Source checks](https://github.com/irl-commons/irl-commons/discussions/47) discussion.
 
-## Source-check provenance
-
-A content review on **2026-11-14** opened and read public primary sources for
-these words: relay, srt, srtla, encoder, cloud-obs, brb, noalbs, drop-protection,
-bitrate, adaptive-bitrate, packet-loss, srt-latency, latency,
-maximize-compatibility, mic-override, dns-lookup-strategy, browser-source,
-big-packets, scene, upload-speed and data-cap. It also checked feed-into-obs,
-second-link-idle, sound-missing and camera-switch-drop against their cited
-project documentation and platform guidance. Corrections made after that review retain that day.
-
-The two OBS Knowledge Base sources for picture-frozen were read on 2026-11-14:
-[Video Capture Sources](https://obsproject.com/kb/video-capture-sources) backs
-selecting a capture device and supported resolution/frame rate;
-[Stream Connection Troubleshooting](https://obsproject.com/kb/stream-connection-troubleshooting)
-backs reducing bitrate when OBS reports dropped network frames. The answer is
-limited to those checks; neither page is evidence for phone-preview, cable
-seating or 5 GHz advice.
-
-Every `standards.json` entry was compared with its listed sources on
-**2026-11-14**. Where a note says support "follows the services.json entries",
-the per-product claim rests on those catalogue entries (checked the same day)
-rather than a separate read of each product's page.
-
-The codec and interface entries, NDI, and every comparison fact were checked on
-**2026-11-15** against the pages each one cites. Twitch's help pages need
-JavaScript, so Twitch facts rest on OBS's `services.json` (pinned to a commit)
-and Twitch's own blog, and say so. Facts marked `unverified` say what the
-makers' pages leave open, such as whether an Android encoder runs in hardware.
-VP9 isn't listed: YouTube takes it only over DASH, which IRL senders don't use.
-
-Other words and answers omit `checked_on`: a source link without a recorded
-content check is insufficient. Omission means unknown freshness, not a fresh or
-recently checked claim. Uncertainty flags remain independent of review dates.
-
-### Support channels
+## Support links
 
 Service `support` links keep `label` and `url` and add `kind`: `discord`,
 `forum`, `help`, `docs`, `contact` or `github` (issue trackers). Typed links
