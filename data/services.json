@@ -2675,6 +2675,112 @@
       "tags": [],
       "words": [],
       "checked_on": "2026-11-16"
+    },
+    {
+      "id": "open-live",
+      "name": "Open Live",
+      "kind": "production",
+      "role": "production",
+      "class": "production",
+      "hosting": null,
+      "maker": "Eyevinn Technology",
+      "url": "https://openlive.apps.osaas.io/",
+      "links": [
+        {
+          "label": "Source code",
+          "url": "https://github.com/Eyevinn/open-live"
+        },
+        {
+          "label": "Studio source code",
+          "url": "https://github.com/Eyevinn/open-live-studio"
+        },
+        {
+          "label": "Managed plans",
+          "url": "https://openlive.apps.osaas.io/#pricing"
+        }
+      ],
+      "open_source": true,
+      "licence": "MIT (Open Live and Studio); MIT OR Apache-2.0 (Strom)",
+      "status": null,
+      "description": "Browser-controlled vision and audio mixing with a multiviewer. Takes up to 16 SRT, EFP or WebRTC sources, with SRT and WebRTC (WHEP) output; free software to self-host on Kubernetes, or managed on Open Source Cloud plans.",
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "obs"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Setup guide",
+          "url": "https://github.com/EyevinnOSC/community/wiki/User-Guide:-Open-Live-Setup",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://openlive.apps.osaas.io/"
+        },
+        {
+          "label": "Studio user guide",
+          "url": "https://github.com/EyevinnOSC/community/wiki/User-Guide:-Open-Live-Studio",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://openlive.apps.osaas.io/"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "srt"
+      ],
+      "checked_on": "2026-11-16",
+      "sources": [
+        {
+          "kind": "public primary",
+          "url": "https://openlive.apps.osaas.io/",
+          "read_on": "2026-11-16",
+          "note": "Lists browser controls, up to 16 SRT, EFP and WebRTC inputs, SRT/WebRTC output and WHEP egress; free self-hosting on Kubernetes and managed OSC plans. Release stage unknown."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://github.com/Eyevinn/open-live/blob/main/LICENSE",
+          "read_on": "2026-11-16",
+          "note": "MIT licence for the API server."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://github.com/Eyevinn/open-live-studio/blob/main/LICENSE",
+          "read_on": "2026-11-16",
+          "note": "MIT licence for the studio."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://github.com/Eyevinn/strom/blob/main/Cargo.toml",
+          "read_on": "2026-11-16",
+          "note": "Strom declares MIT OR Apache-2.0; both licence files are present in the repository."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://github.com/Eyevinn/strom/blob/main/LICENSE-MIT",
+          "read_on": "2026-11-16",
+          "note": "MIT licence option for Strom."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://github.com/Eyevinn/strom/blob/main/LICENSE-APACHE",
+          "read_on": "2026-11-16",
+          "note": "Apache-2.0 licence option for Strom."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://github.com/EyevinnOSC/community/wiki/User-Guide:-Open-Live-Studio",
+          "read_on": "2026-11-16",
+          "note": "Documents MPEG-TS/SRT and EFP/SRT inputs and outputs, WHIP WebRTC ingest and automatic WHEP programme monitoring."
+        },
+        {
+          "kind": "public primary",
+          "url": "https://openlive.apps.osaas.io/#pricing",
+          "read_on": "2026-11-16",
+          "note": "Managed OSC plans include production hours. No prices copied into the catalogue; software self-hosting and managed hosting are separate options."
+        }
+      ]
     }
   ]
 }
