@@ -140,7 +140,7 @@ export const Word = z.strictObject({
     const same = lower(w.naming.alternatives.filter((a) => a.status === "also-used").map((a) => a.term));
     const label = w.naming.label.toLowerCase();
     for (const x of also) if (x !== label && !same.includes(x)) issue("also_called", `'${x}' is neither the label nor an also-used alternative`);
-    for (const x of same) if (!also.includes(x)) issue("naming", `the also-used alternative '${x}' belongs in also_called too`);
+    for (const x of same) if (!also.includes(x) && x !== w.term.toLowerCase()) issue("naming", `the also-used alternative '${x}' belongs in also_called too`);
   }
 });
 

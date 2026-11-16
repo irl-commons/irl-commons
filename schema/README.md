@@ -18,7 +18,7 @@ The JSON Schemas carry the rules they can express for a single entry. `scripts/c
 **Words**
 
 - `also_called` and `search_terms` don't repeat each other or the term.
-- With a naming block, every `also_called` name is the label or an also-used alternative, and every also-used alternative is in `also_called`.
+- With a naming block, every `also_called` name is the label or an also-used alternative, and every also-used alternative is in `also_called` or is the term itself.
 - Recommended labels are unique.
 - A technical alternative never equals another word's label. An also-used alternative may, but only with a `see` that resolves and `seen_in` backed by direct evidence for that product's exact label. An ambiguous or narrower alternative may, but only with `see` pointing at that word. Any `see` must resolve to the word the alternative normally names.
 - `seen_in` lists services with direct evidence for that exact label (case doesn't matter), and never appears on ambiguous alternatives.

@@ -144,10 +144,9 @@
     },
     {
       "id": "relay",
-      "term": "Relay or receiver",
+      "term": "Receiver",
       "also_called": [
         "Relay server",
-        "Receiver",
         "Bonding server"
       ],
       "search_terms": [
@@ -155,7 +154,6 @@
       ],
       "aliases": [
         "Relay server",
-        "Receiver",
         "Bonding server",
         "SRTLA receiver",
         "Relay",
@@ -163,7 +161,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "When you set up bonding, or read the guide for a relay service or your own receiver",
+      "heard_when": "When you set up bonding, or read the guide for a hosted receiver or one you run yourself",
       "plain": "A computer on the internet that collects your stream's pieces from every connection. It joins them back into one stream for OBS or the platform.",
       "related": [
         "srtla",
@@ -262,7 +260,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Output settings in Moblin, Larix or BELABOX; an srt:// address from a relay or cloud OBS; OBS Media Source receiving SRT",
+      "heard_when": "Output settings in Moblin, Larix or BELABOX; an srt:// address from a receiver or cloud OBS; OBS Media Source receiving SRT",
       "plain": "A way of sending live video over the internet. When a piece gets lost on the way, it is sent again quickly, so the picture glitches less.",
       "related": [
         "srtla",
@@ -290,7 +288,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Bonding settings in BELABOX and Moblin; a relay or receiver service gives you an SRTLA host and port",
+      "heard_when": "Bonding settings in BELABOX and Moblin; a receiver service gives you an SRTLA host and port",
       "plain": "A way of splitting one live video across several internet connections at once. A computer at the other end joins the pieces up again.",
       "related": [
         "srt",
@@ -342,7 +340,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Relay and hosting services that include OBS; IRL setups with nothing running at home",
+      "heard_when": "Receiver and hosting services that include OBS; IRL setups with nothing running at home",
       "plain": "OBS, the free program that builds what viewers see, running on a rented computer in a data centre. Nothing at home has to stay switched on.",
       "related": [
         "relay",
@@ -433,7 +431,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Choosing cloud production or a hosted relay; NOALBS switching to a BRB scene when the feed drops",
+      "heard_when": "Choosing cloud production or a hosted receiver; NOALBS switching to a BRB scene when the feed drops",
       "plain": "Your setup switches to your BRB scene when the connection drops, then back when it returns. There is no time limit.",
       "related": [
         "brb",
@@ -659,7 +657,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "OBS output settings, every IRL app's stats line, a relay's stats page, chat asking why the picture went blocky",
+      "heard_when": "OBS output settings, every IRL app's stats line, a receiver's stats page, chat asking why the picture went blocky",
       "plain": "How much data your stream sends every second. More data means a sharper picture, but it needs a stronger connection.",
       "related": [
         "upload-speed",
@@ -783,7 +781,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Stats in BELABOX, Moblin, relays and SRT receivers; 'the link is fine but loss is high'; often confused with OBS's dropped frames",
+      "heard_when": "Stats in BELABOX, Moblin and receivers; 'the link is fine but loss is high'; often confused with OBS's dropped frames",
       "plain": "Little pieces of your stream that go missing on the way. A few can be sent again in time; too many cause glitches or a drop.",
       "related": [
         "srt-latency"
@@ -813,7 +811,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "The latency setting in BELABOX, Moblin, IRL Pro and relays, in milliseconds; 'raise the latency on bad networks'",
+      "heard_when": "The latency setting in BELABOX, Moblin, IRL Pro and receivers, in milliseconds; 'raise the latency on bad networks'",
       "plain": "How long the receiving end waits for late or missing pieces before showing the picture. Waiting longer means fewer glitches, but viewers see things later.",
       "related": [
         "srt",
@@ -1006,7 +1004,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Setting up where your app sends; a hub or relay showing you its ingest address",
+      "heard_when": "Setting up where your app sends; a hub or receiver showing you its ingest address",
       "plain": "The address where a server or app takes in your stream. Your phone sends to it.",
       "related": [
         "hub",
@@ -1217,7 +1215,7 @@
       ],
       "tier": "more",
       "who": "both",
-      "heard_when": "Cloud OBS and relay dashboards; the app says live but the platform says offline",
+      "heard_when": "Cloud OBS and receiver dashboards; the app says live but the platform says offline",
       "plain": "With an online streaming service, your stream arrives there first. Then the service sends it on to Twitch or YouTube. You have to start each half separately.",
       "related": [
         "cloud-obs",
