@@ -179,9 +179,9 @@ export function semantic(data: Record<FileName, any>): string[] {
 }
 
 // The project's one public chat invite, a contact link for people without a GitHub account.
-// Only these two files may carry it; the data never does.
+// Only these files may carry it; the data never does.
 export const CONTACT_INVITE = "https://disco" + "rd.gg/KChVwU6fjk";
-export const CONTACT_FILES = new Set([".github/ISSUE_TEMPLATE/config.yml", "CONTRIBUTING.md"]);
+export const CONTACT_FILES = new Set(["README.md", "CONTRIBUTING.md"]);
 
 // Scan the distributable repository tree as well as the parsed datasets.
 function scanTree(dir: URL): void {

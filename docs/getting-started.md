@@ -86,7 +86,7 @@ function isOld(checkedOn, months, today = new Date()) {
 ```
 
 An entry with no date has unknown freshness. Don't show it as fresh. The
-[README](../README.md#freshness) has the full rule, and
+[data README](../data/README.md#freshness) has the full rule, and
 `bun scripts/stale.ts` prints a report of every old entry.
 
 ## 5. Report a mistake
