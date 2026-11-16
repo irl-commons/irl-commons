@@ -4,7 +4,8 @@
   "properties": {
     "about": {
       "type": "string",
-      "pattern": "\\S"
+      "pattern": "\\S",
+      "description": "What this file holds, in a sentence or two, with a link to the docs."
     },
     "carriers": {
       "type": "array",
@@ -13,27 +14,32 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Permanent id, used as an anchor and in links from other files."
           },
           "checked_on": {
             "type": "string",
             "format": "date",
-            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+            "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+            "description": "The day the entry was compared with its public source."
           },
           "name": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "The carrier's name, as it writes it."
           },
           "country": {
             "type": "string",
-            "pattern": "^[A-Z]{2}$"
+            "pattern": "^[A-Z]{2}$",
+            "description": "ISO 3166-1 alpha-2 country code."
           },
           "network_type": {
             "type": "string",
             "enum": [
               "MNO",
               "MVNO"
-            ]
+            ],
+            "description": "MNO: runs its own network. MVNO: uses another carrier's network."
           },
           "host_network_id": {
             "anyOf": [
@@ -44,18 +50,22 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "description": "For an MVNO, the id of the MNO in the same country whose network it uses. Null for an MNO."
           },
           "esim": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "True when it offers eSIM."
           },
           "official_url": {
             "type": "string",
-            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+            "description": "The carrier's own page."
           },
           "coverage_map_url": {
             "type": "string",
-            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+            "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+            "description": "The carrier's coverage map."
           },
           "sources": {
             "minItems": 1,
@@ -65,11 +75,13 @@
               "properties": {
                 "label": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "What the page is, in a few words."
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The page's https address."
                 }
               },
               "required": [
@@ -77,25 +89,30 @@
                 "url"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "Official pages that back the carrier fields."
           },
           "plans": {
+            "description": "Optional plans, each with its own source and date.",
             "type": "array",
             "items": {
               "type": "object",
               "properties": {
                 "id": {
                   "type": "string",
-                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+                  "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                  "description": "Permanent id, unique within the carrier."
                 },
                 "checked_on": {
                   "type": "string",
                   "format": "date",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "description": "The day the plan was compared with its source."
                 },
                 "name": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "The plan's name, as the carrier writes it."
                 },
                 "data_cap_gb": {
                   "anyOf": [
@@ -106,7 +123,8 @@
                     {
                       "type": "null"
                     }
-                  ]
+                  ],
+                  "description": "Data cap in decimal GB. Null means unlimited."
                 },
                 "throttle_after_cap_kbps": {
                   "anyOf": [
@@ -117,9 +135,11 @@
                     {
                       "type": "null"
                     }
-                  ]
+                  ],
+                  "description": "Speed after the cap, in kbit/s. Null means unknown."
                 },
                 "tethering_allowed": {
+                  "description": "Whether the plan allows tethering. Null means unknown.",
                   "type": [
                     "boolean",
                     "null"
@@ -131,11 +151,13 @@
                     "home-routed",
                     "local-breakout",
                     "unknown"
-                  ]
+                  ],
+                  "description": "How roaming data is routed. Never guessed from marketing."
                 },
                 "source_url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The plan's official page."
                 }
               },
               "required": [
