@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { readFileSync } from "node:fs";
-import { files, type FileName } from "../schema/src/schema.ts";
+import { ServiceTag, files, type FileName } from "../schema/src/schema.ts";
 import { applyRequest, fenced, formFor, loadForms, parseBody, readRequest, serialize, type Kind } from "./forms.ts";
 import { commitMessage, mayLabel, prBody, prepare, problemComment } from "./form-pr.ts";
 import { branchFor, handOver, readBundle } from "./form-open.mjs";
@@ -63,10 +63,6 @@ describe("parsing a form body", () => {
     expect(values.conflict_details).toBe("");
     expect(values.checked).toStartWith("The README still says");
   });
-  test("unwraps the JSON code fence GitHub adds", () => {
-    const { values } = parseBody(form("new"), fixture("new-word"));
-    expect(JSON.parse(values.fields).tier).toBe("more");
-  });
   test("Windows line endings read the same", () => {
     const { values } = parseBody(form("confirm"), fixture("confirm-moblin").replace(/\n/g, "\r\n"));
     expect(values.read_on).toBe("2026-11-15");
@@ -108,14 +104,6 @@ describe("checking the values", () => {
   test("very long text is refused", () => {
     expect(problems({ checked: "x".repeat(5001) })).toEqual(['"What you checked" is longer than 5000 characters.']);
   });
-  test("JSON must be an object", () => {
-    const base = parseBody(form("edit"), fixture("edit-json")).values;
-    for (const fields of ["[1]", "\"text\"", "{not json"])
-      expect(readRequest(form("edit"), { ...base, fields }, TODAY).problems).toHaveLength(1);
-  });
-});
-
-describe("writing the entry", () => {
   test("a confirmation moves only checked_on and keeps the file's layout", () => {
     const { change, data: before } = run("confirm", "confirm-moblin");
     expect(change.status).toBe("ready");
@@ -141,10 +129,10 @@ describe("writing the entry", () => {
     d.services.services.find((s: any) => s.id === "moblin").checked_on = "2026-11-16";
     expect(run("confirm", "confirm-moblin", d).change.status).toBe("invalid");
   });
-  test("an edit applies JSON fields and the date", () => {
-    const { change } = run("edit", "edit-json");
+  test("an edit applies the new link and the date", () => {
+    const { change } = run("edit", "edit-link");
     expect(change.status).toBe("ready");
-    expect(change.after!.support).toEqual([{ label: "IRL Pro help", url: "https://irlpro.app/help" }]);
+    expect(change.after!.url).toBe("https://irlpro.app/help");
     expect(change.after!.checked_on).toBe("2026-11-15");
     expect(files.services.safeParse(change.doc).success).toBe(true);
   });
@@ -158,15 +146,13 @@ describe("writing the entry", () => {
     expect(change.after!.tags).toEqual(["multi-camera", "camera-in"]);
     expect(change.summary).toContain("Adds the tag `camera-in`.");
   });
+  test("the edit form has a tick box for every tag", () => {
+    const yml = readFileSync(new URL("../.github/ISSUE_TEMPLATE/edit-entry.yml", import.meta.url), "utf8");
+    for (const tag of ServiceTag.options) expect(yml).toContain(`- label: "${tag}: `);
+  });
   test("a tag box the form doesn't offer is refused", () => {
     const values = parseBody(form("edit"), fixture("edit-tags").replace("- [X] multi-camera:", "- [X] dslr:")).values;
     expect(readRequest(form("edit"), values, TODAY).problems).toEqual(['"Tags (apps and services only, optional)" has a box this form doesn\'t offer.']);
-  });
-  test("JSON can't change the id or the date, or add unknown fields", () => {
-    const { request } = run("edit", "edit-json");
-    for (const fields of [{ id: "other" }, { checked_on: "2026-11-15" }, { colour: "red" }, JSON.parse('{"__proto__": {"x": 1}}')])
-      expect(applyRequest({ ...request, fields }, data()).status).toBe("invalid");
-    expect(({} as any).x).toBeUndefined();
   });
   test("a maker edit renames the entry", () => {
     const { change, request } = run("maker", "maker-rename");
@@ -180,20 +166,12 @@ describe("writing the entry", () => {
     expect(request.productLabel).toBe('"Latency (ms)" inside the SRT section, because the section title already says SRT.');
     expect(change.status).toBe("manual");
   });
-  test("JSON can't set the generated aliases of a word", () => {
-    const { request } = run("maker", "maker-label");
-    expect(applyRequest({ ...request, fields: { aliases: ["x"] } }, data()).status).toBe("invalid");
-    const change = applyRequest({ ...request, fields: { search_terms: ["SRT latency setting"] } }, data());
-    expect(change.status).toBe("ready");
-    expect(change.after!.aliases).toContain("SRT latency setting");
-  });
-  test("a new word is complete when the JSON gives the rest", () => {
+  test("a new word lists what a steward still fills in", () => {
     const { change } = run("new", "new-word");
-    expect(change.after).toMatchObject({ id: "keyframe-interval", term: "Keyframe interval", tier: "more", who: "helper", also_called: [], search_terms: [], aliases: [], related: [], uncertain: true, source: "https://obsproject.com/kb/stream-connection-troubleshooting", checked_on: "2026-11-15" });
-    expect(files.words.safeParse(change.doc).success).toBe(true);
-    expect(change.notes.join(" ")).not.toContain("Still missing");
+    expect(change.after).toMatchObject({ id: "keyframe-interval", term: "Keyframe interval", uncertain: true, source: "https://obsproject.com/kb/stream-connection-troubleshooting", checked_on: "2026-11-15" });
+    expect(change.notes.join(" ")).toContain("Still missing");
   });
-  test("a new service without JSON lists what a steward still fills in", () => {
+  test("a new service lists what a steward still fills in", () => {
     const { change } = run("new", "new-service");
     expect(change.after).toMatchObject({ id: "sample-relay", name: "Sample Relay", url: "https://relay.example.org/", links: [{ label: "relay.example.org", url: "https://relay.example.org/docs" }] });
     expect(change.notes.join(" ")).toContain("`kind`, `role`, `class`, `hosting`, `maker`");
@@ -202,14 +180,7 @@ describe("writing the entry", () => {
   test("a new entry can't reuse an id, and an edit needs one that exists", () => {
     const { request } = run("new", "new-service");
     expect(applyRequest({ ...request, id: "moblin" }, data()).status).toBe("invalid");
-    expect(applyRequest({ ...run("edit", "edit-json").request, id: "no-such-entry" }, data()).status).toBe("invalid");
-  });
-  test("a guide keeps its generated title in step", () => {
-    const d = data();
-    const guide = d.guides.guides[0];
-    const { request } = run("edit", "edit-json");
-    const change = applyRequest({ ...request, dataset: "guides", id: guide.id, fields: { part: ["sender"] } }, d);
-    expect(change.after!.title_display).toEndWith(": set up the sender");
+    expect(applyRequest({ ...run("edit", "edit-link").request, id: "no-such-entry" }, data()).status).toBe("invalid");
   });
 });
 
@@ -222,7 +193,7 @@ describe("the pull request and the reply", () => {
       "Confirm services/moblin against its source\n\nFrom the form in #42. The source was read on 2026-11-15.\n\n" +
       "Co-authored-by: sample-user <1234+sample-user@users.noreply.github.com>\n");
     const body = prBody(meta, { passed: true, output: "" });
-    expect(body).toStartWith("This draft comes from the form in #42, filled in by @sample-user. Thank you!");
+    expect(body).toStartWith("From the form in #42 by @sample-user. Thank you!");
     expect(body).toContain("**Conflict of interest:** none declared.");
     expect(body).toContain("**Data check:** passes.");
     expect(body).toEndWith("Closes #42\n");
@@ -238,6 +209,14 @@ describe("the pull request and the reply", () => {
     const { meta } = prepare(event("maker", "maker-rename"), TODAY, data());
     meta.request!.productLabel = "Relay";
     expect(prBody(meta, { passed: true, output: "" })).toContain("**The label their product uses, and why**\n\n```text\nRelay\n```");
+  });
+  test("an empty date uses the day the issue was opened", () => {
+    const e = event("new", "new-service");
+    e.issue.body = e.issue.body.replace("### Date you read it\n\n2026-11-14", "### Date you read it\n\n_No response_");
+    (e.issue as any).created_at = "2026-11-13T09:30:00Z";
+    const { meta } = prepare(e, TODAY, data());
+    expect(meta.request).toMatchObject({ readOn: "2026-11-13", readOnFromIssue: true });
+    expect(prBody(meta, { passed: false, output: "" })).toContain("read on 2026-11-13 (the form left the date empty, so this is the day the issue was opened).");
   });
   test("a declared conflict and a maker request say who reviews", () => {
     expect(prBody(prepare(event("new", "new-service"), TODAY, data()).meta, { passed: false, output: "" })).toContain("declared in the form. An independent steward reviews it.");

@@ -9,6 +9,11 @@ never change.
 
 ## Unreleased
 
+- `services.json`: a third tag, `scene-control`: the product switches the
+  scenes in OBS or a hub from outside it, by remote, chat commands or on its
+  own. The "Fix or update an entry" form has a tick box for it.
+- `words.json`: three new words, hub, source and ingest. "Ingest" is no longer
+  a search term of "Ingest and output", which links to the new word instead.
 - `services.json`: `tags` now takes two values, each at most once.
   `camera-in`: the product takes the picture from a standalone camera, such
   as a DSLR, mirrorless or action camera, over HDMI, USB or the network.

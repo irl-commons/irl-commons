@@ -3,7 +3,8 @@
   "type": "object",
   "properties": {
     "about": {
-      "type": "string"
+      "type": "string",
+      "description": "What this file holds, in a sentence or two, with a link to the docs."
     },
     "answers": {
       "minItems": 1,
@@ -13,21 +14,25 @@
         "properties": {
           "id": {
             "type": "string",
-            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
+            "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+            "description": "Permanent id, used as an anchor and in links from other files."
           },
           "checked_on": {
+            "description": "The day the entry was compared with its public source. Left out when no check is recorded; freshness is then unknown.",
             "type": "string",
             "format": "date",
             "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
           },
           "question": {
             "type": "string",
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "The question as people ask it."
           },
           "summary": {
             "type": "string",
             "maxLength": 220,
-            "pattern": "\\S"
+            "pattern": "\\S",
+            "description": "Which part most likely broke, in one or two sentences."
           },
           "checks": {
             "minItems": 1,
@@ -45,33 +50,38 @@
                     "receiver",
                     "obs",
                     "platform"
-                  ]
+                  ],
+                  "description": "Where along the chain: camera (camera and mic into the sender), sender (the app or box), connections, receiver, obs, platform."
                 },
                 "text": {
                   "type": "string",
                   "maxLength": 140,
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "One short check in simple language. No product names or product settings."
                 }
               },
               "required": [
                 "text"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "One to three checks, in the order worth trying."
           },
           "words": {
             "type": "array",
             "items": {
               "type": "string",
               "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-            }
+            },
+            "description": "Ids of related words in words.json."
           },
           "services": {
             "type": "array",
             "items": {
               "type": "string",
               "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
-            }
+            },
+            "description": "Service ids of products whose own docs and support help with this question."
           },
           "sources": {
             "minItems": 1,
@@ -81,11 +91,13 @@
               "properties": {
                 "label": {
                   "type": "string",
-                  "pattern": "\\S"
+                  "pattern": "\\S",
+                  "description": "What the page is, in a few words."
                 },
                 "url": {
                   "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The page's https address."
                 }
               },
               "required": [
@@ -93,7 +105,8 @@
                 "url"
               ],
               "additionalProperties": false
-            }
+            },
+            "description": "The public docs behind the checks. At least one."
           }
         },
         "required": [

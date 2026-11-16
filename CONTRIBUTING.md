@@ -1,30 +1,40 @@
 # Contributing
 
-Propose an entry, correction or confirmation with a pull request or one of the
-[issue forms](https://github.com/irl-commons/irl-commons/issues/new/choose). Give the dataset and permanent id, public HTTPS primary source,
-date you read it, and the specific claim or fields it supports. Use your own
-words, neutral descriptions and no rankings, paid placement or affiliate links.
-Do not copy community posts, private material or credentials.
+## What a change needs
 
-A confirmation must say what you actually checked and whether each claim still
-matches. Set `checked_on` to that source-check date, never just the day a link
-returned success. Preserve uncertainty; do not invent historical check dates.
-For standards, credit the maker, link products through `service_ids`, and add
-an app's own format only once a named second product writes or reads it.
-For plans, cite the carrier's country-specific page and its cap, price or
-fair-use terms. Prices require three stewards first (see GOVERNANCE.md).
+- **A public source:** the maker's own page, the standard, or the platform's help. Discord invites must be published on the maker’s own site or README, with a source and checked date. No unofficial invites, community posts or private material.
+- **The date you read it.** It becomes the entry's `checked_on`. A link that loads is not a check.
+- **Your own words:** neutral, with no rankings, paid placement or affiliate links.
+- **Any connection** to the product or a competitor: work, payment or ownership. That's fine; it only means an independent steward reviews it.
 
-Declare employment, payment, ownership and competing-product affiliations.
-Makers should use an edit request; an unconnected reviewer verifies the evidence
-and merges. Nobody merges their own or a competitor's entry. One independent
-steward review is normally required for data; two for rule paths (including
-schema, licence and stewards); with exactly two listed stewards, rule paths need
-one. A conflicted author needs an independent steward approval, and rule changes
-wait seven days for objections. While fewer than two stewards are listed
-(bootstrap), those counts and the seven-day window don't apply: still declare any
-conflict in the PR, and the governance check shows it without blocking. They
-switch on automatically once a second steward is listed in `stewards.json`.
-See GOVERNANCE.md for the exact rules.
+## How to send it
+
+- **Issue form:** [pick a form](https://github.com/irl-commons/irl-commons/issues/new/choose). A steward turns it into a pull request with you as co-author.
+- **Pull request:** edit the data files and run the [checks](#checks) below.
+- **No GitHub account?** Write to hello@irlcommons.org or post on [Discord](https://discord.gg/KChVwU6fjk). Say which entry it is about, what is wrong, missing or still right, the public page that shows it, and when you read it. A steward files the form for you.
+
+## Special cases
+
+- **Confirming an entry:** say what you checked and whether each claim still matches.
+- **Behind a login:** when a feature is only described behind a login, a steward may record a dated description supplied by a user. Use source kind `behind login (supplied by a user)`, the date supplied and a neutral paraphrase. Link only the public login page. No keys, secret URLs or account data.
+- **Standards:** credit the maker and link products through `service_ids`. An app's own format goes in only once a named second product writes or reads it.
+- **Plans:** cite the carrier's page for that country, with its cap, price or fair-use terms. Prices need three stewards first (see [GOVERNANCE.md](GOVERNANCE.md)).
+
+## Propose a different label
+
+A label in the naming guide is a recommendation for one context, not the only right name. To suggest another, use "Fix or update an entry" (or the maker form for your own product) with the entry `words/<id>`, and fill in the label field. A public page or screenshot that shows the label is the best source. Write about the word, not about another product.
+
+## Carriers and plans: field rules
+
+Carrier submissions must support every populated field with official sources. Use ISO 3166-1 alpha-2 country codes, `MNO` or `MVNO`, a null host for an MNO and a same-country MNO id for an MVNO. `sources` backs carrier properties; each plan has its own source and checked date. A null data cap means unlimited, while null throttle and tethering values mean unknown. Data caps use decimal GB and throttles use kbit/s. Roaming routing is `home-routed`, `local-breakout` or `unknown`. Do not infer routing from marketing claims.
+
+## Review
+
+Nobody approves or merges their own or a competitor's entry. Data changes need one independent steward approval. Rule changes (schema, licences, stewards, docs, workflows and scripts; the full list is in [GOVERNANCE.md](GOVERNANCE.md)) need two approvals and wait seven days for objections. With exactly two stewards listed, they need one. A conflicted author always needs an independent approval.
+
+Right now one steward is listed, so the counts and the seven-day wait are off (bootstrap). Conflicts are still declared in the pull request, and the governance check shows them. Everything switches on once a second steward is listed in `stewards.json`.
+
+## Checks
 
 Run the checks with Bun 1.4.3:
 
@@ -35,58 +45,14 @@ bun run export
 git diff --exit-code -- schema/json
 ```
 
-The check validates all six files, cross-references, generated titles, privacy rules, schema drift and rejection fixtures. Carrier checks also exercise a valid synthetic network and virtual operator, missing hosts, country mismatches and duplicates. Run `bun run titles` after changing the service names or relationships used by guide titles, and `bun run aliases` after changing a word's names. For intentional schema changes, regenerate
-and review the JSON Schema first, then repeat the drift check. Add invalid
-fixtures for new constraints. Keep ids stable and all cross-references valid.
-
-## Carriers and plans
-
-Carrier submissions must support every populated field with official sources. Use ISO 3166-1 alpha-2 country codes, `MNO` or `MVNO`, a null host for an MNO and a same-country MNO id for an MVNO. `sources` backs carrier properties; each plan has its own source and checked date. A null data cap means unlimited, while null throttle and tethering values mean unknown. Data caps use decimal GB and throttles use kbit/s. Roaming routing is `home-routed`, `local-breakout` or `unknown`. Do not infer routing from marketing claims.
-
-## Propose a different label
-
-The words in the naming guide recommend a label for one context; they don't
-say any other label is wrong. If your product uses another label, or you think
-a different one would serve streamers better, open "Fix or update an entry"
-(or "Edit request from the maker" if it's your product) with the entry
-`words/<id>`. Say what you suggest under "What changed", and use the optional
-field for the label your product uses and why. A public page or screenshot that
-shows the label is the best source. Write reasons about the word, not about
-another product. A steward adds what you show as evidence or as another name.
-
-## No GitHub account?
-
-Write to hello@irlcommons.org, or post on Discord
-(https://discord.gg/KChVwU6fjk). Say which entry it is about, what is wrong,
-missing or still right, the public page that shows it, and the date you read
-that page. A steward files the matching issue form for you and links it in the
-reply; the change then follows the same steps as any other.
+`bun run check` validates the six files, cross-references, generated titles, privacy rules, schema drift and the invalid fixtures. Run `bun run titles` after changing service names used in guide titles, and `bun run aliases` after changing a word's names. For a schema change, run `bun run export`, review the JSON Schema and add invalid fixtures for the new rule. Ids never change.
 
 ## How a form becomes a change
 
-There are four issue forms: suggest a new entry, fix or update an entry,
-confirm an entry still holds, and an edit request from the maker. Each one asks
-for the entry, the source, the date you read it and any conflict of interest.
-
-1. You fill in a form. A steward reads it and checks that the source is public
-   and says what the form says.
-2. The steward adds the `make-pr` label. The "Form to draft pull request"
-   workflow then checks that the person who added the label is a listed steward
-   or has write access, reads the form as plain text, writes the entry into the
-   right data file with `checked_on` set to the date you read the source, and
-   runs `bun run check`.
-3. It opens a draft pull request that links the issue and names you as
-   co-author. The issue gets a reply with the link. If GitHub doesn't let the
-   workflow open the pull request, the reply links the ready branch instead,
-   and a steward opens the draft from there. If the form can't be
-   written automatically (a change described only in words, or a problem in
-   the form), the reply says why, and the label comes off so it can be added
-   again after a fix.
-4. The steward compares the draft with the source and finishes anything still
-   missing on the same branch, for example the fields of a new entry that the
-   form doesn't ask for. Marking the pull request ready for review starts the
-   `validate` and `governance` checks. Merging follows the rules above and in
-   GOVERNANCE.md; the workflow can't bypass them.
+1. You fill in a form. A steward checks the source.
+2. The steward adds the `make-pr` label (only stewards and people with write access can). The bot writes the change into the data file and runs the checks.
+3. The bot opens a draft pull request with you as co-author and replies on the issue with the link. If it can't write the change, the reply says why.
+4. The steward finishes anything missing and marks the pull request ready for review. The review rules above apply.
 
 ### Links that fill in a form
 
@@ -103,7 +69,8 @@ field id; URL-encode each value. These fields can be filled: `entry` (written
 as dataset/id, so the dataset needs no separate choice), `name`, `link`,
 `source`, and the text boxes `description`, `checked` and `changes`. The
 dropdowns (dataset and conflict of interest) can't be filled by a link, and
-`read_on` is left for the person who reads the source.
+`read_on` is left for the person who reads the source. If they leave it empty,
+the bot uses the day the issue was opened.
 
 ## Releases
 

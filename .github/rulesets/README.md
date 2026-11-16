@@ -15,8 +15,8 @@ Inspect existing rulesets first; use PUT for an existing id instead of creating
 duplicates. Bootstrap has no bypass, no native approvals, no code-owner or
 last-push requirement, and pins `validate` and `governance` to Actions app 15368.
 PRs, resolved threads, stale-review dismissal, no deletion and no force-push remain.
-While fewer than two stewards are listed, the governance check reports the
-review counts and the seven-day window as "not active (bootstrap)" and passes;
+While fewer than two stewards are listed, the governance check reports that the
+review counts and the seven-day wait are off (bootstrap) and passes;
 it shows conflicts without blocking, and objections still fail it on rule paths.
 Listing a second steward switches enforcement on (see GOVERNANCE.md).
 
@@ -73,3 +73,48 @@ PR list. A separate job reports checks and never checks out code. PR events and
 the daily run also evaluate. API errors fail closed per PR; an outage during
 reporting can leave an old check until a successful rerun. Verify the current
 head before merging. Scheduled workflows may stop after 60 inactive days.
+
+## How GitHub, the check and people enforce GOVERNANCE.md
+
+The committed bootstrap main ruleset requires PRs, resolved review threads,
+`validate` and `governance` from Actions app 15368, stale-review dismissal, no
+force-push, no deletion and no bypass. Its native approval count is zero; it
+requires neither code-owner nor last-push approval. Files are not live settings.
+Installation must land on main before its check is required; see
+`.github/rulesets/README.md` for owner apply commands. Workflows never apply rules.
+
+A second-steward PR adds the handle/affiliations, sets a real CODEOWNERS team,
+copies `main.steady.json` over `main.json`, and updates the bootstrap status in GOVERNANCE.md.
+After it lands, the check requires one approval and fails every PR until an org
+owner manually PUTs the steady ruleset. GitHub then enforces code-owner review,
+at least one approval and approval of the last push. The check adds declared
+conflicts, current-head independent steward approvals and two approvals for rule
+paths once three stewards are listed. Proposed policy cannot appoint its reviewers:
+code and policy always come from main.
+
+Rule paths include governance/contribution documents, steward policy, README,
+NPM-PUBLISHING.md, data/README.md, package.json, bun.lock, licences, schema,
+workflows/rulesets and all scripts. Outside bootstrap, seven days start at ready-for-review (creation
+for never-draft PRs). A force-push restarts the window. Return substantive ordinary
+pushes to draft, then mark ready to restart it. Drafts wait; reopening alone does
+not restart the window. Daily evaluation handles elapsed time.
+
+Only edited entries contribute conflicts, using both old and new maker ownership,
+linked services and explicit competitor mappings. Conflicted approvals are ignored
+and noted; they cannot veto otherwise sufficient independent approvals. Undeclared
+interests cannot be detected. The author's own approval never counts.
+
+Fork and same-repo reviews run a permissionless no-op trigger. A `workflow_run`
+uses main's evaluator with read-only API access and evaluates all open PRs. It
+never trusts PR code, artifacts or the trigger's PR list. A separate check reporter
+has `checks: write` and no checkout. API failures fail closed; a failed report can
+leave a previous check until rerun, so verify the current head before merging.
+
+People still verify sources, affiliations and independence; who presses merge;
+whether a block cites a written rule; expiry and the two-thirds override count;
+seat limits, succession and substantive-change discussion. The check cannot stop
+a conflicted person pressing merge once valid approvals exist. Clear an expired
+label/review only after documenting its outcome. Administrators can alter settings
+and workflows; drift monitoring makes changes visible but cannot prevent them.
+GitHub may disable scheduled daily, weekly and drift workflows after 60 days of
+inactivity. Check their status and run them manually when necessary.

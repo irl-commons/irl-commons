@@ -1,27 +1,28 @@
-# IRL streaming data
+# Data files
 
-Six reviewed data files about IRL streaming (streaming your real life away from the desk, wherever that is):
+Six files. Each has a short `about` and one list. The JSON Schemas in [`../schema/json/`](../schema/json/) describe every field.
 
-- `words.json`: a word list, one entry per term: a plain explanation, other names (`also_called`: true synonyms only; `search_terms`: plurals, units, spellings and syntax, for search and never shown as a name), who meets it, when it comes up, related terms, a public primary source, and an `uncertain` flag. Entries define; they don't give fix instructions. Optional `l10n` blocks hold translations by language tag (for example `es-419`, `pt-BR`); translations keep the scene's English terms as the term. `aliases` is deprecated: it is generated from the fields above for one release, so existing readers keep working.
-  An optional `naming` block makes a word part of the naming guide for app makers. It recommends a `label` for the context in `scope` (with an optional `short_label`, its `case` and `plural`) and says `why`. Other names sit in `alternatives`, each with a status: `also-used`, `narrower`, `technical` or `ambiguous` (in this context it can also mean something else). `why` is required unless the status is `also-used`, and describes the word, never a maker. `seen_in` optionally names products whose settings show that name; each must appear in `evidence`, and ambiguous items never name products. `evidence` lists public pages that show a product's own label, each with `maker`, `url`, the day it was read (`read_on`) and a `note` quoting the label; `unverified: true` marks a page that doesn't settle it, such as a feature list. `translation_note` helps translators. `status` is `draft` or `reviewed`; reviewed needs verified evidence from at least two makers and two stewards in `reviewed_by`. Labels are unique, and no word lists another word's label as one of its other names. The guide is advice: a recommended label for one context, never the only correct one.
-- `answers.json`: quick checks for the questions that come up most, written along the chain a stream takes: camera and mic, sender, connections, receiver, OBS, platform. Each answer says which part most likely broke and gives 1 to 3 short checks in plain words, in the order worth trying, each optionally tagged with its part. Checks name no product and no product setting; products are linked as `services` (the makers' own docs and support) and through `guides.json`. Also related word ids and the public primary sources behind the checks.
-- `services.json`: a catalogue of apps, relays and receivers, hosted hubs, hardware, production tools and communities: the maker's own page, licence or open-source flag, status, platforms, official support channels (help centres, docs, issue trackers, contact pages), related words and the date each entry was last checked. `part` says where along the chain the product sits (camera, sender, connections, receiver, obs, platform; the main one first); community entries (docs, wikis) have no part and name the products they document in `covers` instead. `class` says which overview a product belongs in, as a streamer looks for it: `phone-app`, `helper-app`, `connections`, `bonding`, `hardware`, `parts`, `store`, `cloud`, `production`, `building-block` (protocols, libraries and general media servers that apps are built from) or `docs`. `hosting` says who runs the server side: `self` (software you run yourself) or `service` (someone runs it for you, paid or free); bonding and cloud entries always have one, and it is null where it doesn't apply. `tags` is optional and says what a product can do that its class doesn't: `camera-in` (it takes the picture from a standalone camera, such as a DSLR, mirrorless or action camera, over HDMI, USB or the network) and `multi-camera` (it shows several cameras in one scene at once). These two are the only tags; add a tag only when the product's own page shows it. Ids are permanent.
-- `guides.json`: public tutorials from the makers' own docs and channels, as links only. Each has the page's own `title`; the products it `covers` (service ids, at least one); the chain `part` it helps with; the `publisher` when the maker who wrote it is one of the covered products; creator, language, kind (article, video or docs), published date when the page states one, the date it was checked, and the words and quick checks it helps with. `title_display` is generated from covers, publisher and part ("Moblin with IRLhosting: set up the sender", "OBS Studio: set up OBS and switching") by `../scripts/titles.ts`, so it never drifts from the data.
+## Primary data
 
-Descriptions and definitions are written for this list. Sources and links point to public primary pages only (makers' own pages, standards, platform help); no chat invites, private links or community posts. The schemas in `../schema` (zod, with exported JSON Schema) validate every file; see that folder's README.
+- `words.json`: IRL streaming terms, explained in simple language, with other names, related words and a source. Some words also have a naming guide for app makers: a recommended label for one screen or setting, other names with a status, and dated evidence from apps' own settings. The guide is advice, not the only right name.
+- `answers.json`: quick checks for common problems, along the chain a stream takes: camera and mic, sender, connections, receiver, OBS, platform. Each answer says which part most likely broke and gives up to three checks. Checks name no products; products are linked instead.
+- `plans.json`: mobile carriers and their data plans. Empty until official sources back every field.
 
-- `plans.json`: carrier and optional plan records; initially empty pending primary-source verification. Field rules for carriers and plans are in [CONTRIBUTING](../CONTRIBUTING.md#carriers-and-plans).
-- `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, Moblink, RIST, WHIP and OBS WebSocket. Each entry credits its maker, says how open it is (a public spec, documented by a closed product, code only, or not public yet), and names the products that write or read it: catalogued ones by `service_ids`, the rest in `other_users`. Entries sit in one of three groups. `shared` is for items several makers' products use. `app-formats` is for one app's own export or setup format, listed only when a named second product writes or reads it. `hardware-codecs` holds the video and audio codecs (H.264, HEVC, AV1, AAC, Opus) and the camera interfaces (UVC, HDMI, SDI). `steward-projects` holds items made by people who steward this repository, kept apart so they're never mistaken for established standards. Codec and transport entries also carry comparison facts: how they're licensed (as the licensors put it), efficiency only from a published comparison, hardware encode and decode on common IRL gear, bonding, latency, loss recovery, and ingest on Twitch, YouTube and Kick. Every fact names its own sources and `checked_on` date. An entry that is also a glossary word (SRT, SRTLA) uses the same id, points at it with `word`, and leaves the definition to `words.json`. Listing an item doesn't mean this project makes, runs or endorses it.
+## Directories
+
+- `services.json`: apps, relays and receivers, hosted services, hardware, production tools and docs. One entry per product, with the maker's own page and official support channels.
+- `guides.json`: links to public tutorials, with the products they cover and the part of the chain they help with.
+- `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, codecs and camera interfaces. Each entry credits its maker, says how open it is and names the products that use it. Codecs and transports carry comparison facts, each with its own sources and date. Items made by stewards of this repository are listed apart. Being listed doesn't mean IRL Commons makes, runs or endorses it.
+
+## Rules for every file
+
+Descriptions are written for this list. Sources are public pages: the makers' own pages, standards and platform help. No chat invites, private links or community posts. Ids never change.
 
 All JSON data here is CC BY 4.0; see `../LICENSE-DATA` and the credit line in [Getting started](../docs/getting-started.md#3-give-credit). Retain supplied attribution and modification notices, link the source and licence, and identify your changes. Data is supplied without warranties. Links do not license the linked third-party material or imply endorsement.
 
 ## Freshness
 
-Services, guides, standards, carriers and nested plans require a `checked_on` ISO date; words
-and answers may omit it when no content review is recorded. When present it is:
-the day its content was checked against its public primary source. A successful
-link request alone is not a content check. Preserve actual dates; never infer one from link health or a bulk import.
-See [source-check provenance](#source-check-provenance) for the recorded 2026-11-14 content review.
+Entries have a `checked_on` date: the day someone compared the entry with its public source. A link that loads is not a check, and dates are never guessed. Words and answers may leave the date out. Their freshness is then unknown, and they must not be shown as fresh.
 
 | Dataset or field | Stale after |
 | --- | --- |
@@ -34,14 +35,7 @@ See [source-check provenance](#source-check-provenance) for the recorded 2026-11
 | Carrier records | 6 calendar months |
 | Plan prices, caps and fair-use rules; service `status` | 90 days |
 
-Undated entries have unknown freshness and must not be presented as fresh.
-Consumers compute staleness from `checked_on` and today's UTC date; data stores
-only dates, never a stale flag. An entry is stale on its due date. Calendar
-months clamp to the final day of the target month. Show stale entries with their
-date; hide stale plan prices/caps/fair-use figures and service status while
-keeping the carrier/service and source visible. Nested plans use their own date.
-Run `bun scripts/stale.ts [YYYY-MM-DD]` for a Markdown report. Weekly automation
-checks links and updates one freshness issue; it never edits data.
+Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan prices, caps, fair-use figures and service status, but keep the carrier or service and its source visible. Each plan uses its own date. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data.
 
 ## Source-check provenance
 
@@ -51,8 +45,7 @@ bitrate, adaptive-bitrate, packet-loss, srt-latency, latency,
 maximize-compatibility, mic-override, dns-lookup-strategy, browser-source,
 big-packets, scene, upload-speed and data-cap. It also checked feed-into-obs,
 second-link-idle, sound-missing and camera-switch-drop against their cited
-project documentation and platform guidance. This was a content review, not
-merely HTTP status checking. Corrections made after that review retain that day.
+project documentation and platform guidance. Corrections made after that review retain that day.
 
 The two OBS Knowledge Base sources for picture-frozen were read on 2026-11-14:
 [Video Capture Sources](https://obsproject.com/kb/video-capture-sources) backs
@@ -77,3 +70,18 @@ VP9 isn't listed: YouTube takes it only over DASH, which IRL senders don't use.
 Other words and answers omit `checked_on`: a source link without a recorded
 content check is insufficient. Omission means unknown freshness, not a fresh or
 recently checked claim. Uncertainty flags remain independent of review dates.
+
+### Support channels
+
+Service `support` links keep `label` and `url` and add `kind`: `discord`,
+`forum`, `help`, `docs`, `contact` or `github` (issue trackers). Typed links
+require a channel-level `checked_on` and `source`, the maker's public page or
+README that publishes the channel. Existing destinations can cite themselves;
+the migration preserves their recorded check dates. Discord invites must come
+from the maker, never from an invite directory or a guessed address. A maker's
+stable Discord redirect is also a `discord` channel.
+
+For one release, legacy `label`/`url` pairs without the new fields remain valid.
+Consumers should use `kind` when present and fall back to the label for legacy
+links. The shipped catalogue is fully typed. Adding a channel does not claim
+that every other field in the service was rechecked.

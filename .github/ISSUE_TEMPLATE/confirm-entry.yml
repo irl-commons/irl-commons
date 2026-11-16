@@ -6,8 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for checking. A confirmation moves the entry's check date forward, so people know it is still true.
-        A steward reads this form and can turn it into a draft pull request with you as co-author.
+        A confirmation updates the entry's check date, so people know it is still up to date.
   - type: input
     id: entry
     attributes:
@@ -22,10 +21,10 @@ body:
       label: Dataset
       description: Only needed when the entry above has no dataset in front of the id.
       options:
-        - "words: the word list"
+        - "words: IRL streaming terms"
         - "answers: quick checks for common problems"
-        - "services: apps, relays, receivers, hardware and communities"
-        - "guides: tutorials from the makers"
+        - "services: apps, relays, receivers, hosted services, hardware and docs"
+        - "guides: public tutorials"
         - "standards: shared formats and protocols"
         - "plans: mobile carriers and their plans"
     validations:
@@ -42,10 +41,10 @@ body:
     id: read_on
     attributes:
       label: Date you read it
-      description: Year-month-day, for example 2026-11-15.
+      description: Year-month-day, for example 2026-11-15. Leave it empty if you read it today.
       placeholder: YYYY-MM-DD
     validations:
-      required: true
+      required: false
   - type: textarea
     id: checked
     attributes:

@@ -6,10 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Makers are welcome here. You know your product best, and the list should be right about it.
-        Please link a public page that shows the change. An independent steward checks it against the source and decides.
-        You can't approve or merge a change to your own entry or a competitor's.
-        Proposing a different label for a word in the naming guide? Write the entry as words/<id> and tell us the label your product uses below.
+        We require changes to be backed with a public source. An independent steward checks and decides.
   - type: input
     id: entry
     attributes:
@@ -24,10 +21,10 @@ body:
       label: Dataset
       description: Only needed when the entry above has no dataset in front of the id.
       options:
-        - "words: the word list"
+        - "words: IRL streaming terms"
         - "answers: quick checks for common problems"
-        - "services: apps, relays, receivers, hardware and communities"
-        - "guides: tutorials from the makers"
+        - "services: apps, relays, receivers, hosted services, hardware and docs"
+        - "guides: public tutorials"
         - "standards: shared formats and protocols"
         - "plans: mobile carriers and their plans"
     validations:
@@ -43,7 +40,7 @@ body:
     id: link
     attributes:
       label: New link
-      description: Only if the main link changed. Your product's own https page.
+      description: Only if the official link changed.
       placeholder: https://
     validations:
       required: false
@@ -59,32 +56,22 @@ body:
     id: read_on
     attributes:
       label: Date you read it
-      description: Year-month-day, for example 2026-11-15.
+      description: Year-month-day, for example 2026-11-15. Leave it empty if you read it today.
       placeholder: YYYY-MM-DD
     validations:
-      required: true
+      required: false
   - type: textarea
     id: changes
     attributes:
       label: What changed
-      description: What is wrong or out of date, and what the source says now. Plain facts, no ranking or advertising.
+      description: What is wrong or out of date, and what the source says now. No ranking or advertising.
     validations:
       required: true
   - type: textarea
     id: product_label
     attributes:
       label: The label your product uses, and why (optional)
-      description: For a word in the naming guide. The label as your settings show it, for example "SRT latency (ms)", and why it suits your users. A public page or screenshot that shows it helps.
-    validations:
-      required: false
-  - type: textarea
-    id: fields
-    attributes:
-      label: Changed fields as JSON (optional)
-      description: |
-        Only if you know the data format. The fields to change and their new values, for example {"status": "Discontinued"}.
-        Leave it empty if you are not sure. A steward can do this part.
-      render: json
+      description: Only for words in the naming guide. The label as your settings show it, for example "SRT latency (ms)", and why it fits.
     validations:
       required: false
   - type: textarea

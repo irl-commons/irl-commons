@@ -25,8 +25,8 @@ test("fork reviews signal a default-branch reporter without executing fork code"
 
 test("the reported check carries the evaluator's title, so bootstrap is visible on the PR", () => {
   const script = workflow("governance").jobs.report.steps[0].run as string;
-  expect(script).toContain("title: report.title || 'Steward review and consensus window'");
-  expect(script).toContain("state: 'failure', title: 'Governance evidence unavailable'");
+  expect(script).toContain("title: report.title || 'Steward review and seven-day wait'");
+  expect(script).toContain("state: 'failure', title: \"Governance check couldn't run\"");
   // Pending stays in progress; every other state, including a bootstrap success, completes with its conclusion.
   expect(script).toContain("status: report.state === 'pending' ? 'in_progress' : 'completed'");
 });

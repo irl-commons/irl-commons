@@ -1,0 +1,3 @@
+- What changes:
+- Public source and the date you read it:
+- Do you work for, get paid by, or own this product or a competing one?

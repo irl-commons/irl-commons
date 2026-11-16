@@ -26,10 +26,6 @@ https://irlpro.app/
 
 The app has a new name in the store and on the site.
 
-### Changed fields as JSON (optional)
-
-_No response_
-
 ### Your connection to the product
 
 I build this app.

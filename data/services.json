@@ -1,5 +1,5 @@
 {
-  "about": "A catalogue of apps, relays and receivers, hosted hubs, hardware, production tools and communities for IRL streaming. One entry per product; ids are permanent. Descriptions are written for this list; url is the maker's own page; support lists official public channels from the maker's own pages (help centres, docs, issue trackers, contact pages; no chat invites). role says what it is for (streaming-app, extra-connections, camera-capture, remote-control, chat-overlays, other-app, relay, hub, production, hardware, community; allowed roles depend on kind, see ../schema). part says where along the chain (camera, sender, connections, receiver, obs, platform) the product sits, first the main one; community entries (docs, wikis) have no part and instead name the products they document in covers. Validated by the zod schema in ../schema.",
+  "about": "Apps, receivers, hosted services, hardware, production tools and docs for IRL streaming, one entry per product. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
   "services": [
     {
       "id": "bond-bunny",
@@ -26,7 +26,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/dimadesu/bond-bunny/issues"
+          "url": "https://github.com/dimadesu/bond-bunny/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/dimadesu/bond-bunny/issues"
+        },
+        {
+          "label": "Developer Discord",
+          "url": "https://discord.gg/2UzEkU2AJW",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/dimadesu/bond-bunny"
         }
       ],
       "tags": [],
@@ -59,7 +69,22 @@
         "camera"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRL+ Discord",
+          "url": "https://discord.gg/GCrKZNj5VA",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/cast/"
+        },
+        {
+          "label": "IRL+ contact",
+          "url": "https://www.irlplus.uk/contact-us/",
+          "kind": "contact",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/"
+        }
+      ],
       "tags": [
         "camera-in"
       ],
@@ -91,9 +116,28 @@
         "obs"
       ],
       "covers": [],
-      "support": [],
-      "tags": [],
-      "words": [],
+      "support": [
+        {
+          "label": "IRL+ Discord",
+          "url": "https://discord.gg/GCrKZNj5VA",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/chat/"
+        },
+        {
+          "label": "IRL+ contact",
+          "url": "https://www.irlplus.uk/contact-us/",
+          "kind": "contact",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/"
+        }
+      ],
+      "tags": [
+        "scene-control"
+      ],
+      "words": [
+        "scene"
+      ],
       "checked_on": "2026-11-14"
     },
     {
@@ -117,7 +161,15 @@
         "sender"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRL Pro Discord",
+          "url": "https://discord.gg/irlpro",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://irlpro.app/"
+        }
+      ],
       "tags": [],
       "words": [
         "bonding",
@@ -150,11 +202,17 @@
       "support": [
         {
           "label": "Larix help",
-          "url": "https://softvelum.com/mobile/help/"
+          "url": "https://softvelum.com/mobile/help/",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://softvelum.com/mobile/help/"
         },
         {
           "label": "Larix docs",
-          "url": "https://softvelum.com/larix/docs/"
+          "url": "https://softvelum.com/larix/docs/",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://softvelum.com/larix/docs/"
         }
       ],
       "tags": [],
@@ -188,7 +246,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/dimadesu/LifeStreamer/issues"
+          "url": "https://github.com/dimadesu/LifeStreamer/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/dimadesu/LifeStreamer/issues"
+        },
+        {
+          "label": "Developer Discord",
+          "url": "https://discord.gg/2UzEkU2AJW",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/dimadesu/LifeStreamer"
         }
       ],
       "tags": [
@@ -225,7 +293,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/dimadesu/MediaSrvr/issues"
+          "url": "https://github.com/dimadesu/MediaSrvr/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/dimadesu/MediaSrvr/issues"
+        },
+        {
+          "label": "Developer Discord",
+          "url": "https://discord.gg/2UzEkU2AJW",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/dimadesu/MediaSrvr"
         }
       ],
       "tags": [],
@@ -260,7 +338,7 @@
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A free, open-source iPhone app for IRL streaming, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras.",
+      "description": "A free, open-source iPhone app for IRL streaming, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras. Its OBS remote control changes scenes, starts and stops the stream and mutes inputs.",
       "platforms": [
         "ios"
       ],
@@ -272,12 +350,23 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/eerimoq/moblin/issues"
+          "url": "https://github.com/eerimoq/moblin/issues",
+          "kind": "github",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/eerimoq/moblin/issues"
+        },
+        {
+          "label": "Moblin Discord",
+          "url": "https://discord.moblin.app",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/eerimoq/moblin#readme"
         }
       ],
       "tags": [
         "camera-in",
-        "multi-camera"
+        "multi-camera",
+        "scene-control"
       ],
       "words": [
         "bonding",
@@ -316,7 +405,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/eerimoq/moblink/issues"
+          "url": "https://github.com/eerimoq/moblink/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/eerimoq/moblink/issues"
+        },
+        {
+          "label": "Moblink Discord",
+          "url": "https://discord.gg/nt3UwHqbMM",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/eerimoq/moblink"
         }
       ],
       "tags": [],
@@ -355,14 +454,22 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/Kounex/obs_blade/issues"
+          "url": "https://github.com/Kounex/obs_blade/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/Kounex/obs_blade/issues"
         },
         {
           "label": "GitHub discussions",
-          "url": "https://github.com/Kounex/obs_blade/discussions"
+          "url": "https://github.com/Kounex/obs_blade/discussions",
+          "kind": "forum",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/Kounex/obs_blade/discussions"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "scene"
       ],
@@ -395,7 +502,15 @@
         "obs"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "kind": "discord",
+          "label": "RealtimeIRL Discord",
+          "url": "https://discord.gg/UKHJMQs74u",
+          "source": "https://rtirl.com/",
+          "checked_on": "2026-11-16"
+        }
+      ],
       "tags": [],
       "words": [],
       "checked_on": "2026-11-14"
@@ -426,7 +541,24 @@
       "support": [
         {
           "label": "TVU support contact",
-          "url": "https://www.tvunetworks.com/contact-us/"
+          "url": "https://www.tvunetworks.com/contact-us/",
+          "kind": "contact",
+          "checked_on": "2026-11-14",
+          "source": "https://www.tvunetworks.com/contact-us/"
+        },
+        {
+          "label": "TVU Go Discord",
+          "url": "https://discord.com/invite/NYemJf98A5",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://tvugo.app/"
+        },
+        {
+          "label": "TVU Go guide",
+          "url": "https://tvugo.app/guide",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://tvugo.app/"
         }
       ],
       "tags": [],
@@ -448,7 +580,7 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Hosted receivers (relays) for BELABOX users, as a sponsor perk.",
+      "description": "Hosted receivers for BELABOX users, as a sponsor perk.",
       "platforms": [
         "service"
       ],
@@ -456,7 +588,22 @@
         "receiver"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "BELABOX Discord",
+          "url": "https://discord.gg/hS8TcpsCKu",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/cloud"
+        },
+        {
+          "label": "BELABOX wiki",
+          "url": "https://github.com/BELABOX/tutorial/wiki/",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
+        }
+      ],
       "tags": [],
       "words": [
         "relay",
@@ -485,7 +632,15 @@
         "receiver"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "kind": "discord",
+          "label": "doink! Discord",
+          "url": "https://discord.gg/ujuMmTZASf",
+          "source": "https://everything.doink.tv/socials",
+          "checked_on": "2026-11-16"
+        }
+      ],
       "tags": [],
       "words": [
         "bonding",
@@ -506,7 +661,7 @@
       "open_source": false,
       "licence": null,
       "status": null,
-      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA. You send with IRL+'s bond-send app or the IRL+ phone app, to a relay run by IRL+ or a relay host. Free trials.",
+      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA. You send with IRL+'s bond-send app or the IRL+ phone app, to a receiver run by IRL+ or a receiver host. Free trials.",
       "platforms": [
         "service"
       ],
@@ -515,7 +670,22 @@
         "receiver"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRL+ Discord",
+          "url": "https://discord.gg/GCrKZNj5VA",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/"
+        },
+        {
+          "label": "IRL+ contact",
+          "url": "https://www.irlplus.uk/contact-us/",
+          "kind": "contact",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/"
+        }
+      ],
       "tags": [],
       "words": [
         "bonding",
@@ -544,7 +714,15 @@
         "receiver"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "kind": "docs",
+          "label": "README and setup",
+          "url": "https://github.com/irlserver/irl-srt-server#readme",
+          "source": "https://github.com/irlserver/irl-srt-server#readme",
+          "checked_on": "2026-11-16"
+        }
+      ],
       "tags": [],
       "words": [
         "srt",
@@ -584,11 +762,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/bluenviron/mediamtx/issues"
+          "url": "https://github.com/bluenviron/mediamtx/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/bluenviron/mediamtx/issues"
         },
         {
           "label": "GitHub discussions",
-          "url": "https://github.com/bluenviron/mediamtx/discussions"
+          "url": "https://github.com/bluenviron/mediamtx/discussions",
+          "kind": "forum",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/bluenviron/mediamtx/discussions"
         }
       ],
       "tags": [],
@@ -627,7 +811,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/OpenIRL/srtla-receiver/issues"
+          "url": "https://github.com/OpenIRL/srtla-receiver/issues",
+          "kind": "github",
+          "checked_on": "2026-11-15",
+          "source": "https://github.com/OpenIRL/srtla-receiver/issues"
+        },
+        {
+          "kind": "docs",
+          "label": "README and setup",
+          "url": "https://github.com/OpenIRL/srtla-receiver#readme",
+          "source": "https://github.com/OpenIRL/srtla-receiver#readme",
+          "checked_on": "2026-11-16"
         }
       ],
       "tags": [],
@@ -665,7 +859,10 @@
       "support": [
         {
           "label": "Speedify support",
-          "url": "https://speedify.com/support/"
+          "url": "https://speedify.com/support/",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://speedify.com/support/"
         }
       ],
       "tags": [],
@@ -705,11 +902,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/Haivision/srt/issues"
+          "url": "https://github.com/Haivision/srt/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/Haivision/srt/issues"
         },
         {
           "label": "GitHub discussions",
-          "url": "https://github.com/Haivision/srt/discussions"
+          "url": "https://github.com/Haivision/srt/discussions",
+          "kind": "forum",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/Haivision/srt/discussions"
         }
       ],
       "tags": [],
@@ -743,7 +946,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/BELABOX/srtla/issues"
+          "url": "https://github.com/BELABOX/srtla/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/BELABOX/srtla/issues"
+        },
+        {
+          "label": "BELABOX Discord",
+          "url": "https://discord.gg/hS8TcpsCKu",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
         }
       ],
       "tags": [],
@@ -784,7 +997,22 @@
         "sender"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "BELABOX Discord",
+          "url": "https://discord.gg/hS8TcpsCKu",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
+        },
+        {
+          "label": "BELABOX wiki",
+          "url": "https://github.com/BELABOX/tutorial/wiki/",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
+        }
+      ],
       "tags": [],
       "words": [
         "backpack",
@@ -826,7 +1054,17 @@
       "support": [
         {
           "label": "CeraLive docs",
-          "url": "https://docs.ceralive.tv/"
+          "url": "https://docs.ceralive.tv/",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://docs.ceralive.tv/"
+        },
+        {
+          "label": "CeraLive Discord",
+          "url": "https://discord.gg/Q2bvU49yx2",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://ceralive.tv/"
         }
       ],
       "tags": [],
@@ -861,7 +1099,10 @@
       "support": [
         {
           "label": "Dejero technical support",
-          "url": "https://www.dejero.com/technical-support/"
+          "url": "https://www.dejero.com/technical-support/",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://www.dejero.com/technical-support/"
         }
       ],
       "tags": [],
@@ -896,7 +1137,10 @@
       "support": [
         {
           "label": "Haivision support",
-          "url": "https://www.haivision.com/support/"
+          "url": "https://www.haivision.com/support/",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://www.haivision.com/support/"
         }
       ],
       "tags": [],
@@ -930,7 +1174,17 @@
       "support": [
         {
           "label": "IRL+ contact",
-          "url": "https://www.irlplus.uk/contact-us/"
+          "url": "https://www.irlplus.uk/contact-us/",
+          "kind": "contact",
+          "checked_on": "2026-11-14",
+          "source": "https://www.irlplus.uk/contact-us/"
+        },
+        {
+          "label": "IRL+ Discord",
+          "url": "https://discord.gg/GCrKZNj5VA",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://www.irlplus.uk/"
         }
       ],
       "tags": [],
@@ -965,7 +1219,15 @@
         "sender"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "kind": "docs",
+          "label": "IRLbox docs",
+          "url": "https://irlbox.com/#/docs/README",
+          "source": "https://irlbox.com/docs/README.md",
+          "checked_on": "2026-11-16"
+        }
+      ],
       "tags": [],
       "words": [
         "encoder",
@@ -998,7 +1260,10 @@
       "support": [
         {
           "label": "LiveU Solo help centre",
-          "url": "https://solohelp.liveu.tv/hc/en-us"
+          "url": "https://solohelp.liveu.tv/hc/en-us",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://solohelp.liveu.tv/hc/en-us"
         }
       ],
       "tags": [
@@ -1035,7 +1300,10 @@
       "support": [
         {
           "label": "Starlink support",
-          "url": "https://www.starlink.com/support"
+          "url": "https://www.starlink.com/support",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://www.starlink.com/support"
         }
       ],
       "tags": [],
@@ -1067,7 +1335,10 @@
       "support": [
         {
           "label": "Teradek support",
-          "url": "https://support.cs.inc/s/"
+          "url": "https://support.cs.inc/s/",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://support.cs.inc/s/"
         }
       ],
       "tags": [
@@ -1104,11 +1375,17 @@
       "support": [
         {
           "label": "TVU community",
-          "url": "https://community.tvunetworks.com/"
+          "url": "https://community.tvunetworks.com/",
+          "kind": "forum",
+          "checked_on": "2026-11-14",
+          "source": "https://community.tvunetworks.com/"
         },
         {
           "label": "TVU support contact",
-          "url": "https://www.tvunetworks.com/contact-us/"
+          "url": "https://www.tvunetworks.com/contact-us/",
+          "kind": "contact",
+          "checked_on": "2026-11-14",
+          "source": "https://www.tvunetworks.com/contact-us/"
         }
       ],
       "tags": [],
@@ -1142,7 +1419,10 @@
       "support": [
         {
           "label": "UnlimitedIRL contact",
-          "url": "https://unlimitedirl.com/contact"
+          "url": "https://unlimitedirl.com/contact",
+          "kind": "contact",
+          "checked_on": "2026-11-14",
+          "source": "https://unlimitedirl.com/contact"
         }
       ],
       "tags": [],
@@ -1178,7 +1458,15 @@
         "camera"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "YoloLiv Discord",
+          "url": "https://discord.gg/UtdFmhS3J5",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://www.yololiv.com/yoloboxUltra"
+        }
+      ],
       "tags": [
         "camera-in"
       ],
@@ -1209,7 +1497,15 @@
         "camera"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRL+ Discord",
+          "url": "https://discord.gg/GCrKZNj5VA",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://video-mixer.irlplus.uk/"
+        }
+      ],
       "tags": [
         "multi-camera"
       ],
@@ -1240,7 +1536,7 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Cloud OBS servers for IRL streamers, with SRTLA bonding and disconnect protection; its relays and SimpleStreamer are listed separately.",
+      "description": "Cloud OBS servers for IRL streamers, with SRTLA bonding and disconnect protection; its receivers and SimpleStreamer are listed separately.",
       "platforms": [
         "service"
       ],
@@ -1250,7 +1546,22 @@
         "platform"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRLhosting Discord",
+          "url": "https://discord.gg/IRltools",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://irlhosting.com/"
+        },
+        {
+          "label": "IRLhosting guides",
+          "url": "https://irlhosting.com/guides/",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://irlhosting.com/"
+        }
+      ],
       "tags": [
         "multi-camera"
       ],
@@ -1292,7 +1603,17 @@
       "support": [
         {
           "label": "IRLToolkit knowledge base",
-          "url": "https://kb.irltoolkit.com/"
+          "url": "https://kb.irltoolkit.com/",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://kb.irltoolkit.com/"
+        },
+        {
+          "label": "IRLToolkit Discord",
+          "url": "https://irltoolkit.com/discord",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://irltoolkit.com/"
         }
       ],
       "tags": [
@@ -1330,10 +1651,29 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/issues"
+          "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/issues"
+        },
+        {
+          "label": "NOALBS Discord",
+          "url": "https://discord.gg/efWu5HWM2u",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching"
+        },
+        {
+          "label": "NOALBS docs",
+          "url": "https://docs.noalbs.com",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "noalbs",
         "brb",
@@ -1367,7 +1707,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/irlserver/obs-irl-source/issues"
+          "url": "https://github.com/irlserver/obs-irl-source/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/irlserver/obs-irl-source/issues"
+        },
+        {
+          "kind": "docs",
+          "label": "README and setup",
+          "url": "https://github.com/irlserver/obs-irl-source#readme",
+          "source": "https://github.com/irlserver/obs-irl-source#readme",
+          "checked_on": "2026-11-16"
         }
       ],
       "tags": [],
@@ -1403,11 +1753,24 @@
       "support": [
         {
           "label": "OBS help",
-          "url": "https://obsproject.com/help"
+          "url": "https://obsproject.com/help",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://obsproject.com/help"
         },
         {
           "label": "OBS forum",
-          "url": "https://obsproject.com/forum/"
+          "url": "https://obsproject.com/forum/",
+          "kind": "forum",
+          "checked_on": "2026-11-14",
+          "source": "https://obsproject.com/forum/"
+        },
+        {
+          "label": "OBS Discord",
+          "url": "https://discord.gg/obsproject",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://obsproject.com/"
         }
       ],
       "tags": [
@@ -1443,11 +1806,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/halveknots-llc/openirl/issues"
+          "url": "https://github.com/halveknots-llc/openirl/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/halveknots-llc/openirl/issues"
         },
         {
           "label": "GitHub discussions",
-          "url": "https://github.com/halveknots-llc/openirl/discussions"
+          "url": "https://github.com/halveknots-llc/openirl/discussions",
+          "kind": "forum",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/halveknots-llc/openirl/discussions"
         }
       ],
       "tags": [],
@@ -1481,10 +1850,22 @@
       "support": [
         {
           "label": "Streamer.bot docs",
-          "url": "https://docs.streamer.bot"
+          "url": "https://docs.streamer.bot",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://docs.streamer.bot"
+        },
+        {
+          "label": "Streamer.bot Discord",
+          "url": "https://discord.streamer.bot",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://streamer.bot/"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "scene"
       ],
@@ -1511,7 +1892,15 @@
       "covers": [
         "belabox"
       ],
-      "support": [],
+      "support": [
+        {
+          "label": "BELABOX Discord",
+          "url": "https://discord.gg/hS8TcpsCKu",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
+        }
+      ],
       "tags": [],
       "words": [
         "backpack"
@@ -1539,7 +1928,15 @@
       "covers": [
         "ceralive"
       ],
-      "support": [],
+      "support": [
+        {
+          "label": "CeraLive Discord",
+          "url": "https://discord.gg/Q2bvU49yx2",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://ceralive.tv/"
+        }
+      ],
       "tags": [],
       "words": [
         "backpack"
@@ -1567,7 +1964,15 @@
       "covers": [
         "irltoolkit"
       ],
-      "support": [],
+      "support": [
+        {
+          "label": "IRLToolkit Discord",
+          "url": "https://irltoolkit.com/discord",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://kb.irltoolkit.com/"
+        }
+      ],
       "tags": [],
       "words": [
         "cloud-obs"
@@ -1595,7 +2000,15 @@
       "covers": [
         "moblin"
       ],
-      "support": [],
+      "support": [
+        {
+          "label": "Moblin Discord",
+          "url": "https://discord.moblin.app",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/eerimoq/moblin#readme"
+        }
+      ],
       "tags": [],
       "words": [],
       "checked_on": "2026-11-14"
@@ -1622,10 +2035,19 @@
         "camera"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRLtools Discord",
+          "url": "https://discord.gg/IRLtools",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://irlwhatever.com/"
+        }
+      ],
       "tags": [
         "camera-in",
-        "multi-camera"
+        "multi-camera",
+        "scene-control"
       ],
       "words": [
         "bonding",
@@ -1654,7 +2076,7 @@
       "open_source": false,
       "licence": null,
       "status": null,
-      "description": "Hosted relays that carry your stream to your own OBS, over SRT, SRTLA, RIST or RTMP, with stats a scene switcher can read. The region can change and the relay ID stays. Paid.",
+      "description": "Hosted receivers that carry your stream to your own OBS, over SRT, SRTLA, RIST or RTMP, with stats a scene switcher can read. The region can change and the relay ID stays. Paid.",
       "platforms": [
         "service"
       ],
@@ -1665,7 +2087,10 @@
       "support": [
         {
           "label": "IRLrelays support",
-          "url": "https://irlrelays.com/support"
+          "url": "https://irlrelays.com/support",
+          "kind": "help",
+          "checked_on": "2026-11-14",
+          "source": "https://irlrelays.com/support"
         }
       ],
       "tags": [],
@@ -1698,7 +2123,22 @@
         "platform"
       ],
       "covers": [],
-      "support": [],
+      "support": [
+        {
+          "label": "IRLhosting Discord",
+          "url": "https://discord.gg/IRltools",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://irlhosting.com/plans/simplestreamer/"
+        },
+        {
+          "label": "IRLhosting guides",
+          "url": "https://irlhosting.com/guides/",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://irlhosting.com/plans/simplestreamer/"
+        }
+      ],
       "tags": [],
       "words": [
         "drop-protection",
@@ -1732,7 +2172,17 @@
       "support": [
         {
           "label": "IRLToolkit knowledge base",
-          "url": "https://kb.irltoolkit.com/"
+          "url": "https://kb.irltoolkit.com/",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://kb.irltoolkit.com/"
+        },
+        {
+          "label": "IRLToolkit Discord",
+          "url": "https://irltoolkit.com/discord",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://irltoolkit.com/"
         }
       ],
       "tags": [],
@@ -1771,14 +2221,29 @@
       "support": [
         {
           "label": "NOALBS Cloud docs",
-          "url": "https://docs.noalbs.com/"
+          "url": "https://docs.noalbs.com/",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://docs.noalbs.com/"
         },
         {
           "label": "GitHub issues",
-          "url": "https://github.com/NOALBS/noalbs-cloud/issues"
+          "url": "https://github.com/NOALBS/noalbs-cloud/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/NOALBS/noalbs-cloud/issues"
+        },
+        {
+          "label": "NOALBS Discord",
+          "url": "https://discord.gg/efWu5HWM2u",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://noalbs.com/"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "noalbs",
         "stats-url",
@@ -1812,7 +2277,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/sniffingpickles/obs-smooth-media/issues"
+          "url": "https://github.com/sniffingpickles/obs-smooth-media/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/sniffingpickles/obs-smooth-media/issues"
+        },
+        {
+          "label": "IRLtools Discord",
+          "url": "https://discord.gg/IRLtools",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/sniffingpickles/obs-smooth-media"
         }
       ],
       "tags": [],
@@ -1851,7 +2326,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/moo-the-cow/moo-rist-hosting-native/issues"
+          "url": "https://github.com/moo-the-cow/moo-rist-hosting-native/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/moo-the-cow/moo-rist-hosting-native/issues"
+        },
+        {
+          "label": "Developer Discord",
+          "url": "https://discord.gg/khTtNJjFBY",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://moo-the-cow.github.io/moo-rist-hosting-native/"
         }
       ],
       "tags": [],
@@ -1889,7 +2374,24 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/OpenRTMP/librtmp2-server/issues"
+          "url": "https://github.com/OpenRTMP/librtmp2-server/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/OpenRTMP/librtmp2-server/issues"
+        },
+        {
+          "label": "OpenRTMP docs",
+          "url": "https://openrtmp.org/docs/",
+          "kind": "docs",
+          "checked_on": "2026-11-16",
+          "source": "https://openrtmp.org/"
+        },
+        {
+          "label": "OpenRTMP discussions",
+          "url": "https://github.com/OpenRTMP/community/discussions",
+          "kind": "forum",
+          "checked_on": "2026-11-16",
+          "source": "https://openrtmp.org/"
         }
       ],
       "tags": [],
@@ -1932,11 +2434,24 @@
       "support": [
         {
           "label": "VDO.Ninja docs",
-          "url": "https://docs.vdo.ninja/"
+          "url": "https://docs.vdo.ninja/",
+          "kind": "docs",
+          "checked_on": "2026-11-14",
+          "source": "https://docs.vdo.ninja/"
         },
         {
           "label": "GitHub issues",
-          "url": "https://github.com/steveseguin/vdo.ninja/issues"
+          "url": "https://github.com/steveseguin/vdo.ninja/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/steveseguin/vdo.ninja/issues"
+        },
+        {
+          "label": "VDO.Ninja Discord",
+          "url": "https://discord.vdo.ninja",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://vdo.ninja/"
         }
       ],
       "tags": [
@@ -1973,7 +2488,17 @@
       "support": [
         {
           "label": "GitHub issues",
-          "url": "https://github.com/NOALBS/belabot/issues"
+          "url": "https://github.com/NOALBS/belabot/issues",
+          "kind": "github",
+          "checked_on": "2026-11-14",
+          "source": "https://github.com/NOALBS/belabot/issues"
+        },
+        {
+          "label": "NOALBS Discord",
+          "url": "https://discord.gg/efWu5HWM2u",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://github.com/NOALBS/belabot"
         }
       ],
       "tags": [],
@@ -2006,7 +2531,10 @@
       "support": [
         {
           "label": "feedback form",
-          "url": "https://syncer.live/feedback"
+          "url": "https://syncer.live/feedback",
+          "kind": "contact",
+          "checked_on": "2026-11-14",
+          "source": "https://syncer.live/feedback"
         }
       ],
       "tags": [],
@@ -2039,13 +2567,113 @@
       "support": [
         {
           "label": "Help",
-          "url": "https://help.twitch.tv/"
+          "url": "https://help.twitch.tv/",
+          "kind": "help",
+          "checked_on": "2026-11-16",
+          "source": "https://help.twitch.tv/"
         }
       ],
       "tags": [],
       "words": [
         "disconnect-protection"
       ],
+      "checked_on": "2026-11-16"
+    },
+    {
+      "id": "belabox-cloud-stream-servers",
+      "name": "BELABOX cloud stream servers",
+      "kind": "hub",
+      "role": "hub",
+      "class": "cloud",
+      "hosting": "service",
+      "maker": "BELABOX",
+      "url": "https://cloud.belabox.net/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Hosted production with transcoding, drop protection, web overlays, scene switching and picture-in-picture, streaming to platforms without running OBS.",
+      "sources": [
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "read_on": "2026-11-16",
+          "note": "Account feature description behind login, supplied by a user on 16 November 2026; the URL is the public login page."
+        },
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "read_on": "2026-11-16",
+          "note": "Maintainer announcement dated 13 November 2026, supplied by a user; describes cloud production and picture-in-picture. The feature is behind login; the URL is the public login page."
+        }
+      ],
+      "platforms": [
+        "service"
+      ],
+      "part": [
+        "receiver",
+        "obs",
+        "platform"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "BELABOX Discord",
+          "url": "https://discord.gg/hS8TcpsCKu",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
+        }
+      ],
+      "tags": [
+        "multi-camera"
+      ],
+      "words": [
+        "drop-protection",
+        "scene"
+      ],
+      "checked_on": "2026-11-16"
+    },
+    {
+      "id": "belabox-remotes",
+      "name": "BELABOX remotes",
+      "kind": "app",
+      "role": "remote-control",
+      "class": "helper-app",
+      "hosting": "service",
+      "maker": "BELABOX",
+      "url": "https://cloud.belabox.net/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "Controls a BELABOX encoder over the internet without a direct local network connection.",
+      "sources": [
+        {
+          "kind": "behind login (supplied by a user)",
+          "url": "https://cloud.belabox.net/",
+          "read_on": "2026-11-16",
+          "note": "Account feature description behind login, supplied by a user on 16 November 2026; the URL is the public login page."
+        }
+      ],
+      "platforms": [
+        "web"
+      ],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "BELABOX Discord",
+          "url": "https://discord.gg/hS8TcpsCKu",
+          "kind": "discord",
+          "checked_on": "2026-11-16",
+          "source": "https://belabox.net/"
+        }
+      ],
+      "tags": [],
+      "words": [],
       "checked_on": "2026-11-16"
     }
   ]

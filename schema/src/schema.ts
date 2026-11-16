@@ -2,44 +2,52 @@ import { z } from "zod";
 
 /** A lowercase slug, used as an anchor and as a cross-reference. */
 export const Id = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "lowercase letters, digits and single dashes");
-/** An https URL without spaces; chat invites are not accepted in shared data. */
+/** An https URL without spaces; chat invites are accepted only by SupportLink. */
 export const HttpsUrl = z.string().regex(/^https:\/\/(?![^/]*discord(?:app)?\.(?:gg|com))\S+$/, "an https:// URL, not a chat invite");
 /** A BCP 47 style tag such as es-419 or pt-BR. */
 export const LanguageTag = z.string().regex(/^[a-z]{2,3}(?:-(?:[A-Z]{2}|[0-9]{3}))?$/, "a language tag such as es-419 or pt-BR");
 /** Non-empty text: at least one non-space character (the same rule in zod and JSON Schema). */
 export const Text = z.string().regex(/\S/, "not empty");
 export const Day = z.iso.date();
-export const Link = z.strictObject({ label: Text, url: HttpsUrl });
+export const Link = z.strictObject({ label: Text.describe("What the page is, in a few words."), url: HttpsUrl.describe("The page's https address.") });
+
+/** Official support channels. Legacy label/url pairs remain readable for one release. */
+export const SupportLink = z.strictObject({
+  label: Text,
+  url: z.string().regex(/^https:\/\/\S+$/, "an https:// URL"),
+  kind: z.enum(["discord", "forum", "help", "docs", "contact", "github"]).optional(),
+  checked_on: Day.optional(),
+  source: HttpsUrl.optional().describe("The maker's public page or README that publishes this channel."),
+}).superRefine((s, ctx) => {
+  if (s.kind !== undefined && (!s.checked_on || !s.source))
+    ctx.addIssue({ code: "custom", message: "typed channels need checked_on and source" });
+  if (/discord(?:app)?\.(?:gg|com)/i.test(s.url) && s.kind !== "discord")
+    ctx.addIssue({ code: "custom", path: ["kind"], message: "Discord links need kind discord and official evidence" });
+}).meta({ allOf: [
+  { if: { required: ["kind"] }, then: { required: ["checked_on", "source"] } },
+  { if: { properties: { url: { pattern: "[dD][iI][sS][cC][oO][rR][dD](?:[aA][pP][pP])?\\.(?:[gG][gG]|[cC][oO][mM])" } } }, then: { required: ["kind"], properties: { kind: { const: "discord" } } } },
+] });
 
 // ---------- Words ----------
 
 export const WordL10n = z.strictObject({
-  term: Text,
-  plain: Text,
-  heard_when: z.string().optional(),
+  term: Text.describe("The term in that language. Usually the scene's English word."),
+  plain: Text.describe("The explanation, in that language."),
+  heard_when: z.string().optional().describe("When the word comes up, in that language."),
 });
 
-// Naming guide for app makers: an optional `naming` block on a word. Advisory: `label` is the
-// recommended label for the context in `scope`, never the only correct one. Reasons describe the
-// word, never a maker. Statuses of other names:
-//   also-used: means the same thing (the true synonyms in `also_called`);
-//   narrower: one part or one kind of it; technical: the engineering name;
-//   ambiguous: in this context it can also mean something else.
-export const NamingStatus = z.enum(["also-used", "narrower", "technical", "ambiguous"]);
-/** How a label is written: sentence case ("Relay server", acronyms stay capitals), a proper name, or an acronym ("BRB"). */
-export const LabelCase = z.enum(["sentence", "proper", "acronym"]);
+// Naming guide for app makers: an optional `naming` block on a word.
+export const NamingStatus = z.enum(["also-used", "narrower", "technical", "ambiguous"]).describe("also-used: means the same thing. narrower: one part or one kind of it. technical: the engineering name. ambiguous: here it can also mean something else.");
+export const LabelCase = z.enum(["sentence", "proper", "acronym"]).describe("How the label is written: sentence case (\"Relay server\"; acronyms stay capitals), a proper name, or an acronym (\"BRB\").");
 /** A GitHub login, as listed in stewards.json. */
 export const Login = z.string().regex(/^[A-Za-z0-9](?:[A-Za-z0-9-]{0,38})$/, "a GitHub login");
 
 export const Alternative = z.strictObject({
-  term: Text.max(60),
+  term: Text.max(60).describe("The other name."),
   status: NamingStatus,
-  /** Why it isn't the recommended label here, about the word. Required unless the status is also-used. */
-  why: Text.max(200).optional(),
-  /** The word normally named by an ambiguous, narrower or product-scoped also-used alternative. */
-  see: Id.optional(),
-  /** Service ids with direct evidence for this exact alternative. Never on ambiguous items. */
-  seen_in: z.array(Id).min(1).optional(),
+  why: Text.max(200).optional().describe("Why it isn't the recommended label here, about the word. Required unless the status is also-used."),
+  see: Id.optional().describe("The word this name normally means, for an ambiguous, narrower or product-specific also-used name."),
+  seen_in: z.array(Id).min(1).optional().describe("Service ids whose evidence shows exactly this name. Never on ambiguous names."),
 }).superRefine((a, ctx) => {
   if (a.status !== "also-used" && a.why === undefined)
     ctx.addIssue({ code: "custom", path: ["why"], message: "give a reason unless the status is also-used" });
@@ -52,30 +60,37 @@ export const Alternative = z.strictObject({
   ],
 });
 
-/** A public source, its observed label, and whether it directly supports this meaning. */
+export const SourceKind = z.enum(["public primary", "behind login (supplied by a user)"]).describe("Where the claim comes from. Left out on older evidence, which means public primary.");
+export const Source = z.strictObject({
+  kind: SourceKind,
+  url: HttpsUrl.describe("The public page. For a description behind a login, the public login page."),
+  read_on: Day.describe("The day it was read, or the day a description was supplied."),
+  note: Text.max(300).describe("What the page shows, in a sentence or two."),
+});
+
+/** A source, its observed label, and whether it directly supports this meaning. */
 export const Evidence = z.strictObject({
-  service: Id,
-  label: Text,
-  support: z.enum(["direct", "context-only"]),
-  url: HttpsUrl,
-  read_on: Day,
-  note: Text.max(300),
+  kind: SourceKind.optional(),
+  service: Id.describe("The service id of the product whose label the page shows."),
+  label: Text.describe("The label exactly as the product shows it."),
+  support: z.enum(["direct", "context-only"]).describe("direct: the page shows this label for this meaning. context-only: related use or doubt; never counts for review."),
+  url: HttpsUrl.describe("The public page."),
+  read_on: Day.describe("The day it was read."),
+  note: Text.max(300).describe("What the page shows, quoting the label."),
 });
 
 export const Naming = z.strictObject({
-  label: Text.max(40),
-  short_label: Text.max(20).optional(),
+  label: Text.max(40).describe("The recommended label for the place in scope."),
+  short_label: Text.max(20).optional().describe("A shorter label for tight spaces."),
   case: LabelCase,
-  plural: Text.max(40).optional(),
-  /** Where the label fits: the screen or setting it names. */
-  scope: Text.max(200),
-  why: Text.max(300),
-  alternatives: z.array(Alternative),
-  evidence: z.array(Evidence),
-  translation_note: Text.max(300),
-  status: z.enum(["draft", "reviewed"]),
-  /** Stewards who reviewed it: at least two different ones for reviewed. */
-  reviewed_by: z.array(Login).optional(),
+  plural: Text.max(40).optional().describe("The plural of the label."),
+  scope: Text.max(200).describe("Where the label fits: the screen or setting it names."),
+  why: Text.max(300).describe("Why this label, about the word, never about a maker."),
+  alternatives: z.array(Alternative).describe("Other names, each with a status."),
+  evidence: z.array(Evidence).describe("Public pages that show a product's own label."),
+  translation_note: Text.max(300).describe("Help for translators."),
+  status: z.enum(["draft", "reviewed"]).describe("draft, or reviewed. Reviewed needs direct evidence from two makers and two stewards."),
+  reviewed_by: z.array(Login).optional().describe("The stewards who reviewed it: at least two for reviewed, none for draft."),
 }).superRefine((n, ctx) => {
   const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
   const makers = new Set(n.evidence.filter((e) => e.support === "direct").map((e) => e.service));
@@ -117,25 +132,21 @@ export function wordAliases(w: { term: string; also_called: string[]; search_ter
 }
 
 export const Word = z.strictObject({
-  id: Id,
-  checked_on: Day.optional(),
-  term: Text,
-  /** True synonyms only: other names for exactly this thing, the ones a streamer may hear.
-   *  With a naming block, each one is the label or an also-used alternative, and every also-used alternative is here. */
-  also_called: z.array(Text),
-  /** Search only, never shown as a name: plurals, units, spellings, address syntax and nearby phrases. */
-  search_terms: z.array(Text),
-  /** Deprecated, kept for one release: generated by `bun run aliases` from the fields above. */
-  aliases: z.array(Text).meta({ deprecated: true }),
-  tier: z.enum(["core", "more"]),
-  who: z.enum(["streamer", "helper", "both"]),
-  heard_when: z.string(),
-  plain: Text,
-  related: z.array(Id),
-  source: Text,
-  uncertain: z.boolean(),
-  l10n: z.record(LanguageTag, WordL10n).optional(),
-  naming: Naming.optional(),
+  id: Id.describe("Permanent id, used as an anchor and in links from other files."),
+  checked_on: Day.optional().describe("The day the entry was compared with its public source. Left out when no check is recorded; freshness is then unknown."),
+  term: Text.describe("The word as streamers use it."),
+  also_called: z.array(Text).describe("True synonyms: other names for exactly this thing. With a naming block, each one is the label or an also-used alternative."),
+  search_terms: z.array(Text).describe("For search only, never shown as a name: plurals, units, spellings and nearby phrases."),
+  aliases: z.array(Text).meta({ deprecated: true, description: "Deprecated, kept for one release. Generated by `bun run aliases` from the label, also_called, the plural, the other names and search_terms." }),
+  tier: z.enum(["core", "more"]).describe("core: the few basics people meet first. more: everything else."),
+  who: z.enum(["streamer", "helper", "both"]).describe("Who usually meets the word."),
+  heard_when: z.string().describe("When the word comes up, in one sentence. May be empty."),
+  plain: Text.describe("The explanation in simple language. It says what the word means, not how to fix anything."),
+  related: z.array(Id).describe("Ids of related words in words.json."),
+  source: Text.describe("A public source for the explanation."),
+  uncertain: z.boolean().describe("True while the explanation is not settled."),
+  l10n: z.record(LanguageTag, WordL10n).optional().describe("Translations by language tag, such as es-419 or pt-BR. A native speaker reads each one before it is published."),
+  naming: Naming.optional().describe("A naming guide for app makers: a recommended label for one screen or setting. Advice, not the only right name."),
 }).superRefine((w, ctx) => {
   const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
   const lower = (xs: string[]) => xs.map((x) => x.toLowerCase());
@@ -146,12 +157,12 @@ export const Word = z.strictObject({
     const same = lower(w.naming.alternatives.filter((a) => a.status === "also-used").map((a) => a.term));
     const label = w.naming.label.toLowerCase();
     for (const x of also) if (x !== label && !same.includes(x)) issue("also_called", `'${x}' is neither the label nor an also-used alternative`);
-    for (const x of same) if (!also.includes(x)) issue("naming", `the also-used alternative '${x}' belongs in also_called too`);
+    for (const x of same) if (!also.includes(x) && x !== w.term.toLowerCase()) issue("naming", `the also-used alternative '${x}' belongs in also_called too`);
   }
 });
 
 export const WordsFile = z.strictObject({
-  about: z.string(),
+  about: z.string().describe("What this file holds, in a sentence or two, with a link to the docs."),
   words: z.array(Word).min(1),
 }).superRefine((f, ctx) => {
   // Recommended labels stay unique; ambiguous/narrower collisions require a resolving see.
@@ -181,72 +192,49 @@ export const WordsFile = z.strictObject({
 
 // ---------- Answers (quick checks) ----------
 
-/** Where along the chain a check looks: the camera and mic into the sender,
- *  the sender (app or box), its connections, the receiver, OBS, the platform. */
-export const Part = z.enum(["camera", "sender", "connections", "receiver", "obs", "platform"]);
+export const Part = z.enum(["camera", "sender", "connections", "receiver", "obs", "platform"]).describe("Where along the chain: camera (camera and mic into the sender), sender (the app or box), connections, receiver, obs, platform.");
 
 /** One short check in plain words: which part to look at and what to look for.
  *  No product names or product settings; those live in guides and services. */
 export const Check = z.strictObject({
   part: Part.optional(),
-  text: Text.max(140),
+  text: Text.max(140).describe("One short check in simple language. No product names or product settings."),
 });
 
 export const Answer = z.strictObject({
-  id: Id,
-  checked_on: Day.optional(),
-  question: Text,
-  /** Which part most likely broke, in one or two sentences. */
-  summary: Text.max(220),
-  checks: z.array(Check).min(1).max(3),
-  words: z.array(Id),
-  /** Products whose own docs and support channels help with this question. */
-  services: z.array(Id),
-  sources: z.array(Link).min(1),
+  id: Id.describe("Permanent id, used as an anchor and in links from other files."),
+  checked_on: Day.optional().describe("The day the entry was compared with its public source. Left out when no check is recorded; freshness is then unknown."),
+  question: Text.describe("The question as people ask it."),
+  summary: Text.max(220).describe("Which part most likely broke, in one or two sentences."),
+  checks: z.array(Check).min(1).max(3).describe("One to three checks, in the order worth trying."),
+  words: z.array(Id).describe("Ids of related words in words.json."),
+  services: z.array(Id).describe("Service ids of products whose own docs and support help with this question."),
+  sources: z.array(Link).min(1).describe("The public docs behind the checks. At least one."),
 });
 
 export const AnswersFile = z.strictObject({
-  about: z.string(),
+  about: z.string().describe("What this file holds, in a sentence or two, with a link to the docs."),
   answers: z.array(Answer).min(1),
 });
 
 // ---------- Services catalogue ----------
 
-export const ServiceKind = z.enum(["app", "relay", "hub", "hardware", "production", "community"]);
-export const Platform = z.enum(["android", "ios", "windows", "macos", "linux", "web", "hardware", "service"]);
+export const ServiceKind = z.enum(["app", "relay", "hub", "hardware", "production", "community"]).describe("What kind of product it is. The kind limits which roles it can have.");
+export const Platform = z.enum(["android", "ios", "windows", "macos", "linux", "web", "hardware", "service"]).describe("Where it runs. hardware: its own device. service: a hosted service.");
 
-/** What a product is for, as a reader picks it: the groups on a link list and the steps of a stack picker.
- *  streaming-app: the app that sends your stream; extra-connections: adds a network path;
- *  camera-capture: brings a camera or screen in; remote-control: runs OBS or the sender from another device;
- *  chat-overlays: chat, alerts, overlays and location; other-app: an app that fits none of these;
- *  relay: relays, receivers and protocols; hub: hosted hubs that go out to the platform;
- *  production: OBS and its tools; hardware: encoders, backpacks and parts; community: docs and wikis. */
 export const Role = z.enum([
   "streaming-app", "extra-connections", "camera-capture", "remote-control", "chat-overlays", "other-app",
   "relay", "hub", "production", "hardware", "community",
-]);
+]).describe("What it is for, as a reader picks it. streaming-app: sends your stream. extra-connections: adds a network path. camera-capture: brings a camera or screen in. remote-control: runs OBS or the sender from another device. chat-overlays: chat, alerts, overlays and location. other-app: an app that fits none of these. relay: relays, receivers and protocols. hub: hosted hubs that go out to the platform. production: OBS and its tools. hardware: encoders, backpacks and parts. community: docs and wikis.");
 
-/** Which overview a product belongs in, as a streamer looks for it. One class per product.
- *  phone-app: the app on a phone that sends the stream; helper-app: small apps around it (chat,
- *  location, remote control, a camera into the phone); connections: ways to add another network;
- *  bonding: receivers and relays that join a bonded stream back together, and bonding services;
- *  hardware: backpacks, encoders and kits; parts: add-ons for a box or backpack; store: shops for
- *  built backpacks, cases and parts; cloud: hosted production (cloud OBS, drop protection, restreaming);
- *  production: OBS and tools on your own computer or in the browser; building-block: protocols,
- *  libraries and general media servers that apps are built from; docs: community docs and wikis. */
 export const ServiceClass = z.enum([
   "phone-app", "helper-app", "connections", "bonding", "hardware", "parts", "store", "cloud", "production",
   "building-block", "docs",
-]);
+]).describe("Which overview it belongs in, as a streamer looks for it. phone-app: the phone app that sends the stream. helper-app: small apps around it (chat, location, remote control, a camera into the phone). connections: ways to add another network. bonding: receivers and relays that join a bonded stream, and bonding services. hardware: backpacks, encoders and kits. parts: add-ons for a box or backpack. store: shops for built backpacks, cases and parts. cloud: hosted production (cloud OBS, drop protection, restreaming). production: OBS and tools on your own computer or in the browser. building-block: protocols, libraries and media servers that apps are built from. docs: community docs and wikis.");
 
-/** Who runs the server side. self: software you run on your own server or computer;
- *  service: someone runs it for you, paid or free. Required for bonding and cloud; null where it doesn't apply. */
-export const Hosting = z.enum(["self", "service"]);
+export const Hosting = z.enum(["self", "service"]).describe("self: software you run on your own server or computer. service: someone runs it for you, paid or free.");
 
-/** Optional tags for what a product can do that its class doesn't say. Plain words:
- *  camera-in: takes the picture from a standalone camera (a DSLR, mirrorless or action camera)
- *  over HDMI, USB or the network; multi-camera: shows several cameras in one scene at once. */
-export const ServiceTag = z.enum(["camera-in", "multi-camera"]);
+export const ServiceTag = z.enum(["camera-in", "multi-camera", "scene-control"]).describe("camera-in: takes the picture from a standalone camera (a DSLR, mirrorless or action camera) over HDMI, USB or the network. multi-camera: shows several cameras in one scene at once. scene-control: switches the scenes in OBS or a hub from outside it, by remote, chat commands or on its own.");
 
 /** Which roles each kind may take. */
 export const RolesByKind: Record<z.infer<typeof ServiceKind>, z.infer<typeof Role>[]> = {
@@ -259,33 +247,32 @@ export const RolesByKind: Record<z.infer<typeof ServiceKind>, z.infer<typeof Rol
 };
 
 export const Service = z.strictObject({
-  id: Id,
-  checked_on: Day,
-  name: Text,
+  id: Id.describe("Permanent id, used as an anchor and in links from other files."),
+  checked_on: Day.describe("The day the entry was compared with its public source."),
+  name: Text.describe("The name as the maker writes it."),
   kind: ServiceKind,
   role: Role,
   class: ServiceClass,
-  hosting: Hosting.nullable(),
-  maker: Text,
-  url: HttpsUrl,
-  links: z.array(Link),
-  open_source: z.boolean().nullable(),
-  licence: Text.nullable(),
-  status: Text.nullable(),
-  description: Text,
-  platforms: z.array(Platform).min(1),
-  /** Where along the chain it sits, the main part first. Empty only for community entries. */
-  part: z.array(Part).max(3),
-  /** For community entries (docs, wikis): the products they document. Empty otherwise. */
-  covers: z.array(Id),
-  support: z.array(Link),
+  hosting: Hosting.nullable().describe("Who runs the server side. Set for bonding and cloud entries; null where it doesn't apply."),
+  maker: Text.describe("The maker or organisation that owns it."),
+  url: HttpsUrl.describe("The maker's own page."),
+  links: z.array(Link).describe("Other official pages."),
+  open_source: z.boolean().nullable().describe("True when the code is open source. Null when unknown."),
+  licence: Text.nullable().describe("The licence, or null."),
+  status: Text.nullable().describe("A release stage the maker states, such as beta or pre-release. Null for a normal release."),
+  description: Text.describe("What it is, in a sentence or two, written for this list."),
+  sources: z.array(Source).min(1).optional().describe("Sources for claims the maker's page doesn't show, such as a description behind a login."),
+  platforms: z.array(Platform).min(1).describe("Where it runs."),
+  part: z.array(Part).max(3).describe("Where along the chain it sits, the main part first. Empty only for community entries."),
+  covers: z.array(Id).describe("For community entries (docs, wikis): the products they document. Empty otherwise."),
+  support: z.array(SupportLink).describe("Official support channels, including Discord invites published by the maker. Typed channels carry their own checked date and source."),
   /** Optional tags from ServiceTag, each at most once. */
   tags: z.array(ServiceTag).refine((t) => new Set(t).size === t.length, "each tag at most once").meta({ uniqueItems: true }),
-  words: z.array(Id),
+  words: z.array(Id).describe("Ids of related words in words.json."),
 });
 
 export const ServicesFile = z.strictObject({
-  about: z.string(),
+  about: z.string().describe("What this file holds, in a sentence or two, with a link to the docs."),
   services: z.array(Service).min(1),
 });
 
@@ -314,101 +301,78 @@ export function guideTitle(g: { covers: string[]; publisher: string | null; part
 }
 
 export const Guide = z.strictObject({
-  id: Id,
-  checked_on: Day,
-  /** The page's own title, as it shows it. */
-  title: Text,
-  /** Generated by scripts/titles.ts from covers, publisher and part; never written by hand. */
-  title_display: Text,
-  url: HttpsUrl,
-  creator: Text,
-  /** The service id of the maker who wrote it, when that maker is one of `covers`. */
-  publisher: Id.nullable(),
-  language: LanguageTag,
-  kind: z.enum(["article", "video", "docs"]),
-  published: Day.nullable(),
-  /** The products the guide is about, as service ids. */
-  covers: z.array(Id).min(1),
-  /** Where along the chain it helps; the first one decides the title and the group. */
-  part: z.array(Part).min(1).max(3),
-  words: z.array(Id),
-  answers: z.array(Id),
+  id: Id.describe("Permanent id, used as an anchor and in links from other files."),
+  checked_on: Day.describe("The day the entry was compared with its public source."),
+  title: Text.describe("The page's own title."),
+  title_display: Text.describe("Generated by scripts/titles.ts from covers, publisher and part. Never written by hand."),
+  url: HttpsUrl.describe("The tutorial."),
+  creator: Text.describe("Who made it."),
+  publisher: Id.nullable().describe("The service id of the maker who wrote it, when that maker is one of covers. Otherwise null."),
+  language: LanguageTag.describe("The language it is in."),
+  kind: z.enum(["article", "video", "docs"]).describe("article, video or docs."),
+  published: Day.nullable().describe("The date the page states, or null."),
+  covers: z.array(Id).min(1).describe("The products it is about, as service ids."),
+  part: z.array(Part).min(1).max(3).describe("Where along the chain it helps. The first one decides the title and the group."),
+  words: z.array(Id).describe("Ids of related words in words.json."),
+  answers: z.array(Id).describe("Ids of quick checks in answers.json it helps with."),
 });
 
 export const GuidesFile = z.strictObject({
-  about: z.string(),
+  about: z.string().describe("What this file holds, in a sentence or two, with a link to the docs."),
   guides: z.array(Guide).min(1),
 });
 
 // ---------- Carriers and optional plans ----------
 
 export const Plan = z.strictObject({
-  id: Id,
-  checked_on: Day,
-  name: Text,
-  data_cap_gb: z.number().nonnegative().nullable(),
-  throttle_after_cap_kbps: z.number().nonnegative().nullable(),
-  tethering_allowed: z.boolean().nullable(),
-  roaming_routing: z.enum(["home-routed", "local-breakout", "unknown"]),
-  source_url: HttpsUrl,
+  id: Id.describe("Permanent id, unique within the carrier."),
+  checked_on: Day.describe("The day the plan was compared with its source."),
+  name: Text.describe("The plan's name, as the carrier writes it."),
+  data_cap_gb: z.number().nonnegative().nullable().describe("Data cap in decimal GB. Null means unlimited."),
+  throttle_after_cap_kbps: z.number().nonnegative().nullable().describe("Speed after the cap, in kbit/s. Null means unknown."),
+  tethering_allowed: z.boolean().nullable().describe("Whether the plan allows tethering. Null means unknown."),
+  roaming_routing: z.enum(["home-routed", "local-breakout", "unknown"]).describe("How roaming data is routed. Never guessed from marketing."),
+  source_url: HttpsUrl.describe("The plan's official page."),
 });
 export const Carrier = z.strictObject({
-  id: Id,
-  checked_on: Day,
-  name: Text,
-  country: z.string().regex(/^[A-Z]{2}$/, "ISO 3166-1 alpha-2 country code"),
-  network_type: z.enum(["MNO", "MVNO"]),
-  host_network_id: Id.nullable(),
-  esim: z.boolean(),
-  official_url: HttpsUrl,
-  coverage_map_url: HttpsUrl,
-  sources: z.array(Link).min(1),
-  plans: z.array(Plan).optional(),
+  id: Id.describe("Permanent id, used as an anchor and in links from other files."),
+  checked_on: Day.describe("The day the entry was compared with its public source."),
+  name: Text.describe("The carrier's name, as it writes it."),
+  country: z.string().regex(/^[A-Z]{2}$/, "ISO 3166-1 alpha-2 country code").describe("ISO 3166-1 alpha-2 country code."),
+  network_type: z.enum(["MNO", "MVNO"]).describe("MNO: runs its own network. MVNO: uses another carrier's network."),
+  host_network_id: Id.nullable().describe("For an MVNO, the id of the MNO in the same country whose network it uses. Null for an MNO."),
+  esim: z.boolean().describe("True when it offers eSIM."),
+  official_url: HttpsUrl.describe("The carrier's own page."),
+  coverage_map_url: HttpsUrl.describe("The carrier's coverage map."),
+  sources: z.array(Link).min(1).describe("Official pages that back the carrier fields."),
+  plans: z.array(Plan).optional().describe("Optional plans, each with its own source and date."),
 });
 export const PlansFile = z.strictObject({
-  about: Text,
+  about: Text.describe("What this file holds, in a sentence or two, with a link to the docs."),
   carriers: z.array(Carrier),
 });
 
 // ---------- Standards (shared formats and protocols) ----------
 
-/** Which list an entry sits in. shared: several makers' products write or read it;
- *  app-formats: one app's own format that a named second product also writes or reads;
- *  hardware-codecs: the codecs and hardware interfaces a stream's picture and sound go through;
- *  steward-projects: made by people who steward this repository, listed apart so
- *  they are never mistaken for established standards. */
-export const StandardGroup = z.enum(["shared", "app-formats", "hardware-codecs", "steward-projects"]);
-/** protocol: something two programs speak over a network or link; format: a file, URL
- *  or message shape; settings: a setup link or settings file one app imports; data: a dataset;
- *  codec: a way of compressing video or audio; interface: a cable or bus that carries a camera's picture. */
-export const StandardKind = z.enum(["protocol", "format", "settings", "data", "codec", "interface"]);
-/** open: a public spec, or open-licensed reference code whose docs describe it;
- *  documented-closed: the maker describes it publicly, but the spec is partial or the product closed;
- *  undocumented: no written description, the code (if public) is the only reference;
- *  not-public: not published yet. */
-export const Openness = z.enum(["open", "documented-closed", "undocumented", "not-public"]);
+export const StandardGroup = z.enum(["shared", "app-formats", "hardware-codecs", "steward-projects"]).describe("shared: several makers' products write or read it. app-formats: one app's own format that a named second product also writes or reads. hardware-codecs: codecs and camera interfaces. steward-projects: made by stewards of this repository, listed apart so they are not mistaken for established standards.");
+export const StandardKind = z.enum(["protocol", "format", "settings", "data", "codec", "interface"]).describe("protocol: two programs speak it over a network or link. format: a file, URL or message shape. settings: a setup link or settings file one app imports. data: a dataset. codec: a way to compress video or audio. interface: a cable or bus that carries a camera's picture.");
+export const Openness = z.enum(["open", "documented-closed", "undocumented", "not-public"]).describe("open: a public spec, or open-licensed code whose docs describe it. documented-closed: the maker describes it publicly, but the spec is partial or the product closed. undocumented: no written description; public code, if any, is the only reference. not-public: not published yet.");
 
 // Comparison facts. Each one is a single claim for one table cell: short text written for this list,
 // the public pages that support it, and the day they were read. unverified: true when the makers'
 // and platforms' own pages don't confirm it (shown as [U]); the claim then says what is known.
 const factFields = {
-  text: Text.max(240),
-  sources: z.array(Link).min(1),
-  checked_on: Day,
-  unverified: z.literal(true).optional(),
+  text: Text.max(240).describe("The claim, written for this list."),
+  sources: z.array(Link).min(1).describe("Public pages that support the claim."),
+  checked_on: Day.describe("The day the sources were read."),
+  unverified: z.literal(true).optional().describe("True when the makers' and platforms' own pages don't confirm it. The text then says what is known."),
 };
 const valued = <T extends z.ZodType>(value: T) => z.strictObject({ value, ...factFields });
 
-/** How it may be used, as its licensors describe it: royalty-free patent licences, patent pools,
- *  an open spec, open-source code without a separate spec, or a proprietary SDK. Never legal advice. */
-export const LicenceModel = z.enum(["royalty-free", "patent-pools", "open-spec", "open-code", "proprietary"]);
-/** yes; some: only some models, versions or modes; no: the platform or maker lists it as unsupported,
- *  or lists only other options; unknown: nothing public says either way. */
-export const Support = z.enum(["yes", "some", "no", "unknown"]);
-/** Ingest on the big platforms, from their own help pages (or OBS's services.json where a page needs JavaScript). */
-export const Ingest = z.strictObject({ twitch: valued(Support), youtube: valued(Support), kick: valued(Support) });
-/** Hardware encode and decode on one kind of common IRL gear, from the chip or platform maker's docs. */
-export const HardwareSupport = z.strictObject({ encode: Support, decode: Support, ...factFields });
+export const LicenceModel = z.enum(["royalty-free", "patent-pools", "open-spec", "open-code", "proprietary"]).describe("How it may be used, as its licensors describe it: royalty-free patent licences, patent pools, an open spec, open-source code without a separate spec, or a proprietary SDK. Not legal advice.");
+export const Support = z.enum(["yes", "some", "no", "unknown"]).describe("yes. some: only some models, versions or modes. no: listed as unsupported, or only other options are listed. unknown: nothing public says either way.");
+export const Ingest = z.strictObject({ twitch: valued(Support), youtube: valued(Support), kick: valued(Support) }).describe("Ingest on the big platforms, from their own help pages (or OBS's services.json where a page needs JavaScript).");
+export const HardwareSupport = z.strictObject({ encode: Support, decode: Support, ...factFields }).describe("Hardware encode and decode on this kind of gear, from the chip or platform maker's docs.");
 export const Hardware = z.strictObject({
   ios: HardwareSupport, android: HardwareSupport, rk3588: HardwareSupport,
   intel: HardwareSupport, nvidia: HardwareSupport, apple_mac: HardwareSupport,
@@ -417,52 +381,42 @@ export const Hardware = z.strictObject({
 /** Codec comparison. efficiency comes only from a published comparison against the codecs in
  *  compared_with (ids of other codec entries); null when none is listed. Audio has no hardware row. */
 export const CodecFacts = z.strictObject({
-  media: z.enum(["video", "audio"]),
-  licensing: valued(LicenceModel),
-  efficiency: z.strictObject({ compared_with: z.array(Id).min(1), ...factFields }).nullable(),
-  hardware: Hardware.nullable(),
-  ingest: Ingest,
+  media: z.enum(["video", "audio"]).describe("video or audio."),
+  licensing: valued(LicenceModel).describe("How it may be used."),
+  efficiency: z.strictObject({ compared_with: z.array(Id).min(1), ...factFields }).nullable().describe("Efficiency, only from a published comparison with the codecs in compared_with. Null when none is listed."),
+  hardware: Hardware.nullable().describe("Hardware encode and decode on common IRL gear. Null for audio."),
+  ingest: Ingest.describe("Ingest on Twitch, YouTube and Kick."),
 });
 /** Transport comparison. bonding: built into the protocol, through an add-on protocol, or not at all.
  *  latency: a receive buffer you set, real-time by design, or whatever TCP gives (no buffer setting).
  *  loss_recovery: resends, resends plus forward error correction, or TCP's own resends. */
 export const TransportFacts = z.strictObject({
-  bonding: valued(z.enum(["built-in", "add-on", "no"])),
-  latency: valued(z.enum(["buffer", "real-time", "tcp"])),
-  loss_recovery: valued(z.enum(["resend", "resend-and-fec", "tcp"])),
-  licensing: valued(LicenceModel),
-  ingest: Ingest,
+  bonding: valued(z.enum(["built-in", "add-on", "no"])).describe("Bonding: built into the protocol, through an add-on protocol, or not at all."),
+  latency: valued(z.enum(["buffer", "real-time", "tcp"])).describe("Latency: a receive buffer you set, real-time by design, or whatever TCP gives."),
+  loss_recovery: valued(z.enum(["resend", "resend-and-fec", "tcp"])).describe("Loss recovery: resends, resends plus error correction, or TCP's own resends."),
+  licensing: valued(LicenceModel).describe("How it may be used."),
+  ingest: Ingest.describe("Ingest on Twitch, YouTube and Kick."),
 });
 
 export const Standard = z.strictObject({
-  id: Id,
-  checked_on: Day,
-  name: Text,
+  id: Id.describe("Permanent id, used as an anchor and in links from other files."),
+  checked_on: Day.describe("The day the entry was compared with its public source."),
+  name: Text.describe("The name as the maker writes it."),
   group: StandardGroup,
   kind: StandardKind,
-  status: z.enum(["in-use", "proposed"]),
+  status: z.enum(["in-use", "proposed"]).describe("in-use, or proposed."),
   openness: Openness,
-  /** Short licence line. Null when the entry has codec or transport facts: their licensing fact says it once. */
-  licence: Text.nullable(),
-  /** Who makes or maintains it; the credit belongs to them, not to this catalogue. */
-  maker: Text,
-  /** The page that best describes it, the maker's own where one exists. Null only when not public. */
-  url: HttpsUrl.nullable(),
-  /** A one-line description written for this list. Left out when `word` is set: the glossary definition is used instead. */
-  description: Text.max(200).optional(),
-  /** The words.json id of the same thing, when it is also a glossary word. It must equal this entry's id,
-   *  and the entry then carries no description of its own. */
-  word: Id.optional(),
-  /** Catalogued products that write or read it, as service ids. */
-  service_ids: z.array(Id),
-  /** Named products that write or read it but are not in services.json. */
-  other_users: z.array(Text),
-  /** Public primary sources for the claims. Empty only when not public. */
-  sources: z.array(Link),
-  notes: Text.nullable(),
-  /** Comparison facts for codecs (kind codec) and transports (kind protocol); the site's tables are generated from them. */
-  codec: CodecFacts.optional(),
-  transport: TransportFacts.optional(),
+  licence: Text.nullable().describe("A short licence line. Null when codec or transport facts carry the licensing."),
+  maker: Text.describe("Who makes or maintains it. The credit belongs to them, not to this list."),
+  url: HttpsUrl.nullable().describe("The page that best describes it, the maker's own where one exists. Null only when not public."),
+  description: Text.max(200).optional().describe("One line written for this list. Left out when word is set."),
+  word: Id.optional().describe("The words.json id of the same thing, when it is also a glossary word. Equal to this entry's id; the glossary explanation is used instead of a description."),
+  service_ids: z.array(Id).describe("Catalogued products that write or read it, as service ids."),
+  other_users: z.array(Text).describe("Named products that write or read it but are not in services.json."),
+  sources: z.array(Link).describe("Public sources for the claims. Empty only when not public."),
+  notes: Text.nullable().describe("Anything else worth knowing, or null."),
+  codec: CodecFacts.optional().describe("Comparison facts, for codecs."),
+  transport: TransportFacts.optional().describe("Comparison facts, for transport protocols."),
 }).superRefine((x, ctx) => {
   const issue = (path: string, message: string) => ctx.addIssue({ code: "custom", path: [path], message });
   if ((x.description === undefined) === (x.word === undefined))
@@ -492,7 +446,7 @@ export const Standard = z.strictObject({
 });
 
 export const StandardsFile = z.strictObject({
-  about: Text,
+  about: Text.describe("What this file holds, in a sentence or two, with a link to the docs."),
   standards: z.array(Standard).min(1),
 });
 

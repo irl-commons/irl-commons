@@ -6,19 +6,17 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for the suggestion. Each entry needs a public source, and the description is written in your own words.
-        No rankings, no advertising and no affiliate links. A steward reads this form, fills in anything still missing,
-        and can turn it into a draft pull request with you as co-author.
+        We require entries to be backed with a public source. Do not rank, advertise or use affiliate links.
   - type: dropdown
     id: dataset
     attributes:
       label: Dataset
       description: Which list the new entry belongs in.
       options:
-        - "words: the word list"
+        - "words: IRL streaming terms"
         - "answers: quick checks for common problems"
-        - "services: apps, relays, receivers, hardware and communities"
-        - "guides: tutorials from the makers"
+        - "services: apps, relays, receivers, hosted services, hardware and docs"
+        - "guides: public tutorials"
         - "standards: shared formats and protocols"
         - "plans: mobile carriers and their plans"
     validations:
@@ -41,7 +39,7 @@ body:
   - type: input
     id: link
     attributes:
-      label: Its own link
+      label: Official link
       description: The product's or the page's own https link, if it has one.
       placeholder: https://
     validations:
@@ -58,10 +56,10 @@ body:
     id: read_on
     attributes:
       label: Date you read it
-      description: Year-month-day, for example 2026-11-15.
+      description: Year-month-day, for example 2026-11-15. Leave it empty if you read it today.
       placeholder: YYYY-MM-DD
     validations:
-      required: true
+      required: false
   - type: textarea
     id: description
     attributes:
@@ -69,16 +67,6 @@ body:
       description: One or two sentences in your own words. What is it, and who uses it?
     validations:
       required: true
-  - type: textarea
-    id: fields
-    attributes:
-      label: More fields as JSON (optional)
-      description: |
-        Only if you know the data format (see data/README.md), for example {"kind": "app", "platforms": ["android"]}.
-        Leave it empty if you are not sure. A steward can do this part.
-      render: json
-    validations:
-      required: false
   - type: dropdown
     id: conflict
     attributes:
