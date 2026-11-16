@@ -36,7 +36,7 @@ export const Alternative = z.strictObject({
   status: NamingStatus,
   /** Why it isn't the recommended label here, about the word. Required unless the status is also-used. */
   why: Text.max(200).optional(),
-  /** The word normally named by an ambiguous or narrower alternative. */
+  /** The word normally named by an ambiguous, narrower or product-scoped also-used alternative. */
   see: Id.optional(),
   /** Service ids with direct evidence for this exact alternative. Never on ambiguous items. */
   seen_in: z.array(Id).min(1).optional(),
@@ -165,14 +165,15 @@ export const WordsFile = z.strictObject({
   f.words.forEach((w, i) => {
     for (const name of w.also_called) {
       const other = labels.get(name.toLowerCase());
-      if (other && other !== w.id) ctx.addIssue({ code: "custom", path: ["words", i, "also_called"], message: `'${name}' is the label of ${other}` });
+      const scoped = w.naming?.alternatives.some(a => a.term.toLowerCase() === name.toLowerCase() && a.status === "also-used" && a.see === other && a.seen_in?.length);
+      if (other && other !== w.id && !scoped) ctx.addIssue({ code: "custom", path: ["words", i, "also_called"], message: `'${name}' is the label of ${other}` });
     }
     w.naming?.alternatives.forEach((a, j) => {
       const other = labels.get(a.term.toLowerCase());
       const issue = (message: string) => ctx.addIssue({ code: "custom", path: ["words", i, "naming", "alternatives", j], message });
-      if (a.see && (!["ambiguous", "narrower"].includes(a.status) || !f.words.some((target) => target.id === a.see && target.id !== w.id && (target.naming?.label ?? target.term).toLowerCase() === a.term.toLowerCase())))
-        issue("see must resolve to the word normally named by an ambiguous or narrower alternative");
-      if (other && other !== w.id && (!["ambiguous", "narrower"].includes(a.status) || a.see !== other))
+      if (a.see && (!(["ambiguous", "narrower"].includes(a.status) || (a.status === "also-used" && !!a.seen_in?.length)) || !f.words.some((target) => target.id === a.see && target.id !== w.id && (target.naming?.label ?? target.term).toLowerCase() === a.term.toLowerCase())))
+        issue("see must resolve to the word normally named by an ambiguous, narrower or product-scoped also-used alternative");
+      if (other && other !== w.id && (!(["ambiguous", "narrower"].includes(a.status) || (a.status === "also-used" && !!a.seen_in?.length)) || a.see !== other))
         issue(`'${a.term}' is the label of ${other}; ambiguous or narrower needs see: ${other}`);
     });
   });

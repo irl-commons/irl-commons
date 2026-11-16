@@ -53,3 +53,18 @@ test("a legitimate ambiguity fixture resolves to another recommended label", () 
  const fixture = JSON.parse(readFileSync(new URL("./fixtures/naming/ambiguity.json", import.meta.url), "utf8"));
  expect(files.words.safeParse(fixture).success).toBe(true);
 });
+
+test("product-scoped synonym collision requires a resolving link and direct evidence", () => {
+  const d = candidate();
+  const w = d.words.words.find((w: any) => w.id === "drop-protection");
+  const a = w.naming.alternatives.find((a: any) => a.term === "Disconnect protection");
+  expect(files.words.safeParse(d.words).success).toBe(true);
+  delete a.see;
+  expect(files.words.safeParse(d.words).success).toBe(false);
+  a.see = "disconnect-protection";
+  delete a.seen_in;
+  expect(files.words.safeParse(d.words).success).toBe(false);
+  a.seen_in = ["moblin"];
+  w.naming.evidence.filter((e: any) => e.label === a.term).forEach((e: any) => e.support = "context-only");
+  expect(files.words.safeParse(d.words).success).toBe(false);
+});
