@@ -1,0 +1,41 @@
+{
+  "about": "",
+  "services": [
+    {
+      "id": "bond-bunny",
+      "name": "Bond Bunny",
+      "kind": "app",
+      "role": "extra-connections",
+      "class": "connections",
+      "hosting": null,
+      "maker": "dimadesu",
+      "url": "https://github.com/dimadesu/bond-bunny",
+      "links": [],
+      "open_source": true,
+      "licence": "AGPL-3.0",
+      "status": null,
+      "description": "Android app that takes an SRT stream from another app on the phone and sends it to an SRTLA receiver over several connections; from LifeStreamer's developer.",
+      "platforms": [
+        "android"
+      ],
+      "part": [
+        "connections",
+        "sender"
+      ],
+      "covers": [],
+      "support": [
+        {
+          "label": "Developer Discord",
+          "url": "https://discord.gg/2UzEkU2AJW"
+        }
+      ],
+      "tags": [],
+      "words": [
+        "bonding",
+        "srtla",
+        "srt"
+      ],
+      "checked_on": "2026-11-14"
+    }
+  ]
+}

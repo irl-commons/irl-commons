@@ -2,7 +2,7 @@ import { z } from "zod";
 
 /** A lowercase slug, used as an anchor and as a cross-reference. */
 export const Id = z.string().regex(/^[a-z0-9]+(?:-[a-z0-9]+)*$/, "lowercase letters, digits and single dashes");
-/** An https URL without spaces; chat invites are not accepted in shared data. */
+/** An https URL without spaces; chat invites are accepted only by SupportLink. */
 export const HttpsUrl = z.string().regex(/^https:\/\/(?![^/]*discord(?:app)?\.(?:gg|com))\S+$/, "an https:// URL, not a chat invite");
 /** A BCP 47 style tag such as es-419 or pt-BR. */
 export const LanguageTag = z.string().regex(/^[a-z]{2,3}(?:-(?:[A-Z]{2}|[0-9]{3}))?$/, "a language tag such as es-419 or pt-BR");
@@ -10,6 +10,23 @@ export const LanguageTag = z.string().regex(/^[a-z]{2,3}(?:-(?:[A-Z]{2}|[0-9]{3}
 export const Text = z.string().regex(/\S/, "not empty");
 export const Day = z.iso.date();
 export const Link = z.strictObject({ label: Text.describe("What the page is, in a few words."), url: HttpsUrl.describe("The page's https address.") });
+
+/** Official support channels. Legacy label/url pairs remain readable for one release. */
+export const SupportLink = z.strictObject({
+  label: Text,
+  url: z.string().regex(/^https:\/\/\S+$/, "an https:// URL"),
+  kind: z.enum(["discord", "forum", "help", "docs", "contact", "github"]).optional(),
+  checked_on: Day.optional(),
+  source: HttpsUrl.optional().describe("The maker's public page or README that publishes this channel."),
+}).superRefine((s, ctx) => {
+  if (s.kind !== undefined && (!s.checked_on || !s.source))
+    ctx.addIssue({ code: "custom", message: "typed channels need checked_on and source" });
+  if (/discord(?:app)?\.(?:gg|com)/i.test(s.url) && s.kind !== "discord")
+    ctx.addIssue({ code: "custom", path: ["kind"], message: "Discord links need kind discord and official evidence" });
+}).meta({ allOf: [
+  { if: { required: ["kind"] }, then: { required: ["checked_on", "source"] } },
+  { if: { properties: { url: { pattern: "[dD][iI][sS][cC][oO][rR][dD](?:[aA][pP][pP])?\\.(?:[gG][gG]|[cC][oO][mM])" } } }, then: { required: ["kind"], properties: { kind: { const: "discord" } } } },
+] });
 
 // ---------- Words ----------
 
@@ -248,7 +265,7 @@ export const Service = z.strictObject({
   platforms: z.array(Platform).min(1).describe("Where it runs."),
   part: z.array(Part).max(3).describe("Where along the chain it sits, the main part first. Empty only for community entries."),
   covers: z.array(Id).describe("For community entries (docs, wikis): the products they document. Empty otherwise."),
-  support: z.array(Link).describe("Official public help: help centres, docs, issue trackers, contact pages. No chat invites."),
+  support: z.array(SupportLink).describe("Official support channels, including Discord invites published by the maker. Typed channels carry their own checked date and source."),
   /** Optional tags from ServiceTag, each at most once. */
   tags: z.array(ServiceTag).refine((t) => new Set(t).size === t.length, "each tag at most once").meta({ uniqueItems: true }),
   words: z.array(Id).describe("Ids of related words in words.json."),

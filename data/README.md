@@ -70,3 +70,18 @@ VP9 isn't listed: YouTube takes it only over DASH, which IRL senders don't use.
 Other words and answers omit `checked_on`: a source link without a recorded
 content check is insufficient. Omission means unknown freshness, not a fresh or
 recently checked claim. Uncertainty flags remain independent of review dates.
+
+### Support channels
+
+Service `support` links keep `label` and `url` and add `kind`: `discord`,
+`forum`, `help`, `docs`, `contact` or `github` (issue trackers). Typed links
+require a channel-level `checked_on` and `source`, the maker's public page or
+README that publishes the channel. Existing destinations can cite themselves;
+the migration preserves their recorded check dates. Discord invites must come
+from the maker, never from an invite directory or a guessed address. A maker's
+stable Discord redirect is also a `discord` channel.
+
+For one release, legacy `label`/`url` pairs without the new fields remain valid.
+Consumers should use `kind` when present and fall back to the label for legacy
+links. The shipped catalogue is fully typed. Adding a channel does not claim
+that every other field in the service was rechecked.
