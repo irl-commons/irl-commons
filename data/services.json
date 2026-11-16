@@ -1,5 +1,5 @@
 {
-  "about": "Apps, relays, receivers, hosted services, hardware, production tools and docs for IRL streaming, one entry per product. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
+  "about": "Apps, receivers, hosted services, hardware, production tools and docs for IRL streaming, one entry per product. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
   "services": [
     {
       "id": "bond-bunny",
@@ -455,7 +455,7 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Hosted receivers (relays) for BELABOX users, as a sponsor perk.",
+      "description": "Hosted receivers for BELABOX users, as a sponsor perk.",
       "platforms": [
         "service"
       ],
@@ -513,7 +513,7 @@
       "open_source": false,
       "licence": null,
       "status": null,
-      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA. You send with IRL+'s bond-send app or the IRL+ phone app, to a relay run by IRL+ or a relay host. Free trials.",
+      "description": "IRL+'s own encrypted bonding protocol, separate from SRT and SRTLA. You send with IRL+'s bond-send app or the IRL+ phone app, to a receiver run by IRL+ or a receiver host. Free trials.",
       "platforms": [
         "service"
       ],
@@ -1247,7 +1247,7 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Cloud OBS servers for IRL streamers, with SRTLA bonding and disconnect protection; its relays and SimpleStreamer are listed separately.",
+      "description": "Cloud OBS servers for IRL streamers, with SRTLA bonding and disconnect protection; its receivers and SimpleStreamer are listed separately.",
       "platforms": [
         "service"
       ],

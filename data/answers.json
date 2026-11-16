@@ -4,7 +4,7 @@
     {
       "id": "live-not-on-platform",
       "question": "My app says I'm live, but the platform shows me offline",
-      "summary": "Your app may send to a hub: a cloud OBS, a relay with drop protection or OBS at home. The hub goes live on the platform with its own Start.",
+      "summary": "Your app may send to a hub: a cloud OBS, a receiver with drop protection or OBS at home. The hub goes live on the platform with its own Start.",
       "checks": [
         {
           "part": "sender",

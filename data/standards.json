@@ -131,7 +131,7 @@
       "licence": null,
       "maker": "Haivision (srt://); srtla:// has no single maker",
       "url": "https://github.com/Haivision/srt/blob/master/docs/apps/srt-live-transmit.md",
-      "description": "One line that holds the host, port, stream ID and options such as latency, which a relay hands out and an app pastes in.",
+      "description": "One line that holds the host, port, stream ID and options such as latency, which a receiver hands out and an app pastes in.",
       "service_ids": [
         "srt-protocol",
         "moblin",
