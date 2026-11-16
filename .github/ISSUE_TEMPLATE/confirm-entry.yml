@@ -41,10 +41,10 @@ body:
     id: read_on
     attributes:
       label: Date you read it
-      description: Year-month-day, for example 2026-11-15.
+      description: Year-month-day, for example 2026-11-15. Leave it empty if you read it today.
       placeholder: YYYY-MM-DD
     validations:
-      required: true
+      required: false
   - type: textarea
     id: checked
     attributes:

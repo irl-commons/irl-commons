@@ -206,6 +206,14 @@ describe("the pull request and the reply", () => {
     meta.request!.productLabel = "Relay";
     expect(prBody(meta, { passed: true, output: "" })).toContain("**The label their product uses, and why**\n\n```text\nRelay\n```");
   });
+  test("an empty date uses the day the issue was opened", () => {
+    const e = event("new", "new-service");
+    e.issue.body = e.issue.body.replace("### Date you read it\n\n2026-11-14", "### Date you read it\n\n_No response_");
+    (e.issue as any).created_at = "2026-11-13T09:30:00Z";
+    const { meta } = prepare(e, TODAY, data());
+    expect(meta.request).toMatchObject({ readOn: "2026-11-13", readOnFromIssue: true });
+    expect(prBody(meta, { passed: false, output: "" })).toContain("read on 2026-11-13 (the form left the date empty, so this is the day the issue was opened).");
+  });
   test("a declared conflict and a maker request say who reviews", () => {
     expect(prBody(prepare(event("new", "new-service"), TODAY, data()).meta, { passed: false, output: "" })).toContain("declared in the form. An independent steward reviews it.");
     expect(prBody(prepare(event("maker", "maker-rename"), TODAY, data()).meta, { passed: true, output: "" })).toContain("edit request from the maker or a competitor");

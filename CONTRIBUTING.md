@@ -108,7 +108,8 @@ field id; URL-encode each value. These fields can be filled: `entry` (written
 as dataset/id, so the dataset needs no separate choice), `name`, `link`,
 `source`, and the text boxes `description`, `checked` and `changes`. The
 dropdowns (dataset and conflict of interest) can't be filled by a link, and
-`read_on` is left for the person who reads the source.
+`read_on` is left for the person who reads the source. If they leave it empty,
+the bot uses the day the issue was opened.
 
 ## Releases
 

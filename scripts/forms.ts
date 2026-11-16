@@ -79,6 +79,8 @@ export type Request = {
   link: string;
   source: string;
   readOn: string;
+  /** True when the form left the date empty and the day the issue was opened is used. */
+  readOnFromIssue: boolean;
   description: string;
   checked: string;
   changes: string;
@@ -98,7 +100,8 @@ const LIMITS: Record<string, number> = {
 const LABEL = (form: Form, id: string) => form.fields.find((f) => f.id === id)?.label ?? id;
 
 /** Check every value and turn the form into a request. Problem texts never quote the values. */
-export function readRequest(form: Form, values: Record<string, string>, today: string): { request?: Request; problems: string[] } {
+/** `opened` is the day the issue was opened (YYYY-MM-DD); it stands in for an empty read date. */
+export function readRequest(form: Form, values: Record<string, string>, today: string, opened: string = today): { request?: Request; problems: string[] } {
   const problems: string[] = [];
   const v = (id: string) => values[id] ?? "";
   for (const [id, max] of Object.entries(LIMITS))
@@ -124,7 +127,8 @@ export function readRequest(form: Form, values: Record<string, string>, today: s
   url("source");
   url("link");
 
-  const readOn = v("read_on");
+  const readOnFromIssue = !v("read_on");
+  const readOn = v("read_on") || opened;
   if (!Day.safeParse(readOn).success) problems.push(`"${LABEL(form, "read_on")}" must be a real date written as YYYY-MM-DD.`);
   else if (readOn > today) problems.push(`"${LABEL(form, "read_on")}" is in the future.`);
   else if (readOn < "2000-01-01") problems.push(`"${LABEL(form, "read_on")}" is too far in the past.`);
@@ -149,7 +153,7 @@ export function readRequest(form: Form, values: Record<string, string>, today: s
   return {
     problems,
     request: {
-      kind: form.kind, dataset: dataset as Dataset, id, readOn, conflict,
+      kind: form.kind, dataset: dataset as Dataset, id, readOn, readOnFromIssue, conflict,
       name: v("name"), link: v("link"), source: v("source"), description: v("description"),
       checked: v("checked"), changes: v("changes"), conflictDetails: v("conflict_details"),
       productLabel: v("product_label"), tags,
