@@ -12,7 +12,7 @@ _No response_
 
 ### New link
 
-_No response_
+https://irlpro.app/help
 
 ### Source you read
 
@@ -25,12 +25,6 @@ https://irlpro.app/
 ### What changed
 
 The site now has a help page with a contact form.
-
-### Changed fields as JSON (optional)
-
-```json
-{"support": [{"label": "IRL Pro help", "url": "https://irlpro.app/help"}]}
-```
 
 ### Do you work for, get paid by, or own this product or a competing one?
 

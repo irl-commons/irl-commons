@@ -30,10 +30,6 @@ The naming guide could list the label our settings use.
 
 "Latency (ms)" inside the SRT section, because the section title already says SRT.
 
-### Changed fields as JSON (optional)
-
-_No response_
-
 ### Your connection to the product
 
 I build a sample app.

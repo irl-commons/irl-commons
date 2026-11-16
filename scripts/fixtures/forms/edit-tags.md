@@ -31,10 +31,6 @@ OBS takes capture cards, so it takes a standalone camera too.
 - [X] camera-in: takes the picture from a standalone camera, such as a DSLR, mirrorless or action camera, over HDMI, USB or the network
 - [X] multi-camera: shows several cameras in one scene at once
 
-### Changed fields as JSON (optional)
-
-_No response_
-
 ### Do you work for, get paid by, or own this product or a competing one?
 
 No

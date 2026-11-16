@@ -10,7 +10,7 @@ sample-relay
 
 Sample Relay
 
-### Its own link
+### Official link
 
 https://relay.example.org/
 
@@ -25,10 +25,6 @@ https://relay.example.org/docs
 ### Short description
 
 A hosted SRTLA relay with a free tier.
-
-### More fields as JSON (optional)
-
-_No response_
 
 ### Do you work for, get paid by, or own this product or a competing one?
 

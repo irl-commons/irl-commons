@@ -26,10 +26,6 @@ https://obsproject.com/
 
 The description could mention that OBS also runs plugins.
 
-### Changed fields as JSON (optional)
-
-_No response_
-
 ### Do you work for, get paid by, or own this product or a competing one?
 
 No

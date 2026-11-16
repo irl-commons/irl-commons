@@ -1,8 +1,5 @@
 blank_issues_enabled: false
 contact_links:
-  - name: How to contribute
-    url: https://github.com/irl-commons/irl-commons/blob/main/CONTRIBUTING.md
-    about: Sources, check dates and conflicts of interest, before you open an issue.
   - name: Report a security problem privately
     url: https://github.com/irl-commons/irl-commons/security/advisories/new
     about: For weaknesses in the workflows or publishing, or leaked credentials. Not for wrong data.

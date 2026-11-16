@@ -10,7 +10,7 @@ keyframe-interval
 
 Keyframe interval
 
-### Its own link
+### Official link
 
 _No response_
 
@@ -25,16 +25,6 @@ https://obsproject.com/kb/stream-connection-troubleshooting
 ### Short description
 
 How often the video sends a full picture. Platforms often ask for one every two seconds.
-
-### More fields as JSON (optional)
-
-```json
-{
-  "tier": "more",
-  "who": "helper",
-  "heard_when": "A platform warns about the keyframe interval when you go live."
-}
-```
 
 ### Do you work for, get paid by, or own this product or a competing one?
 

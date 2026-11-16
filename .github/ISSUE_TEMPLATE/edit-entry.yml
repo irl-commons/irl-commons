@@ -6,10 +6,7 @@ body:
   - type: markdown
     attributes:
       value: |
-        Thank you for the fix. Sources decide: please link the public page that shows the right information.
-        A steward reads this form and can turn it into a draft pull request with you as co-author.
-        Do you make or sell this product, or a competing one? Please use the "Edit request from the maker" form instead.
-        Proposing a different label for a word in the naming guide? Write the entry as words/<id>, say what you suggest under "What changed", and fill in the label field below if you have one.
+        We require changes to be backed with a public source. Do you make or sell this product, or a competing one? Use the "Edit request from the maker" form instead.
   - type: input
     id: entry
     attributes:
@@ -24,10 +21,10 @@ body:
       label: Dataset
       description: Only needed when the entry above has no dataset in front of the id.
       options:
-        - "words: the word list"
+        - "words: IRL streaming terms"
         - "answers: quick checks for common problems"
-        - "services: apps, relays, receivers, hardware and communities"
-        - "guides: tutorials from the makers"
+        - "services: apps, relays, receivers, hosted services, hardware and docs"
+        - "guides: public tutorials"
         - "standards: shared formats and protocols"
         - "plans: mobile carriers and their plans"
     validations:
@@ -43,7 +40,7 @@ body:
     id: link
     attributes:
       label: New link
-      description: Only if the main link changed. The product's or the page's own https link.
+      description: Only if the official link changed.
       placeholder: https://
     validations:
       required: false
@@ -81,18 +78,8 @@ body:
   - type: textarea
     id: product_label
     attributes:
-      label: The label your product uses, and why (optional)
-      description: For a word in the naming guide. The label as your settings show it, for example "SRT latency (ms)", and why it suits your users. A public page or screenshot that shows it helps.
-    validations:
-      required: false
-  - type: textarea
-    id: fields
-    attributes:
-      label: Changed fields as JSON (optional)
-      description: |
-        Only if you know the data format. The fields to change and their new values, for example {"status": "Discontinued"}.
-        Leave it empty if you are not sure. A steward can do this part.
-      render: json
+      label: The label a product uses, and why (optional)
+      description: Only for words in the naming guide. The label as the app's settings show it, for example "SRT latency (ms)", and why it fits.
     validations:
       required: false
   - type: dropdown
