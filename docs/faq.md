@@ -57,8 +57,8 @@ is there, so the shape is ready.
 
 ## Is there an npm package?
 
-It's prepared as `@irl-commons/data`, but not published yet. Until the first
-reviewed release, use the JSON files directly.
+Yes: `npm install @irl-commons/data`. [Getting started](getting-started.md#1-get-the-files)
+shows the imports. You can also use the JSON files directly.
 
 ## Who decides what goes in?
 

@@ -5,11 +5,27 @@ or a website. In about ten minutes you show an entry from irl-commons in
 your own product, with the credit the licence asks for, and you know how to
 tell when an entry is old.
 
-The data is plain JSON. You don't need an account, a package or a server.
+The data is plain JSON. You don't need an account or a server.
 
 ## 1. Get the files
 
 Pick one:
+
+- **Install the npm package**:
+
+  ```sh
+  npm install @irl-commons/data
+  ```
+
+  ```js
+  import words from "@irl-commons/data/data/words.json" with { type: "json" };
+  import wordsSchema from "@irl-commons/data/schema/json/words.schema.json" with { type: "json" };
+  ```
+
+  `@irl-commons/data/schema` exports the Zod definitions for runtimes that
+  support TypeScript. Other languages can use the JSON Schemas in
+  `schema/json/`; the extra cross-reference rules are in
+  [`schema/README.md`](../schema/README.md).
 
 - **Clone the repository** and read `data/*.json` from disk:
 
@@ -23,9 +39,6 @@ Pick one:
   ```
   https://raw.githubusercontent.com/irl-commons/irl-commons/<commit>/data/words.json
   ```
-
-The npm package `@irl-commons/data` isn't published yet. Until it is, use
-the files directly.
 
 ## 2. Show a word
 
