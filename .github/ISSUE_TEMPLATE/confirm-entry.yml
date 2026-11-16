@@ -22,10 +22,10 @@ body:
       label: Dataset
       description: Only needed when the entry above has no dataset in front of the id.
       options:
-        - "words: the word list"
+        - "words: IRL streaming terms"
         - "answers: quick checks for common problems"
-        - "services: apps, relays, receivers, hardware and communities"
-        - "guides: tutorials from the makers"
+        - "services: apps, relays, receivers, hosted services, hardware and docs"
+        - "guides: public tutorials"
         - "standards: shared formats and protocols"
         - "plans: mobile carriers and their plans"
     validations:
