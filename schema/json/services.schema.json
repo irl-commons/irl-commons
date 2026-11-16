@@ -245,7 +245,8 @@
               "type": "string",
               "enum": [
                 "camera-in",
-                "multi-camera"
+                "multi-camera",
+                "scene-control"
               ]
             },
             "uniqueItems": true

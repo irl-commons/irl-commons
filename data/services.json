@@ -92,8 +92,12 @@
       ],
       "covers": [],
       "support": [],
-      "tags": [],
-      "words": [],
+      "tags": [
+        "scene-control"
+      ],
+      "words": [
+        "scene"
+      ],
       "checked_on": "2026-11-14"
     },
     {
@@ -260,7 +264,7 @@
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A free, open-source iPhone app for IRL streaming, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras.",
+      "description": "A free, open-source iPhone app for IRL streaming, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras. Its OBS remote control changes scenes, starts and stops the stream and mutes inputs.",
       "platforms": [
         "ios"
       ],
@@ -277,7 +281,8 @@
       ],
       "tags": [
         "camera-in",
-        "multi-camera"
+        "multi-camera",
+        "scene-control"
       ],
       "words": [
         "bonding",
@@ -362,7 +367,9 @@
           "url": "https://github.com/Kounex/obs_blade/discussions"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "scene"
       ],
@@ -1333,7 +1340,9 @@
           "url": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching/issues"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "noalbs",
         "brb",
@@ -1484,7 +1493,9 @@
           "url": "https://docs.streamer.bot"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "scene"
       ],
@@ -1625,7 +1636,8 @@
       "support": [],
       "tags": [
         "camera-in",
-        "multi-camera"
+        "multi-camera",
+        "scene-control"
       ],
       "words": [
         "bonding",
@@ -1778,7 +1790,9 @@
           "url": "https://github.com/NOALBS/noalbs-cloud/issues"
         }
       ],
-      "tags": [],
+      "tags": [
+        "scene-control"
+      ],
       "words": [
         "noalbs",
         "stats-url",

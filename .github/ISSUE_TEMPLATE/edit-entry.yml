@@ -75,6 +75,7 @@ body:
       options:
         - label: "camera-in: takes the picture from a standalone camera, such as a DSLR, mirrorless or action camera, over HDMI, USB or the network"
         - label: "multi-camera: shows several cameras in one scene at once"
+        - label: "scene-control: switches the scenes in OBS or a hub from outside it, by remote, chat commands or on its own"
   - type: textarea
     id: product_label
     attributes:
