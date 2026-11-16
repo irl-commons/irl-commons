@@ -243,6 +243,11 @@ export const ServiceClass = z.enum([
  *  service: someone runs it for you, paid or free. Required for bonding and cloud; null where it doesn't apply. */
 export const Hosting = z.enum(["self", "service"]);
 
+/** Optional tags for what a product can do that its class doesn't say. Plain words:
+ *  camera-in: takes the picture from a standalone camera (a DSLR, mirrorless or action camera)
+ *  over HDMI, USB or the network; multi-camera: shows several cameras in one scene at once. */
+export const ServiceTag = z.enum(["camera-in", "multi-camera"]);
+
 /** Which roles each kind may take. */
 export const RolesByKind: Record<z.infer<typeof ServiceKind>, z.infer<typeof Role>[]> = {
   app: ["streaming-app", "extra-connections", "camera-capture", "remote-control", "chat-overlays", "other-app"],
@@ -274,7 +279,8 @@ export const Service = z.strictObject({
   /** For community entries (docs, wikis): the products they document. Empty otherwise. */
   covers: z.array(Id),
   support: z.array(Link),
-  tags: z.array(Id),
+  /** Optional tags from ServiceTag, each at most once. */
+  tags: z.array(ServiceTag).refine((t) => new Set(t).size === t.length, "each tag at most once").meta({ uniqueItems: true }),
   words: z.array(Id),
 });
 

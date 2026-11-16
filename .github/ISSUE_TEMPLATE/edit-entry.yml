@@ -70,6 +70,14 @@ body:
       description: What is wrong or out of date, and what the source says now.
     validations:
       required: true
+  - type: checkboxes
+    id: tags
+    attributes:
+      label: Tags (apps and services only, optional)
+      description: Tick what the product can do, if its entry doesn't say so yet. To remove a tag, say so under "What changed".
+      options:
+        - label: "camera-in: takes the picture from a standalone camera, such as a DSLR, mirrorless or action camera, over HDMI, USB or the network"
+        - label: "multi-camera: shows several cameras in one scene at once"
   - type: textarea
     id: product_label
     attributes:
