@@ -74,7 +74,7 @@ jobs:
               prs.push(...rows);
               if (rows.length < 100) break;
             }
-            reports = prs.filter(p => p.base.ref === 'main').map(p => ({number: p.number, sha: p.head.sha, state: 'failure', title: 'Governance evidence unavailable', summary: 'Governance evidence could not be evaluated. Re-run after resolving the API or configuration error.'}));
+            reports = prs.filter(p => p.base.ref === 'main').map(p => ({number: p.number, sha: p.head.sha, state: 'failure', title: "Governance check couldn't run", summary: 'Fix the API or configuration error, then re-run.'}));
           }
           for (const report of reports) {
             const current = await api(`pulls/${report.number}`);
@@ -83,7 +83,7 @@ jobs:
             const existing = runs.check_runs.find(r => r.external_id === 'governance-policy' && r.app?.slug === 'github-actions');
             const body = {name: 'governance', external_id: 'governance-policy',
               status: report.state === 'pending' ? 'in_progress' : 'completed',
-              output: {title: report.title || 'Steward review and consensus window', summary: report.summary}};
+              output: {title: report.title || 'Steward review and seven-day wait', summary: report.summary}};
             if (report.state !== 'pending') { body.conclusion = report.state; body.completed_at = new Date().toISOString(); }
             if (existing) await api(`check-runs/${existing.id}`, 'PATCH', body);
             else await api('check-runs', 'POST', {...body, head_sha: report.sha});

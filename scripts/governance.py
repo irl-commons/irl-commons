@@ -84,7 +84,7 @@ def evaluate(config, pr, reviews, paths, events, changes, services, now, live_ru
         if who in stewards:
             approvals.append(who)
     if len(approvals) < needed:
-        errors.append(f'Need {needed} independent steward approvals; found {len(approvals)}.')
+        errors.append('Not enough independent steward approvals yet.')
     pending = False
     due = None
     if rules and not bootstrap:
@@ -97,17 +97,19 @@ def evaluate(config, pr, reviews, paths, events, changes, services, now, live_ru
             due = timestamp(start) + dt.timedelta(days=7)
             pending = now < due
     kind = 'rules' if rules else 'data'
+    listed = f'{count} steward{"" if count == 1 else "s"} listed'
+    got = f'{len(approvals)} steward approval{"" if len(approvals) == 1 else "s"} on the latest commit'
     if bootstrap:
-        head = (f'{count} listed stewards; bootstrap ({kind}). Review count: not active (bootstrap). '
-                + ('Seven-day window: not active (bootstrap). ' if rules else '')
-                + f'{len(approvals)} current-head approvals. ')
+        off = 'review counts and the seven-day wait are off' if rules else 'review counts are off'
+        head = f'{listed}, so {off} (bootstrap). {got}. '
     else:
-        head = (f'{count} listed stewards; N={needed} ({kind}); {len(approvals)} current-head approvals. '
-                + ('Waiting for ready-for-review and seven days. ' if pending else '')
-                + (f'Window ends {due.isoformat()}. ' if due else ''))
+        head = (f'{listed}. This {kind} change needs {needed} independent approval{"" if needed == 1 else "s"}; '
+                + f'{len(approvals)} on the latest commit. '
+                + ('Waits until it is ready for review and seven days have passed. ' if pending else '')
+                + (f'The wait ends {due.isoformat()}. ' if due else ''))
     return {'state': 'failure' if errors else 'pending' if pending else 'success',
-            'title': ('Bootstrap: review counts and window not active' if bootstrap
-                      else 'Steward review and consensus window'),
+            'title': ('Bootstrap: one steward, no review count or wait' if bootstrap
+                      else 'Steward review and seven-day wait'),
             'summary': head + ' '.join(notes + errors)}
 
 
@@ -171,7 +173,7 @@ def run():
                               pages(root + '/timeline'), changes, services, dt.datetime.now(dt.timezone.utc),
                               api(f'repos/{repo}/rules/branches/main') if sum(bool(s.get('github')) for s in config['stewards']) >= 2 else [])
         except Exception:
-            result = {'state': 'failure', 'title': 'Governance evidence unavailable', 'summary': 'Governance evidence unavailable; resolve API or policy errors and re-run.'}
+            result = {'state': 'failure', 'title': "Governance check couldn't run", 'summary': 'Fix the API or configuration error, then re-run.'}
         reports.append({'number': pr['number'], 'sha': pr['head']['sha'], **result})
         print(f'PR #{pr["number"]}: {result["state"]}: {result["summary"]}')
     with open(os.environ['GITHUB_OUTPUT'], 'a') as output:
