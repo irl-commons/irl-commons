@@ -9,6 +9,12 @@ never change.
 
 ## Unreleased
 
+- `services.json`: `tags` now takes two values, each at most once.
+  `camera-in`: the product takes the picture from a standalone camera, such
+  as a DSLR, mirrorless or action camera, over HDMI, USB or the network.
+  `multi-camera`: it shows several cameras in one scene at once. Any other
+  tag fails validation. The "Fix or update an entry" form has a tick box for
+  each.
 - `words.json`: a naming guide for app makers. An optional `naming` block
   recommends a label for one context, lists other names as also used,
   narrower, technical or ambiguous, and keeps dated evidence from the apps' own

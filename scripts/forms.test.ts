@@ -151,6 +151,17 @@ describe("writing the entry", () => {
   test("an edit described only in words is left for a steward", () => {
     expect(run("edit", "edit-prose-only").change.status).toBe("manual");
   });
+  test("ticked tag boxes add only the tags an entry doesn't have yet", () => {
+    const { request, change } = run("edit", "edit-tags");
+    expect(request.tags).toEqual(["camera-in", "multi-camera"]);
+    expect(change.status).toBe("ready");
+    expect(change.after!.tags).toEqual(["multi-camera", "camera-in"]);
+    expect(change.summary).toContain("Adds the tag `camera-in`.");
+  });
+  test("a tag box the form doesn't offer is refused", () => {
+    const values = parseBody(form("edit"), fixture("edit-tags").replace("- [X] multi-camera:", "- [X] dslr:")).values;
+    expect(readRequest(form("edit"), values, TODAY).problems).toEqual(['"Tags (apps and services only, optional)" has a box this form doesn\'t offer.']);
+  });
   test("JSON can't change the id or the date, or add unknown fields", () => {
     const { request } = run("edit", "edit-json");
     for (const fields of [{ id: "other" }, { checked_on: "2026-11-15" }, { colour: "red" }, JSON.parse('{"__proto__": {"x": 1}}')])

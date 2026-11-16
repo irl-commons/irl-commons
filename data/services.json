@@ -60,7 +60,9 @@
       ],
       "covers": [],
       "support": [],
-      "tags": [],
+      "tags": [
+        "camera-in"
+      ],
       "words": [
         "bonding",
         "srt",
@@ -189,7 +191,9 @@
           "url": "https://github.com/dimadesu/LifeStreamer/issues"
         }
       ],
-      "tags": [],
+      "tags": [
+        "camera-in"
+      ],
       "words": [
         "bonding",
         "srtla",
@@ -247,12 +251,16 @@
         {
           "label": "sponsor",
           "url": "https://github.com/sponsors/eerimoq"
+        },
+        {
+          "label": "Mobcam OBS plugin",
+          "url": "https://github.com/eerimoq/mobcam/tree/main/crates/obs-plugin#mobcam-obs-plugin"
         }
       ],
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "\"A free iOS app for IRL streaming.\"",
+      "description": "A free, open-source iPhone app for IRL streaming, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras.",
       "platforms": [
         "ios"
       ],
@@ -267,13 +275,17 @@
           "url": "https://github.com/eerimoq/moblin/issues"
         }
       ],
-      "tags": [],
+      "tags": [
+        "camera-in",
+        "multi-camera"
+      ],
       "words": [
         "bonding",
         "srtla",
-        "adaptive-bitrate"
+        "adaptive-bitrate",
+        "scene"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-16"
     },
     {
       "id": "moblink",
@@ -989,7 +1001,9 @@
           "url": "https://solohelp.liveu.tv/hc/en-us"
         }
       ],
-      "tags": [],
+      "tags": [
+        "camera-in"
+      ],
       "words": [
         "bonding",
         "encoder"
@@ -1056,7 +1070,9 @@
           "url": "https://support.cs.inc/s/"
         }
       ],
-      "tags": [],
+      "tags": [
+        "camera-in"
+      ],
       "words": [
         "bonding",
         "encoder"
@@ -1163,7 +1179,9 @@
       ],
       "covers": [],
       "support": [],
-      "tags": [],
+      "tags": [
+        "camera-in"
+      ],
       "words": [
         "encoder",
         "bonding"
@@ -1192,7 +1210,9 @@
       ],
       "covers": [],
       "support": [],
-      "tags": [],
+      "tags": [
+        "multi-camera"
+      ],
       "words": [
         "scene"
       ],
@@ -1231,7 +1251,9 @@
       ],
       "covers": [],
       "support": [],
-      "tags": [],
+      "tags": [
+        "multi-camera"
+      ],
       "words": [
         "cloud-obs",
         "drop-protection",
@@ -1273,7 +1295,9 @@
           "url": "https://kb.irltoolkit.com/"
         }
       ],
-      "tags": [],
+      "tags": [
+        "multi-camera"
+      ],
       "words": [
         "cloud-obs",
         "drop-protection"
@@ -1386,7 +1410,9 @@
           "url": "https://obsproject.com/forum/"
         }
       ],
-      "tags": [],
+      "tags": [
+        "multi-camera"
+      ],
       "words": [
         "scene",
         "browser-source"
@@ -1597,7 +1623,10 @@
       ],
       "covers": [],
       "support": [],
-      "tags": [],
+      "tags": [
+        "camera-in",
+        "multi-camera"
+      ],
       "words": [
         "bonding",
         "srtla",
@@ -1910,7 +1939,9 @@
           "url": "https://github.com/steveseguin/vdo.ninja/issues"
         }
       ],
-      "tags": [],
+      "tags": [
+        "multi-camera"
+      ],
       "words": [
         "scene"
       ],

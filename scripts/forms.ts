@@ -2,7 +2,7 @@
 // it is parsed here as text and JSON, never evaluated, and every value is checked
 // before it reaches a data file. The workflow runs `bun run check` on the result.
 import { readFileSync, readdirSync } from "node:fs";
-import { Day, HttpsUrl, Id, files, guideTitle, wordAliases, type FileName } from "../schema/src/schema.ts";
+import { Day, HttpsUrl, Id, ServiceTag, files, guideTitle, wordAliases, type FileName } from "../schema/src/schema.ts";
 
 export const DATASETS = ["words", "answers", "services", "guides", "standards", "plans"] as const satisfies readonly FileName[];
 export type Dataset = (typeof DATASETS)[number];
@@ -87,11 +87,13 @@ export type Request = {
   conflictDetails: string;
   /** Optional, on edits: the label the person's product uses for a word, and why. */
   productLabel: string;
+  /** Optional, on edits of services: the tags ticked in the form. */
+  tags: string[];
 };
 
 const LIMITS: Record<string, number> = {
   entry: 120, name: 200, link: 500, source: 500, read_on: 20, description: 1000,
-  checked: 5000, changes: 5000, fields: 20000, conflict_details: 2000, product_label: 2000,
+  checked: 5000, changes: 5000, fields: 20000, conflict_details: 2000, product_label: 2000, tags: 1000,
 };
 
 const LABEL = (form: Form, id: string) => form.fields.find((f) => f.id === id)?.label ?? id;
@@ -139,6 +141,15 @@ export function readRequest(form: Form, values: Record<string, string>, today: s
     }
   }
 
+  // Ticked boxes render as "- [X] tag: words"; only the tag before the colon counts.
+  const tags: string[] = [];
+  for (const line of v("tags").split("\n")) {
+    const m = line.trim().match(/^- \[[xX]\] ([^:]+):/);
+    if (!m) continue;
+    if (ServiceTag.safeParse(m[1].trim()).success) tags.push(m[1].trim());
+    else problems.push(`"${LABEL(form, "tags")}" has a box this form doesn't offer.`);
+  }
+
   let conflict = true;
   if (form.kind !== "maker") {
     const answer = v("conflict");
@@ -153,7 +164,7 @@ export function readRequest(form: Form, values: Record<string, string>, today: s
       kind: form.kind, dataset: dataset as Dataset, id, readOn, fields, conflict,
       name: v("name"), link: v("link"), source: v("source"), description: v("description"),
       checked: v("checked"), changes: v("changes"), conflictDetails: v("conflict_details"),
-      productLabel: v("product_label"),
+      productLabel: v("product_label"), tags,
     },
   };
 }
@@ -272,6 +283,14 @@ export function applyRequest(request: Request, data: Record<FileName, any>): Cha
       if (JSON.stringify(before[k]) === JSON.stringify(value)) continue;
       put(entry, k, value);
       summary.push(`Sets \`${k}\` from the JSON in the form.`);
+    }
+    if (request.tags.length && dataset !== "services") notes.push(`Tags are only for apps and services; the ticked boxes are left out.`);
+    else if (request.tags.length) {
+      const added = request.tags.filter((t) => !(entry.tags as string[]).includes(t));
+      if (added.length) {
+        entry.tags = [...(entry.tags as string[]), ...added];
+        summary.push(`Adds the tag${added.length > 1 ? "s" : ""} ${added.map((t) => `\`${t}\``).join(" and ")}.`);
+      }
     }
     if (!summary.length) {
       return { status: "manual", problems: [], summary: [], notes: [], before, after: null, doc: null };
