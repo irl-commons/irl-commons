@@ -47,6 +47,7 @@ The JSON Schemas carry the rules they can express for a single entry. `scripts/c
 - Carrier ids, and plan ids within a carrier, are unique. The file may be empty.
 - Country codes are assigned ISO 3166-1 alpha-2 codes.
 - An MNO has no host; an MVNO points to an MNO in the same country.
+- Every plan fact requires an https `source` and real `checked_on`; future dates fail the semantic check. See [plans v2](../docs/plans-v2.md) for value meanings and migration.
 
 **Standards**
 

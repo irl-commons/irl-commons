@@ -1,4 +1,192 @@
 {
-  "about": "Mobile carriers and their data plans. Empty until official sources back every field. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
-  "carriers": []
+  "about": "Mobile carriers and dated plan examples, without prices or rankings. Not a complete market survey or a recommendation. Fields and rules: https://github.com/irl-commons/irl-commons/blob/main/data/README.md",
+  "carriers": [
+    {
+      "id": "telekom-de",
+      "name": "Telekom",
+      "country": "DE",
+      "network_type": "MNO",
+      "host_network_id": null,
+      "esim": true,
+      "official_url": "https://www.telekom.de/",
+      "coverage_map_url": "https://www.telekom.de/netz/mobilfunk-netzausbau",
+      "checked_on": "2026-11-16",
+      "sources": [
+        {
+          "label": "Network and coverage",
+          "url": "https://www.telekom.de/netz/mobilfunk-netzausbau"
+        },
+        {
+          "label": "eSIM",
+          "url": "https://www.telekom.de/shop/mobilfunk/esim"
+        },
+        {
+          "label": "Plan terms",
+          "url": "https://www.telekom.de/produktinformationsblatt/magentamobil-l"
+        }
+      ],
+      "plans": [
+        {
+          "id": "magentamobil-l",
+          "name": "MagentaMobil L",
+          "data_cap_gb": {
+            "value": 100,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16"
+          },
+          "max_down_mbps": {
+            "value": 300,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16"
+          },
+          "max_up_mbps": {
+            "value": 50,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16"
+          },
+          "throttle_down_kbps": {
+            "value": 64,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16"
+          },
+          "throttle_up_kbps": {
+            "value": 16,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16"
+          },
+          "priority": {
+            "value": null,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16",
+            "note": "Not stated in this product information sheet."
+          },
+          "hotspot": {
+            "value": null,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16",
+            "note": "Not stated in this product information sheet."
+          },
+          "hotspot_gb": {
+            "value": null,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16",
+            "note": "Not stated in this product information sheet."
+          },
+          "router_or_modem": {
+            "value": null,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16",
+            "note": "Not stated in this product information sheet."
+          },
+          "continuous_video": {
+            "value": null,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16",
+            "note": "Not stated in this product information sheet."
+          },
+          "roaming_routing": {
+            "value": null,
+            "source": "https://www.telekom.de/produktinformationsblatt/magentamobil-l",
+            "checked_on": "2026-11-16",
+            "note": "Not stated in this product information sheet."
+          }
+        }
+      ]
+    },
+    {
+      "id": "verizon-us",
+      "name": "Verizon",
+      "country": "US",
+      "network_type": "MNO",
+      "host_network_id": null,
+      "esim": true,
+      "official_url": "https://www.verizon.com/",
+      "coverage_map_url": "https://www.verizon.com/coverage-map/",
+      "checked_on": "2026-11-16",
+      "sources": [
+        {
+          "label": "Network and coverage",
+          "url": "https://www.verizon.com/coverage-map/"
+        },
+        {
+          "label": "eSIM",
+          "url": "https://www.verizon.com/support/esim/"
+        },
+        {
+          "label": "Plan terms",
+          "url": "https://www.verizon.com/support/important-plan-information/"
+        }
+      ],
+      "plans": [
+        {
+          "id": "unlimited-welcome",
+          "name": "Unlimited Welcome",
+          "data_cap_gb": {
+            "value": "unlimited",
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "Unlimited domestic on-device smartphone data; after 500 GB per month, speeds are reduced to up to 4 Mbps for the rest of the billing cycle. The page does not separate upload and download for that limit."
+          },
+          "max_down_mbps": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "The page gives up to 25 Mbps on 5G Ultra Wideband only, not a plan-wide ceiling."
+          },
+          "max_up_mbps": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16"
+          },
+          "throttle_down_kbps": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "The 4 Mbps after 500 GB limit has no explicit direction, so no download value is inferred."
+          },
+          "throttle_up_kbps": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "The 4 Mbps after 500 GB limit has no explicit direction, so no upload value is inferred."
+          },
+          "priority": {
+            "value": "During congestion, smartphone and purchased hotspot data on 5G or LTE may be slower than other traffic.",
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16"
+          },
+          "hotspot": {
+            "value": "limited",
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "Hotspot requires a separate purchase. The page describes a 100 GB add-on with network-dependent speeds after that allowance.",
+            "source_quote": "100GB mobile hotspot available for purchase"
+          },
+          "hotspot_gb": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16"
+          },
+          "router_or_modem": {
+            "value": "banned",
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "The plan restricts unlimited data to on-device smartphone use.",
+            "source_quote": "Unlimited data is restricted to on-device smartphone usage."
+          },
+          "continuous_video": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16",
+            "note": "Viewing resolution is stated, but continuous uploading or broadcasting permission is not."
+          },
+          "roaming_routing": {
+            "value": null,
+            "source": "https://www.verizon.com/support/important-plan-information/",
+            "checked_on": "2026-11-16"
+          }
+        }
+      ]
+    }
+  ]
 }

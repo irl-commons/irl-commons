@@ -324,16 +324,34 @@ export const GuidesFile = z.strictObject({
 
 // ---------- Carriers and optional plans ----------
 
+/** A plan term checked against a carrier's public page. Null means not stated there. */
+export const PlanFact = <T extends z.ZodType>(value: T) => z.strictObject({
+  value: value.nullable(),
+  source: HttpsUrl,
+  source_quote: Text.max(300).optional(),
+  note: Text.optional().describe("Scope or uncertainty, in our own words."),
+  checked_on: Day,
+});
+export const PlanRule = z.enum(["allowed", "limited", "banned", "unknown"]);
 export const Plan = z.strictObject({
   id: Id.describe("Permanent id, unique within the carrier."),
-  checked_on: Day.describe("The day the plan was compared with its source."),
   name: Text.describe("The plan's name, as the carrier writes it."),
-  data_cap_gb: z.number().nonnegative().nullable().describe("Data cap in decimal GB. Null means unlimited."),
-  throttle_after_cap_kbps: z.number().nonnegative().nullable().describe("Speed after the cap, in kbit/s. Null means unknown."),
-  tethering_allowed: z.boolean().nullable().describe("Whether the plan allows tethering. Null means unknown."),
-  roaming_routing: z.enum(["home-routed", "local-breakout", "unknown"]).describe("How roaming data is routed. Never guessed from marketing."),
-  source_url: HttpsUrl.describe("The plan's official page."),
+  data_cap_gb: PlanFact(z.union([z.number().nonnegative(), z.literal("unlimited")])).describe("Monthly domestic allowance in decimal GB; unlimited is explicit, null is unknown."),
+  max_down_mbps: PlanFact(z.number().positive()),
+  max_up_mbps: PlanFact(z.number().positive()),
+  throttle_down_kbps: PlanFact(z.number().nonnegative()).describe("Domestic on-device download speed after the allowance, in kbit/s; not a hotspot or video-specific limit."),
+  throttle_up_kbps: PlanFact(z.number().nonnegative()).describe("Domestic on-device upload speed after the allowance, in kbit/s; never inferred from download."),
+  priority: PlanFact(Text),
+  hotspot: PlanFact(PlanRule).describe("Phone sharing data, including USB tethering."),
+  hotspot_gb: PlanFact(z.number().nonnegative()).describe("Included monthly high-speed hotspot allowance in decimal GB; null when not stated or dependent on an add-on."),
+  router_or_modem: PlanFact(PlanRule).describe("Using the plan's SIM in a router or modem."),
+  continuous_video: PlanFact(PlanRule).describe("Continuous video uploading or broadcasting; viewing resolution is not permission to broadcast."),
+  roaming_routing: PlanFact(z.enum(["home-routed", "hub-breakout", "local-breakout"])).describe("Never inferred from marketing; null when unknown."),
 });
+/** Enumerate dated facts for validation and freshness reporting. */
+export function planFacts(plan: Record<string, any>): [string, any][] {
+  return Object.entries(plan).filter(([, fact]) => fact !== null && typeof fact === "object" && "value" in fact);
+}
 export const Carrier = z.strictObject({
   id: Id.describe("Permanent id, used as an anchor and in links from other files."),
   checked_on: Day.describe("The day the entry was compared with its public source."),
@@ -345,7 +363,7 @@ export const Carrier = z.strictObject({
   official_url: HttpsUrl.describe("The carrier's own page."),
   coverage_map_url: HttpsUrl.describe("The carrier's coverage map."),
   sources: z.array(Link).min(1).describe("Official pages that back the carrier fields."),
-  plans: z.array(Plan).optional().describe("Optional plans, each with its own source and date."),
+  plans: z.array(Plan).optional().describe("Optional plans, each fact with its own source and date."),
 });
 export const PlansFile = z.strictObject({
   about: Text.describe("What this file holds, in a sentence or two, with a link to the docs."),

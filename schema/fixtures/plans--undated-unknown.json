@@ -1,0 +1,82 @@
+{
+  "about": "Synthetic validation fixture, not carrier research.",
+  "carriers": [
+    {
+      "id": "sample-network",
+      "name": "Sample Network",
+      "country": "DE",
+      "network_type": "MNO",
+      "host_network_id": null,
+      "esim": false,
+      "official_url": "https://example.org/",
+      "coverage_map_url": "https://example.org/coverage",
+      "sources": [
+        {
+          "label": "Details",
+          "url": "https://example.org/details"
+        }
+      ],
+      "checked_on": "2026-11-14",
+      "plans": [
+        {
+          "id": "sample-plan",
+          "name": "Sample Plan",
+          "data_cap_gb": {
+            "value": 50,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "max_down_mbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "max_up_mbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "throttle_down_kbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "throttle_up_kbps": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "priority": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "hotspot": {
+            "value": "unknown",
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "hotspot_gb": {
+            "value": null,
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "router_or_modem": {
+            "value": "unknown",
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "continuous_video": {
+            "value": "unknown",
+            "source": "https://example.org/plan",
+            "checked_on": "2026-11-14"
+          },
+          "roaming_routing": {
+            "value": null,
+            "source": "https://example.org/plan"
+          }
+        }
+      ]
+    }
+  ]
+}

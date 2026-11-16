@@ -93,7 +93,7 @@
             "description": "Official pages that back the carrier fields."
           },
           "plans": {
-            "description": "Optional plans, each with its own source and date.",
+            "description": "Optional plans, each fact with its own source and date.",
             "type": "array",
             "items": {
               "type": "object",
@@ -103,72 +103,512 @@
                   "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
                   "description": "Permanent id, unique within the carrier."
                 },
-                "checked_on": {
-                  "type": "string",
-                  "format": "date",
-                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
-                  "description": "The day the plan was compared with its source."
-                },
                 "name": {
                   "type": "string",
                   "pattern": "\\S",
                   "description": "The plan's name, as the carrier writes it."
                 },
                 "data_cap_gb": {
-                  "anyOf": [
-                    {
-                      "type": "number",
-                      "minimum": 0
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "anyOf": [
+                            {
+                              "type": "number",
+                              "minimum": 0
+                            },
+                            {
+                              "type": "string",
+                              "const": "unlimited"
+                            }
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
                     },
-                    {
-                      "type": "null"
-                    }
-                  ],
-                  "description": "Data cap in decimal GB. Null means unlimited."
-                },
-                "throttle_after_cap_kbps": {
-                  "anyOf": [
-                    {
-                      "type": "number",
-                      "minimum": 0
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
                     },
-                    {
-                      "type": "null"
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
                     }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
                   ],
-                  "description": "Speed after the cap, in kbit/s. Null means unknown."
+                  "additionalProperties": false,
+                  "description": "Monthly domestic allowance in decimal GB; unlimited is explicit, null is unknown."
                 },
-                "tethering_allowed": {
-                  "description": "Whether the plan allows tethering. Null means unknown.",
-                  "type": [
-                    "boolean",
-                    "null"
-                  ]
+                "max_down_mbps": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false
+                },
+                "max_up_mbps": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "exclusiveMinimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false
+                },
+                "throttle_down_kbps": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Domestic on-device download speed after the allowance, in kbit/s; not a hotspot or video-specific limit."
+                },
+                "throttle_up_kbps": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Domestic on-device upload speed after the allowance, in kbit/s; never inferred from download."
+                },
+                "priority": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "pattern": "\\S"
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false
+                },
+                "hotspot": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "allowed",
+                            "limited",
+                            "banned",
+                            "unknown"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Phone sharing data, including USB tethering."
+                },
+                "hotspot_gb": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "number",
+                          "minimum": 0
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Included monthly high-speed hotspot allowance in decimal GB; null when not stated or dependent on an add-on."
+                },
+                "router_or_modem": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "allowed",
+                            "limited",
+                            "banned",
+                            "unknown"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Using the plan's SIM in a router or modem."
+                },
+                "continuous_video": {
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "allowed",
+                            "limited",
+                            "banned",
+                            "unknown"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
+                  ],
+                  "additionalProperties": false,
+                  "description": "Continuous video uploading or broadcasting; viewing resolution is not permission to broadcast."
                 },
                 "roaming_routing": {
-                  "type": "string",
-                  "enum": [
-                    "home-routed",
-                    "local-breakout",
-                    "unknown"
+                  "type": "object",
+                  "properties": {
+                    "value": {
+                      "anyOf": [
+                        {
+                          "type": "string",
+                          "enum": [
+                            "home-routed",
+                            "hub-breakout",
+                            "local-breakout"
+                          ]
+                        },
+                        {
+                          "type": "null"
+                        }
+                      ]
+                    },
+                    "source": {
+                      "type": "string",
+                      "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$"
+                    },
+                    "source_quote": {
+                      "type": "string",
+                      "maxLength": 300,
+                      "pattern": "\\S"
+                    },
+                    "note": {
+                      "description": "Scope or uncertainty, in our own words.",
+                      "type": "string",
+                      "pattern": "\\S"
+                    },
+                    "checked_on": {
+                      "type": "string",
+                      "format": "date",
+                      "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$"
+                    }
+                  },
+                  "required": [
+                    "value",
+                    "source",
+                    "checked_on"
                   ],
-                  "description": "How roaming data is routed. Never guessed from marketing."
-                },
-                "source_url": {
-                  "type": "string",
-                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
-                  "description": "The plan's official page."
+                  "additionalProperties": false,
+                  "description": "Never inferred from marketing; null when unknown."
                 }
               },
               "required": [
                 "id",
-                "checked_on",
                 "name",
                 "data_cap_gb",
-                "throttle_after_cap_kbps",
-                "tethering_allowed",
-                "roaming_routing",
-                "source_url"
+                "max_down_mbps",
+                "max_up_mbps",
+                "throttle_down_kbps",
+                "throttle_up_kbps",
+                "priority",
+                "hotspot",
+                "hotspot_gb",
+                "router_or_modem",
+                "continuous_video",
+                "roaming_routing"
               ],
               "additionalProperties": false
             }

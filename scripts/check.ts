@@ -1,6 +1,7 @@
 // Validate ../data with zod, run the cross-reference checks, make sure the
 // committed JSON Schema matches the zod schemas, and invalid fixtures are rejected. Exit 1 on any problem.
 import { readFileSync, readdirSync } from "node:fs";
+import { planFacts } from "../schema/src/schema.ts";
 import { files, guideTitle, RolesByKind, wordAliases, type FileName } from "../schema/src/schema.ts";
 import { exported, partsJson } from "./export.ts";
 import { comparisonFacts } from "./stale.ts";
@@ -50,6 +51,10 @@ export function semantic(data: Record<FileName, any>): string[] {
         if (row.checked_on > today) out.push(`${dataset}: ${row.id}: checked_on is in the future`);
     }
   }
+  for (const carrier of data.plans.carriers)
+    for (const plan of carrier.plans ?? [])
+      for (const [field, fact] of planFacts(plan))
+        if (fact.checked_on > today) out.push(`plans: ${carrier.id}/${plan.id}.${field}: checked_on is in the future`);
   for (const service of data.services.services)
     for (const source of service.sources ?? [])
       if (source.read_on > today) out.push(`services: ${service.id}: source read_on is in the future`);
@@ -233,13 +238,19 @@ if (problems.length) {
 }
 
 const carrier = {id: "sample-network", name: "Sample Network", country: "DE", network_type: "MNO", host_network_id: null,
-  plans: [{id: "sample-plan", name: "Sample Plan", data_cap_gb: 50, throttle_after_cap_kbps: null, tethering_allowed: true, roaming_routing: "unknown", source_url: "https://example.org/plan", checked_on: "2026-11-14"}],
+  plans: [{id: "sample-plan", name: "Sample Plan", ...Object.fromEntries([
+    ["data_cap_gb", 50], ["max_down_mbps", 100], ["max_up_mbps", 25],
+    ["throttle_down_kbps", 64], ["throttle_up_kbps", 16], ["priority", null],
+    ["hotspot", "allowed"], ["hotspot_gb", null], ["router_or_modem", "unknown"],
+    ["continuous_video", "unknown"], ["roaming_routing", null],
+  ].map(([key, value]) => [key, {value, source: "https://example.org/plan", checked_on: "2026-11-14"}]))}],
   esim: false, official_url: "https://example.org/", coverage_map_url: "https://example.org/coverage",
   sources: [{label: "Official details", url: "https://example.org/details"}], checked_on: "2026-11-14"};
 const candidate = structuredClone(data);
 candidate.plans.carriers = [carrier, {...carrier, id: "sample-virtual", network_type: "MVNO", host_network_id: carrier.id}];
 if (!files.plans.safeParse(candidate.plans).success || semantic(candidate).length) problems.push("valid carrier fixture rejected");
 for (const mutation of [
+  (d: any) => { d.plans.carriers[0].plans[0].max_up_mbps.checked_on = "2999-01-01"; },
   (d: any) => { d.plans.carriers[1].host_network_id = "missing"; },
   (d: any) => { d.plans.carriers[1].country = "FR"; },
   (d: any) => { d.plans.carriers[0].country = "ZZ"; },
