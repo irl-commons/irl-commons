@@ -52,6 +52,40 @@
       "uncertain": true
     },
     {
+      "id": "streaming-setup",
+      "checked_on": "2026-11-17",
+      "term": "Streaming setup",
+      "also_called": [
+        "setup"
+      ],
+      "search_terms": [
+        "rig",
+        "IRL setup",
+        "kit",
+        "gear",
+        "tech stack"
+      ],
+      "aliases": [
+        "setup",
+        "rig",
+        "IRL setup",
+        "kit",
+        "gear",
+        "tech stack"
+      ],
+      "tier": "core",
+      "who": "both",
+      "heard_when": "Someone asks what you use to stream, or a helper asks how your camera, apps and internet connect.",
+      "plain": "The devices, apps and services you use together to go live. Your setup might be just a phone and an app, or a camera, a backpack and OBS on a computer.",
+      "related": [
+        "backpack",
+        "encoder",
+        "relay"
+      ],
+      "source": "https://support.unlimitedirl.com/getting-started/irltoolkit-configuration",
+      "uncertain": false
+    },
+    {
       "id": "bonding",
       "term": "Bonding",
       "also_called": [],
