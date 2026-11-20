@@ -1,0 +1,73 @@
+# PROPOSAL, not enabled. A weekly catalogue watch: which entries most likely changed and need a
+# person to recheck them, and products that aren't listed yet. It reads public pages and APIs,
+# respects robots.txt and never edits data. It runs only when started by hand until stewards
+# agree to a schedule; to enable it, uncomment the schedule below.
+name: Catalogue watch (proposal)
+on:
+  workflow_dispatch:
+  # schedule:
+  #   - cron: '41 8 * * 1'
+permissions: {}
+concurrency:
+  group: catalogue-watch
+  cancel-in-progress: false
+jobs:
+  watch:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    permissions:
+      contents: read
+      # Reads the previous run's snapshots, which are the baseline for text changes.
+      actions: read
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262 # v4
+        with:
+          persist-credentials: false
+      - uses: oven-sh/setup-bun@0c5077e51419868618aeaa5fe8019c62421857d6 # v2
+      - run: bun install --frozen-lockfile --ignore-scripts
+      - name: Restore the previous run's snapshots
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        shell: bash
+        run: |
+          id=$(gh run list --workflow catalogue-watch.yml --status success --limit 1 --json databaseId --jq '.[0].databaseId // empty')
+          if [ -n "$id" ]; then gh run download "$id" --name catalogue-watch-state --dir state || echo "No earlier state; this run is the baseline."; fi
+          rm -rf state/reports state/cache
+      - run: bun run watch --state state
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+      - uses: actions/upload-artifact@ea165f8d65b6e75b540449e92b4886f43607fa02 # v4.6.2
+        with:
+          name: catalogue-watch-state
+          retention-days: 90
+          path: |
+            state/snapshots
+            state/text
+            state/reports
+  report:
+    needs: watch
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: read
+      issues: write
+    steps:
+      - name: Update rolling catalogue watch issue
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+          RUN_ID: ${{ github.run_id }}
+        shell: bash
+        run: |
+          gh run download "$RUN_ID" --name catalogue-watch-state --dir state
+          title='Catalogue watch report'
+          marker='<!-- rolling-catalogue-watch -->'
+          { printf '%s\n\n' "$marker"; cat state/reports/*/issue.md; printf '\n\nFull report: %s\n' "${GITHUB_SERVER_URL}/${GH_REPO}/actions/runs/${RUN_ID}"; } > issue.md
+          number=$(gh api --paginate "repos/$GH_REPO/issues?state=all&per_page=100" --jq '.[] | select(.user.login == "github-actions[bot]" and (.body // "" | startswith("<!-- rolling-catalogue-watch -->")) and (has("pull_request") | not)) | .number' | head -n 1)
+          if [ -n "$number" ]; then
+            gh issue edit "$number" --title "$title" --body-file issue.md
+            gh issue reopen "$number"
+          else
+            gh issue create --title "$title" --body-file issue.md
+          fi

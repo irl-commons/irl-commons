@@ -1,0 +1,15 @@
+# Synthetic robots.txt in the shape large sites use.
+User-agent: SomeBot
+User-agent: OtherBot
+Disallow: /
+
+User-agent: irl-commons-catalogue-watch
+Disallow: /private/
+Allow: /private/public-page$
+Crawl-delay: 2
+
+User-agent: *
+Allow: /*?tab=readme$
+Disallow: /*/tree/
+Disallow: /search$
+Disallow: /tmp

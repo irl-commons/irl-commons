@@ -1,0 +1,15 @@
+{
+  "resultCount": 1,
+  "results": [
+    {
+      "trackId": 1234567890,
+      "trackName": "Example Cast: Live Streaming",
+      "sellerName": "Example Maker Ltd",
+      "version": "2.1.0",
+      "currentVersionReleaseDate": "2026-11-18T07:00:00Z",
+      "formattedPrice": "Free",
+      "minimumOsVersion": "16.0",
+      "description": "Go live with SRT and SRTLA bonding from your iPhone."
+    }
+  ]
+}

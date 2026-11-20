@@ -196,7 +196,7 @@ export const CONTACT_FILES = new Set(["README.md", "CONTRIBUTING.md"]);
 // Scan the distributable repository tree as well as the parsed datasets.
 function scanTree(dir: URL): void {
   for (const entry of readdirSync(dir, {withFileTypes: true})) {
-    if ([".git", "node_modules", "__pycache__"].includes(entry.name)) continue;
+    if ([".git", "node_modules", "__pycache__", ".catalogue-watch"].includes(entry.name)) continue;
     const path = new URL(entry.name + (entry.isDirectory() ? "/" : ""), dir);
     if (entry.isDirectory()) { scanTree(path); continue; }
     let text = readFileSync(path, "utf8");
