@@ -1,0 +1,38 @@
+{
+  "about": "",
+  "services": [
+    {
+      "id": "s",
+      "name": "S",
+      "kind": "app",
+      "role": "streaming-app",
+      "class": "phone-app",
+      "hosting": null,
+      "maker": "M",
+      "url": "https://example.org/",
+      "links": [],
+      "open_source": null,
+      "licence": null,
+      "status": null,
+      "description": "D",
+      "platforms": [
+        "web"
+      ],
+      "support": [],
+      "tags": [],
+      "words": [],
+      "part": [
+        "sender"
+      ],
+      "covers": [],
+      "checked_on": "2026-11-14",
+      "wrappers": [
+        {
+          "label": "Docker image",
+          "maker": "Example",
+          "url": "https://example.org/wrapper"
+        }
+      ]
+    }
+  ]
+}

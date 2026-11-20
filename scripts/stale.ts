@@ -42,6 +42,7 @@ export function staleRows(data: Record<string, any>, today: string): string[] {
       add(`${dataset}/${entry.id}`, entry, { months: count });
       if (dataset === "standards") for (const [where, fact] of comparisonFacts(entry)) add(`standards/${entry.id} ${where}`, fact, { months: count });
       if (dataset === "services" && entry.status !== null) add(`services/${entry.id} status`, entry, { days: 90 });
+      if (dataset === "services") for (const w of entry.wrappers ?? []) add(`services/${entry.id} wrapper ${w.url}`, w, { months: count });
       for (const plan of entry.plans ?? [])
         for (const [field, fact] of planFacts(plan)) add(`plans/${entry.id}/${plan.id} ${field}`, fact, { days: 90 });
     }

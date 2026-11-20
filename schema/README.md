@@ -35,6 +35,8 @@ The JSON Schemas carry the rules they can express for a single entry. `scripts/c
 - Class `docs` is for community entries only.
 - Bonding and cloud entries set `hosting`, and cloud entries are never `self`.
 - Products have chain parts; documentation entries cover products instead.
+- `port_of` names another listed service of the same kind, never itself, and never in a circle.
+- A wrapper's page is not a listed product's page, appears once per entry and has a `checked_on` that isn't in the future. Community entries have no wrappers.
 
 **Guides**
 

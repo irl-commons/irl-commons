@@ -7,6 +7,14 @@ has them, with their sources.
 The data is v0. Fields can still change before the first npm release. Ids
 never change.
 
+## Unreleased
+
+- `services.json`: two optional fields. `port_of` marks a port or fork of a
+  listed product, with `state` `follows` or `diverged`; the original's entry
+  doesn't list its ports, so read them from this field. `wrappers` lists
+  Docker images, install scripts and packages that only install the product,
+  each with its own maker, page and `checked_on`.
+
 ## 0.3.0 — 16 November 2026
 
 - `plans.json`: plans v2, a breaking change. Every plan term is a fact with

@@ -5,7 +5,7 @@ import { declaredModified, htmlToText, lineDiff, markdownToText, pageLinks, page
 import { appStoreId, discordInviteCode, entries, githubRef, playId, resourceKey } from "./sources.ts";
 import { appFromLookup, emptySnapshot, playIdsFor, type Snapshot } from "./signals.ts";
 import { assess, licenceMentioned, pickBaseline, renderRecheck } from "./rank.ts";
-import { alreadyListed, knownIndex, relatedEntry, relevance, score, skeleton, type Candidate } from "./discover.ts";
+import { alreadyListed, knownIndex, outsider, relatedEntry, relevance, renderCandidates, score, skeleton, type Candidate } from "./discover.ts";
 
 const fixture = (name: string) => readFileSync(new URL(`../fixtures/catalogue-watch/${name}`, import.meta.url), "utf8");
 
@@ -160,6 +160,50 @@ test("relevance favours IRL terms and pushes away subtitle tools and guides", ()
   expect(draft.checked_on).toBeNull();
   expect(draft).toMatchObject({ id: "other-tool", kind: "relay", licence: "MIT", platforms: ["linux"] });
   expect(draft.unverified).toContain("kind");
+});
+
+test("scope rules: wrappers, ports, small projects and general infrastructure are flagged", () => {
+  const k = knownIndex([service], [standard]);
+  const repo = (over = {}) => ({ fullName: "someone/x", stars: 0, pushedAt: "2026-11-10", createdAt: null, license: "MIT", language: "Go", topics: [], archived: false, fork: false, homepage: null, ...over });
+  const c = (over: Partial<Candidate>): Candidate => ({ key: "gh:someone/x", name: "X", evidence: "https://github.com/someone/x", via: ["test"], description: null, homepage: null, owner: "someone", repo: repo(), score: 0, why: [], flags: [], ...over });
+  const today = "2026-11-20";
+
+  const wrapper = score(c({ name: "example-cast-docker", description: "Docker compose setup for Example Cast with SRTLA" }), k, today);
+  expect(wrapper.wrapperOf).toBe("example-cast");
+  expect(wrapper.flags.join("; ")).toContain("wrappers");
+  expect(score(c({ name: "restreamer", description: "A Docker restreaming server that sends to YouTube and Example Cast" }), k, today).wrapperOf).toBeUndefined();
+  expect(score(c({ name: "cast-box", description: "Docker container for Example Cast" }), k, today).wrapperOf).toBe("example-cast");
+  const port = score(c({ name: "Example Cast Android", description: "Android port of Example Cast for IRL streaming" }), k, today);
+  expect(port.portOf).toBe("example-cast");
+  expect(skeleton(port)).toMatchObject({ port_of: { service: "example-cast", state: "follows" } });
+  expect(skeleton(port).unverified).toContain("port_of");
+  expect(skeleton(score(c({ description: "An SRTLA receiver" }), k, today))).not.toHaveProperty("port_of");
+
+  const base = { description: "An SRTLA bonding receiver for IRL streaming" };
+  const bare = score(c({ ...base, release: null, outsideUsers: false }), k, today);
+  const used = score(c({ ...base, release: { at: "2026-10-01T00:00:00Z" }, outsideUsers: true }), k, today);
+  expect(bare.flags).toContain("no tagged release or store listing");
+  expect(bare.flags).toContain("no public user other than the maker yet");
+  expect(used.score - bare.score).toBe(20);
+  expect(score(c({ ...base, repo: repo({ stars: 5000 }) }), k, today).score - score(c(base), k, today).score).toBeLessThanOrEqual(6);
+
+  const infra = score(c({ description: "A fast RTMP server and transcoder for live streaming" }), k, today);
+  expect(infra.flags.join("; ")).toContain("general infrastructure");
+  const linked = score(c({ description: "A fast RTMP server and transcoder for live streaming", via: ["linked from services/example-cast (https://example.org/)"] }), k, today);
+  expect(linked.score - infra.score).toBeGreaterThanOrEqual(8);
+  expect(score(c({ description: "An SRTLA media server for IRL streaming" }), k, today).flags.join("; ")).not.toContain("general infrastructure");
+
+  const md = renderCandidates([wrapper, used], { date: today, raw: 2, dropped: new Map(), unresolved: [], min: -100, limit: 10, stats: [] });
+  expect(md).toContain("## Possible wrappers of listed products");
+  expect(md).toContain("- services/example-cast: `example-cast-docker` by `someone`");
+  expect(md.split("## Details")[1].split("## Possible wrappers")[0]).not.toContain("example-cast-docker");
+});
+
+test("an outside user is anyone but the owners, members, collaborators and bots", () => {
+  expect(outsider({ user: { type: "User" }, author_association: "NONE" })).toBe(true);
+  expect(outsider({ user: { type: "User" }, author_association: "CONTRIBUTOR" })).toBe(true);
+  expect(outsider({ user: { type: "User" }, author_association: "OWNER" })).toBe(false);
+  expect(outsider({ user: { type: "Bot" }, author_association: "NONE" })).toBe(false);
 });
 
 test("the watch workflow is manual only, writes no data and opens issues only from the report job", () => {

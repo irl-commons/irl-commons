@@ -11,10 +11,16 @@ export type AppInfo = { id: string; seller: string | null; version: string | nul
 export type Candidate = {
   key: string; name: string; evidence: string | null; via: string[]; description: string | null; homepage: string | null; owner: string | null;
   repo?: RepoInfo; app?: AppInfo; readme?: string; otherUsersOf?: string[];
+  /** Latest release or tag: undefined when not looked up, null when the repository has none. */
+  release?: { at: string | null } | null;
+  /** Whether an issue or pull request comes from someone other than the maker's team. Only this flag is kept, never who. */
+  outsideUsers?: boolean;
+  /** Service ids of listed products it seems to package or port. */
+  wrapperOf?: string; portOf?: string;
   score: number; why: string[]; flags: string[];
 };
 
-export type Known = { names: Map<string, string>; repos: Set<string>; urls: Set<string>; hosts: Set<string>; apps: Set<string>; owners: Set<string>; otherUsers: Map<string, string[]> };
+export type Known = { names: Map<string, string>; repos: Set<string>; urls: Set<string>; hosts: Set<string>; apps: Set<string>; owners: Set<string>; otherUsers: Map<string, string[]>; products: { id: string; re: RegExp }[] };
 
 /** Hosts that many unrelated products share, so a match on them says nothing. */
 const SHARED_HOSTS = new Set(["github.com", "apps.apple.com", "play.google.com", "discord.gg", "discord.com", "youtube.com", "twitch.tv", "x.com", "twitter.com", "datatracker.ietf.org", "support.google.com", "help.kick.com", "kick.com", "itu.int", "apple.com", "support.apple.com", "docs.github.com", "en.wikipedia.org"]);
@@ -35,7 +41,11 @@ export function nameKeys(name: string): string[] {
 }
 
 export function knownIndex(services: any[], standards: any[]): Known {
-  const k: Known = { names: new Map(), repos: new Set(), urls: new Set(), hosts: new Set(), apps: new Set(), owners: new Set(), otherUsers: new Map() };
+  const k: Known = { names: new Map(), repos: new Set(), urls: new Set(), hosts: new Set(), apps: new Set(), owners: new Set(), otherUsers: new Map(), products: [] };
+  // Listed products by name as a whole word, for spotting wrappers and ports. Short names match too much.
+  for (const s of services) if (s.kind !== "community")
+    for (const n of new Set([s.name, s.name.replace(/\s*\(.*\)\s*/g, " ").trim()])) if (n.length >= 4)
+      k.products.push({ id: s.id, re: new RegExp(`(?<![A-Za-z0-9])${n.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}(?![A-Za-z0-9])`, "i") });
   for (const [dataset, list] of [["services", services], ["standards", standards]] as const)
     for (const s of list) for (const n of [...nameKeys(s.name), norm(s.id)]) if (!k.names.has(n)) k.names.set(n, `${dataset}/${s.id}`);
   for (const u of allUrls([services, standards])) {
@@ -123,6 +133,12 @@ export function relevance(text: string): { score: number; hits: { name: string; 
   return { score: hits.reduce((s, h) => s + h.weight, 0), hits };
 }
 
+// The catalogue's scope rules are in CONTRIBUTING.md ("What belongs in the catalogue"); these patterns flag candidates they apply to.
+const WRAPPER = /\b(?:docker(?:file|ized)?|docker[- ]compose|compose file|container image|helm chart|install(?:er)? script|one[- ]click (?:install|deploy)|unraid template)\b/i;
+const PORT = /\b(?:port(?:ed)? (?:of|from)|fork of|forked from|(?:android|ios|linux|windows) version of|clone of|rewrite of)\b/i;
+const INFRA = /\b(?:ffmpeg|gstreamer|libav\w*|nginx|media ?server|streaming server|rtmp server|transcod\w*|webrtc (?:server|sfu))\b/i;
+const IRL_TERMS = new Set(["SRTLA", "IRL streaming", "BELABOX", "NOALBS", "bonding", "Moblin", "RealtimeIRL", "IRL", "bitrate or scene switching"]);
+
 const daysAgo = (date: string | null, today: string) => date ? Math.round((Date.parse(today) - Date.parse(date.slice(0, 10))) / 86_400_000) : null;
 
 export function score(c: Candidate, k: Known, today: string): Candidate {
@@ -140,9 +156,10 @@ export function score(c: Candidate, k: Known, today: string): Candidate {
   s = Math.min(s, 30);
   const relevant = s;
   if (c.repo) {
+    // Stars only break ties. The bar for an entry is a release or store listing, a page that says what it does and a user other than the maker.
     const stars = c.repo.stars;
-    if (stars < 3) { s -= 6; flags.push(`${stars} stars`); }
-    else { s += Math.min(14, Math.round(Math.log2(stars + 1) * 2)); why.push(`${stars} stars`); }
+    s += Math.min(6, Math.round(Math.log2(stars + 1)));
+    if (stars) why.push(`${stars} stars`);
     const age = daysAgo(c.repo.pushedAt, today);
     if (age !== null) {
       if (age <= 180) { s += 6; why.push(`pushed ${c.repo.pushedAt!.slice(0, 10)}`); }
@@ -154,6 +171,14 @@ export function score(c: Candidate, k: Known, today: string): Candidate {
     if (!c.description) { s -= 3; flags.push("no description"); }
     if (k.owners.has(c.repo.fullName.split("/")[0].toLowerCase())) { s += 5; why.push("by a maker already listed"); }
   }
+  if (c.release === null && !c.app) { s -= 8; flags.push("no tagged release or store listing"); }
+  else if (c.release?.at) {
+    const age = daysAgo(c.release.at, today);
+    if (age !== null && age <= 365) { s += 4; why.push(`release ${c.release.at.slice(0, 10)}`); }
+    else flags.push(`last release ${c.release.at.slice(0, 10)}`);
+  } else if (c.release) why.push("tagged");
+  if (c.outsideUsers === true) { s += 4; why.push("issues from people other than the maker"); }
+  else if (c.outsideUsers === false) { s -= 4; flags.push("no public user other than the maker yet"); }
   if (c.app) {
     const age = daysAgo(c.app.releaseDate, today);
     if (age !== null && age <= 365) { s += 8; why.push(`listed on the App Store, version ${c.app.version} from ${c.app.releaseDate}`); }
@@ -165,7 +190,24 @@ export function score(c: Candidate, k: Known, today: string): Candidate {
   const other = [...new Set(nameKeys(c.name).flatMap(n => k.otherUsers.get(n) ?? []))];
   if (other.length) { s += 12; why.push(`already named in other_users of ${other.map(x => `standards/${x}`).join(", ")}`); c.otherUsersOf = other; }
   if (relevant < 5 && !other.length) flags.push("weak relevance");
-  return { ...c, score: s, why, flags };
+  const text = [c.name, c.description ?? "", c.repo?.topics.join(" ") ?? ""].join(" \n ");
+  const listed = k.products.find(p => p.re.test(text))?.id;
+  // A wrapper is about one product: its name says so, or the wrapper word comes right before it ("Docker container for X").
+  const nameText = `${c.name} ${c.description ?? ""}`;
+  const wrapped = WRAPPER.test(text) ? k.products.find(p => p.re.test(c.name) || new RegExp(`(?:${WRAPPER.source})[^.|]{0,40}?${p.re.source}`, "i").test(nameText))?.id : undefined;
+  let wrapperOf: string | undefined, portOf: string | undefined;
+  if (wrapped) {
+    wrapperOf = wrapped; s -= 6;
+    flags.push(`packages services/${wrapped}? If it only installs it, it goes in that entry's wrappers; with features of its own it is a product`);
+  } else if (listed && (PORT.test(text) || c.repo?.fork)) {
+    portOf = listed;
+    flags.push(`port or fork of services/${listed}: its own entry needs a store listing or tagged release and a release in the last 12 months, with port_of set`);
+  }
+  if (INFRA.test(text) && !own.hits.some(h => IRL_TERMS.has(h.name))) {
+    if (c.via.some(v => v.startsWith("linked from")) || other.length) why.push("general infrastructure that a listed product links to: class building-block");
+    else { s -= 8; flags.push("general infrastructure: only when a listed product or guide depends on it, as class building-block"); }
+  }
+  return { ...c, score: s, why, flags, wrapperOf, portOf };
 }
 
 export function slug(name: string): string {
@@ -205,7 +247,8 @@ export function skeleton(c: Candidate) {
     support: [],
     tags: [],
     words: [],
-    unverified: ["id", "name", "kind", "role", "class", "hosting", "maker", "url", "links", "open_source", "licence", "status", "description", "platforms", "part"],
+    ...(c.portOf ? { port_of: { service: c.portOf, state: "follows" } } : {}),
+    unverified: ["id", "name", "kind", "role", "class", "hosting", "maker", "url", "links", "open_source", "licence", "status", "description", "platforms", "part", ...(c.portOf ? ["port_of"] : [])],
   };
 }
 
@@ -322,6 +365,23 @@ export class Discovery {
     }
   }
 
+  /** Latest release or tag, and whether anyone outside the maker's team opened an issue. Keeps only those facts, no names. */
+  async maturity(list: Candidate[], limit = 50) {
+    for (const c of list.filter(c => c.repo).slice(0, limit)) {
+      const repo = c.repo!.fullName;
+      const rel = await this.http.json(`${GH}/repos/${repo}/releases?per_page=1`, { accept: GH_ACCEPT });
+      if (rel.got.status === 200 && Array.isArray(rel.data)) {
+        if (rel.data.length) c.release = { at: rel.data[0].published_at ?? rel.data[0].created_at ?? null };
+        else {
+          const tags = await this.http.json(`${GH}/repos/${repo}/tags?per_page=1`, { accept: GH_ACCEPT });
+          if (tags.got.status === 200 && Array.isArray(tags.data)) c.release = tags.data.length ? { at: null } : null;
+        }
+      }
+      const issues = await this.http.json(`${GH}/repos/${repo}/issues?state=all&per_page=30`, { accept: GH_ACCEPT });
+      if (issues.got.status === 200 && Array.isArray(issues.data)) c.outsideUsers = issues.data.some(outsider);
+    }
+  }
+
   /** READMEs for the strongest repository candidates, to firm up or weaken relevance. */
   async readmes(list: Candidate[], limit = 50) {
     for (const c of list.filter(c => c.repo).slice(0, limit)) {
@@ -330,6 +390,9 @@ export class Discovery {
     }
   }
 }
+
+/** An issue or pull request opened by a person outside the repository's owners, members and collaborators. */
+export const outsider = (i: any) => !!i?.user && i.user.type !== "Bot" && !["OWNER", "MEMBER", "COLLABORATOR"].includes(i.author_association);
 
 export function rankCandidates(pool: Iterable<Candidate>, k: Known, today: string): Candidate[] {
   const ranked = [...pool].map(c => score(c, k, today)).sort((a, b) => b.score - a.score || a.key.localeCompare(b.key));
@@ -341,7 +404,8 @@ export function rankCandidates(pool: Iterable<Candidate>, k: Known, today: strin
 }
 
 export function renderCandidates(list: Candidate[], meta: { date: string; raw: number; dropped: Map<string, string>; related?: Map<string, { candidate: Candidate; entry: string }>; unresolved: { name: string; standards: string[] }[]; min: number; limit: number; stats: string[] }): string {
-  const shown = list.filter(c => c.score >= meta.min && !c.flags.includes("weak relevance")).slice(0, meta.limit);
+  const wrappers = list.filter(c => c.wrapperOf && !c.flags.includes("weak relevance"));
+  const shown = list.filter(c => !c.wrapperOf && c.score >= meta.min && !c.flags.includes("weak relevance")).slice(0, meta.limit);
   const lines: string[] = ["# Catalogue candidates", ""];
   lines.push(`Run on ${meta.date}. ${list.length} candidates not in services.json or standards.json, from ${meta.raw} raw hits; ${meta.dropped.size} hits matched an existing entry. Shown: the ${shown.length} with a score of ${meta.min} or more and some relevance.`, "");
   lines.push("Nothing here is checked. Before an entry is added, a person reads the maker's own page, decides whether it belongs in an IRL streaming catalogue, writes the description in their own words, and sets `checked_on` to the day they read it. The skeletons are guesses from metadata; every field listed under `unverified` needs confirming, and the `unverified` key itself is not part of the schema.", "");
@@ -358,6 +422,11 @@ export function renderCandidates(list: Candidate[], meta: { date: string; raw: n
     const draft = JSON.stringify(skeleton(c), null, 2).replace(/\[\n\s+([^\]{}]*?)\n\s+\]/g, (_, inner: string) => `[${inner.replace(/\n\s+/g, " ")}]`);
     lines.push("", "  ~~~json", ...draft.split("\n").map(l => "  " + l.replace(/~~~/g, "~ ~ ~")), "  ~~~", "");
   });
+  if (wrappers.length) {
+    lines.push("## Possible wrappers of listed products", "", "Docker images, install scripts and similar around a listed product. If one only installs the product, add it to that entry's `wrappers`; if it adds features of its own, it is a product and belongs in the list above.", "");
+    for (const c of wrappers) lines.push(`- services/${c.wrapperOf}: ${quote(c.name, 80)} by ${quote(c.owner ?? c.app?.seller ?? "unknown", 60)}, ${c.evidence ?? "no evidence"}`);
+    lines.push("");
+  }
   if (meta.related?.size) {
     lines.push("## Listings that may belong to existing entries", "", "Their names start with an entry's name. They may be the same product on another store or platform, which the entry's links or platforms might need.", "");
     for (const { candidate: c, entry } of meta.related.values()) lines.push(`- ${entry}: ${quote(c.name, 80)} by ${quote(c.owner, 60)}, ${c.evidence}`);

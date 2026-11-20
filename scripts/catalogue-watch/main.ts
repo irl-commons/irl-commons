@@ -85,7 +85,11 @@ if (only !== "signals") {
   await d.otherUsers(standards);
   let ranked = rankCandidates(d.pool.values(), known, today);
   log(`discovery: READMEs for the top candidates (${d.pool.size} in the pool)`);
-  await d.readmes(ranked.filter(c => !c.flags.includes("weak relevance") || c.score > 10), 50);
+  // Look up the pool's own objects: ranking returns scored copies, and the next ranking starts from the pool again.
+  const top = ranked.filter(c => !c.flags.includes("weak relevance") || c.score > 10).map(c => d.pool.get(c.key)!);
+  await d.readmes(top, 50);
+  log("discovery: releases and outside users for the top candidates");
+  await d.maturity(top, 50);
   ranked = rankCandidates(d.pool.values(), known, today);
   const md = renderCandidates(ranked, { date: today, raw: d.raw, dropped: d.dropped, related: d.related, unresolved: d.unresolved, min: 15, limit: 60, stats: stats() });
   writeFileSync(join(reportDir, "candidates.md"), md);
