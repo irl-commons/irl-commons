@@ -1,5 +1,10 @@
 // What the discovery reports read and how they sort it. Everything here is a plain list
 // so a reviewer can see why a question landed where it did. Patterns are case-insensitive.
+//
+// Sources, in order of preference: an official API (GitHub, Stack Exchange), a feed (RSS or
+// Atom), a sitemap. An HTML index page is read for its links only when a site has none of
+// these. Forum threads come from feeds, never from their HTML pages. Every fetch follows
+// robots.txt; a source that blocks crawlers goes in NOT_READ with the reason.
 
 export type Part = "camera" | "sender" | "connections" | "receiver" | "obs" | "platform";
 
@@ -197,7 +202,7 @@ export const THEMES: { id: string; label: string; part: Part; patterns: string[]
 export type Site = {
   name: string;
   sitemap?: string;        // a sitemap or sitemap index
-  index?: string;          // an HTML page whose same-site links are the pages (when there is no sitemap)
+  index?: string;          // last resort: an HTML page whose same-site links are the pages, for a site with no sitemap or feed
   covers: string[];        // service ids the site documents
   include?: string;        // keep paths that match
   exclude?: string;        // drop paths that match
