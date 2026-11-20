@@ -20,6 +20,16 @@
 - **Standards:** credit the maker and link products through `service_ids`. An app's own format goes in only once a named second product writes or reads it.
 - **Plans:** cite the carrier's page for that country, with its cap, price or fair-use terms. Prices need three stewards first (see [GOVERNANCE.md](GOVERNANCE.md)).
 
+## What belongs in the catalogue
+
+`services.json` lists products a streamer or maker can pick and use. Every entry needs sources and a recheck every six months, so the bar is what a reader can rely on, not popularity.
+
+- **Wrappers:** a Docker image, install script or package that only installs a listed product goes in that product's `wrappers`, not in an entry of its own. One that adds features (a setup page, several streams, stats) is a product and gets its own entry.
+- **Ports and forks:** a port or fork of a listed product gets its own entry when it has its own store listing or a tagged release, and a release in the last 12 months. Set `port_of` to the original, with `state` `follows` while it keeps the original's features and releases, or `diverged` once it goes its own way. Only the port records the link; the original's entry stays as it is.
+- **Small projects:** stars don't count. A project needs a tagged release or a store listing, a README or page that says what it does, and at least one public user who isn't the maker, such as an issue or discussion on its repository or ratings on its store listing.
+- **General infrastructure:** media servers, encoders and libraries that aren't made for IRL streaming go in only when a listed product or guide depends on them, with class `building-block`.
+- **Not products:** tutorials go in `guides.json`. Personal setups, dotfiles and coursework don't go in.
+
 ## Propose a different label
 
 A label in the naming guide is a recommendation for one context, not the only right name. To suggest another, use "Fix or update an entry" (or the maker form for your own product) with the entry `words/<id>`, and fill in the label field. A public page or screenshot that shows the label is the best source. Write about the word, not about another product.

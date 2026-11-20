@@ -343,6 +343,68 @@
               "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$"
             },
             "description": "Ids of related words in words.json."
+          },
+          "port_of": {
+            "description": "Set on a port or fork of a listed product. The original doesn't list its ports; read them from this field.",
+            "type": "object",
+            "properties": {
+              "service": {
+                "type": "string",
+                "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+                "description": "The service id of the listed product it was ported or forked from."
+              },
+              "state": {
+                "type": "string",
+                "enum": [
+                  "follows",
+                  "diverged"
+                ],
+                "description": "follows: keeps the original's features and follows its releases. diverged: started as a port or fork and now goes its own way."
+              }
+            },
+            "required": [
+              "service",
+              "state"
+            ],
+            "additionalProperties": false
+          },
+          "wrappers": {
+            "description": "Other ways to install this product that only package it. A wrapper that adds features is its own entry.",
+            "minItems": 1,
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "label": {
+                  "type": "string",
+                  "pattern": "\\S",
+                  "description": "What it is, in a few words, such as Docker image or install script."
+                },
+                "maker": {
+                  "type": "string",
+                  "pattern": "\\S",
+                  "description": "Who makes the wrapper. Often not the product's maker."
+                },
+                "url": {
+                  "type": "string",
+                  "pattern": "^https:\\/\\/(?![^/]*discord(?:app)?\\.(?:gg|com))\\S+$",
+                  "description": "The wrapper's own page."
+                },
+                "checked_on": {
+                  "type": "string",
+                  "format": "date",
+                  "pattern": "^(?:(?:\\d\\d[2468][048]|\\d\\d[13579][26]|\\d\\d0[48]|[02468][048]00|[13579][26]00)-02-29|\\d{4}-(?:(?:0[13578]|1[02])-(?:0[1-9]|[12]\\d|3[01])|(?:0[469]|11)-(?:0[1-9]|[12]\\d|30)|(?:02)-(?:0[1-9]|1\\d|2[0-8])))$",
+                  "description": "The day someone checked that it still installs this product and adds nothing of its own."
+                }
+              },
+              "required": [
+                "label",
+                "maker",
+                "url",
+                "checked_on"
+              ],
+              "additionalProperties": false
+            }
           }
         },
         "required": [

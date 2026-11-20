@@ -10,7 +10,7 @@ Six files. Each has a short `about` and one list. The JSON Schemas in [`../schem
 
 ## Directories
 
-- `services.json`: apps, relays and receivers, hosted services, hardware, production tools and docs. One entry per product, with the maker's own page and official support channels.
+- `services.json`: apps, relays and receivers, hosted services, hardware, production tools and docs. One entry per product, with the maker's own page and official support channels. A port or fork names its original in `port_of`; Docker images and install scripts that only package a product sit in that product's `wrappers`. What belongs in the list: [CONTRIBUTING](../CONTRIBUTING.md#what-belongs-in-the-catalogue).
 - `guides.json`: links to public tutorials, with the products they cover and the part of the chain they help with.
 - `standards.json`: formats and protocols that IRL streaming products share, such as SRT, SRTLA, codecs and camera interfaces. Each entry credits its maker, says how open it is and names the products that use it. Codecs and transports carry comparison facts, each with its own sources and date. Items made by stewards of this repository are listed apart. Being listed doesn't mean IRL Commons makes, runs or endorses it.
 
@@ -29,7 +29,7 @@ Entries have a `checked_on` date: the day someone compared the entry with its pu
 | Words | 18 calendar months |
 | Answers | 12 calendar months |
 | Guides | 9 calendar months |
-| Services | 6 calendar months |
+| Services; each service wrapper (by its own `checked_on`) | 6 calendar months |
 | Standards | 6 calendar months |
 | Standards comparison facts (each by its own `checked_on`) | 6 calendar months |
 | Carrier records | 6 calendar months |

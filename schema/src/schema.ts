@@ -236,6 +236,22 @@ export const Hosting = z.enum(["self", "service"]).describe("self: software you 
 
 export const ServiceTag = z.enum(["camera-in", "multi-camera", "scene-control"]).describe("camera-in: takes the picture from a standalone camera (a DSLR, mirrorless or action camera) over HDMI, USB or the network. multi-camera: shows several cameras in one scene at once. scene-control: switches the scenes in OBS or a hub from outside it, by remote, chat commands or on its own.");
 
+export const PortState = z.enum(["follows", "diverged"]).describe("follows: keeps the original's features and follows its releases. diverged: started as a port or fork and now goes its own way.");
+
+/** A port or fork of a listed product, recorded on the port only. */
+export const PortOf = z.strictObject({
+  service: Id.describe("The service id of the listed product it was ported or forked from."),
+  state: PortState,
+});
+
+/** A Docker image, install script or package around a listed product that adds no features of its own. */
+export const Wrapper = z.strictObject({
+  label: Text.describe("What it is, in a few words, such as Docker image or install script."),
+  maker: Text.describe("Who makes the wrapper. Often not the product's maker."),
+  url: HttpsUrl.describe("The wrapper's own page."),
+  checked_on: Day.describe("The day someone checked that it still installs this product and adds nothing of its own."),
+});
+
 /** Which roles each kind may take. */
 export const RolesByKind: Record<z.infer<typeof ServiceKind>, z.infer<typeof Role>[]> = {
   app: ["streaming-app", "extra-connections", "camera-capture", "remote-control", "chat-overlays", "other-app"],
@@ -269,6 +285,8 @@ export const Service = z.strictObject({
   /** Optional tags from ServiceTag, each at most once. */
   tags: z.array(ServiceTag).refine((t) => new Set(t).size === t.length, "each tag at most once").meta({ uniqueItems: true }),
   words: z.array(Id).describe("Ids of related words in words.json."),
+  port_of: PortOf.optional().describe("Set on a port or fork of a listed product. The original doesn't list its ports; read them from this field."),
+  wrappers: z.array(Wrapper).min(1).optional().describe("Other ways to install this product that only package it. A wrapper that adds features is its own entry."),
 });
 
 export const ServicesFile = z.strictObject({

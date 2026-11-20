@@ -114,6 +114,30 @@ export function semantic(data: Record<FileName, any>): string[] {
       if (s.covers.length) out.push(`services: ${s.id}: only community entries have covers`);
     }
   }
+  // Ports point at the listed original, one way; wrappers sit on the product they package.
+  const portOf = new Map<string, string>(data.services.services.filter((s: any) => s.port_of).map((s: any) => [s.id, s.port_of.service]));
+  const productUrls = new Set<string>(data.services.services.flatMap((s: any) => [s.url, ...s.links.map((l: any) => l.url)]));
+  for (const s of data.services.services) {
+    if (s.port_of) {
+      const target = s.port_of.service;
+      if (target === s.id) out.push(`services: ${s.id}: port_of points at itself`);
+      else if (!kindOf.has(target)) out.push(`services: ${s.id}: port_of '${target}' is not in services`);
+      else if (kindOf.get(target) !== s.kind) out.push(`services: ${s.id}: port_of '${target}' is a ${kindOf.get(target)}; a port has the original's kind (${s.kind})`);
+      const seen = new Set<string>([s.id]);
+      for (let at = portOf.get(s.id); at; at = portOf.get(at)) {
+        if (seen.has(at)) { out.push(`services: ${s.id}: port_of goes in a circle`); break; }
+        seen.add(at);
+      }
+    }
+    if (s.wrappers && s.kind === "community") out.push(`services: ${s.id}: community entries have no wrappers`);
+    const wrapperUrls = new Set<string>();
+    for (const w of s.wrappers ?? []) {
+      if (w.checked_on > today) out.push(`services: ${s.id}: wrapper ${w.url}: checked_on is in the future`);
+      if (productUrls.has(w.url)) out.push(`services: ${s.id}: wrapper ${w.url} is a listed product's page; a wrapper that is its own entry adds features`);
+      if (wrapperUrls.has(w.url)) out.push(`services: ${s.id}: wrapper ${w.url} is listed twice`);
+      wrapperUrls.add(w.url);
+    }
+  }
   dupes("guides", data.guides.guides.map((g: any) => g.id));
   const serviceName = new Map<string, string>(data.services.services.map((s: any) => [s.id, s.name]));
   const answerById = new Map<string, any>(data.answers.answers.map((a: any) => [a.id, a]));
@@ -322,6 +346,27 @@ for (const mutation of [
 ]) {
   const bad = structuredClone(data); mutation(bad);
   if (!semantic(bad).length) problems.push("invalid service class or hosting accepted");
+}
+// Ports and wrappers.
+const [first, second] = data.services.services.filter((s: any) => s.kind === "app");
+const community = data.services.services.find((s: any) => s.kind === "community");
+const nonApp = data.services.services.find((s: any) => s.kind !== "app" && s.kind !== "community");
+const wrapper = {label: "Docker image", maker: "Example", url: "https://example.org/wrapper", checked_on: "2026-11-20"};
+const withPort = structuredClone(data);
+Object.assign(withPort.services.services.find((s: any) => s.id === second.id), {port_of: {service: first.id, state: "diverged"}, wrappers: [wrapper]});
+if (!files.services.safeParse(withPort.services).success || semantic(withPort).length) problems.push("valid port and wrapper rejected");
+for (const mutation of [
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).port_of = {service: first.id, state: "follows"}; },
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).port_of = {service: "no-such-service", state: "follows"}; },
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).port_of = {service: nonApp.id, state: "follows"}; },
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).port_of = {service: second.id, state: "follows"}; },
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).wrappers = [{...wrapper, url: second.url}]; },
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).wrappers = [wrapper, wrapper]; },
+  (d: any) => { d.services.services.find((s: any) => s.id === first.id).wrappers = [{...wrapper, checked_on: "2999-01-01"}]; },
+  (d: any) => { d.services.services.find((s: any) => s.id === community.id).wrappers = [wrapper]; },
+]) {
+  const bad = structuredClone(withPort); mutation(bad);
+  if (!semantic(bad).length) problems.push("invalid port or wrapper accepted");
 }
 // Naming guide: rules that need the other files (generated aliases, evidence dates, steward list).
 const named = data.words.words.findIndex((w: any) => w.naming);
