@@ -749,7 +749,7 @@
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A ready-to-use live media server and proxy for SRT, RTMP, WebRTC, RTSP and more. It takes plain SRT but not SRTLA, so in a bonded setup it sits behind an SRTLA receiver.",
+      "description": "A live media server and proxy. Streams come in over SRT, RTMP, WebRTC, RTSP and more, and go out in the same or another protocol, so it suits custom setups and testing an app or encoder at home. It takes plain SRT but not SRTLA, so in a bonded setup it sits behind an SRTLA receiver.",
       "platforms": [
         "linux",
         "macos",
@@ -764,14 +764,14 @@
           "label": "GitHub issues",
           "url": "https://github.com/bluenviron/mediamtx/issues",
           "kind": "github",
-          "checked_on": "2026-11-14",
+          "checked_on": "2026-11-20",
           "source": "https://github.com/bluenviron/mediamtx/issues"
         },
         {
           "label": "GitHub discussions",
           "url": "https://github.com/bluenviron/mediamtx/discussions",
           "kind": "forum",
-          "checked_on": "2026-11-14",
+          "checked_on": "2026-11-20",
           "source": "https://github.com/bluenviron/mediamtx/discussions"
         }
       ],
@@ -780,7 +780,7 @@
         "srt",
         "relay"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-20"
     },
     {
       "id": "openirl-srtla-receiver",
