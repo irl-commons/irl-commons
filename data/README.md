@@ -37,8 +37,6 @@ Entries have a `checked_on` date: the day someone compared the entry with its pu
 
 Work out staleness from `checked_on` and today's UTC date; the data stores only dates. An entry is stale on its due date. Months end at the last day of the month: 2026-08-31 plus 6 months is 2027-02-28. Show stale entries with their date. Hide stale plan facts and service status, but keep the carrier or service and its source visible. Each plan fact uses its own date; a recheck of one fact does not refresh the others. `bun scripts/stale.ts [YYYY-MM-DD]` prints a report. A weekly job checks the links and updates one freshness issue; it never edits data. Past source-check rounds are logged in the [Source checks](https://github.com/irl-commons/irl-commons/discussions/47) discussion.
 
-`bun run watch` helps stewards pick what to recheck first. It reads the entries' public sources (GitHub releases and READMEs, App Store versions, page text compared with earlier runs, Discord invite validity) and ranks entries by what changed since their `checked_on`, with the reasons. It also lists products that aren't in the catalogue yet, with the maker's page and a draft entry. It writes reports and never edits data; a signal is a reason to look, not a check. Reports and state go to `.catalogue-watch/` (ignored by Git) or the folder given with `--state`. It identifies itself as `irl-commons-catalogue-watch`, follows robots.txt for pages and keeps requests per site slow.
-
 ## Support links
 
 Service `support` links keep `label` and `url` and add `kind`: `discord`,

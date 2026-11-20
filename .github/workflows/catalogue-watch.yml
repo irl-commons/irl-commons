@@ -1,12 +1,9 @@
-# PROPOSAL, not enabled. A weekly catalogue watch: which entries most likely changed and need a
-# person to recheck them, and products that aren't listed yet. It reads public pages and APIs,
-# respects robots.txt and never edits data. It runs only when started by hand until stewards
-# agree to a schedule; to enable it, uncomment the schedule below.
-name: Catalogue watch (proposal)
+# Catalogue watch: which entries most likely changed and need a person to recheck them, and
+# products that aren't listed yet. It reads public pages and APIs, respects robots.txt and never
+# edits data. It runs only when started by hand. See docs/catalogue-watch.md.
+name: Catalogue watch
 on:
   workflow_dispatch:
-  # schedule:
-  #   - cron: '41 8 * * 1'
 permissions: {}
 concurrency:
   group: catalogue-watch

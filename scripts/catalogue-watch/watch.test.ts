@@ -162,7 +162,7 @@ test("relevance favours IRL terms and pushes away subtitle tools and guides", ()
   expect(draft.unverified).toContain("kind");
 });
 
-test("the weekly watch is a proposal: manual only, no data writes, issues only from the report job", () => {
+test("the watch workflow is manual only, writes no data and opens issues only from the report job", () => {
   const w = Bun.YAML.parse(readFileSync(new URL("../../.github/workflows/catalogue-watch.yml", import.meta.url), "utf8")) as any;
   expect(Object.keys(w.on)).toEqual(["workflow_dispatch"]);
   expect(w.permissions).toEqual({});
