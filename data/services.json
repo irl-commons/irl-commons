@@ -153,7 +153,7 @@
       "open_source": false,
       "licence": null,
       "status": null,
-      "description": "Android app for IRL streaming, with SRTLA bonding and a free bonding service.",
+      "description": "Android app for IRL streaming with SRTLA bonding. IRL Pro lists a free bonding service, with no usage limits shown on the product page.",
       "platforms": [
         "android"
       ],
@@ -175,7 +175,7 @@
         "bonding",
         "srtla"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "larix-broadcaster",
@@ -338,7 +338,7 @@
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "A free, open-source iPhone app for IRL streaming, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras. Its OBS remote control changes scenes, starts and stops the stream and mutes inputs.",
+      "description": "A free, open-source app for IRL streaming on iPhone and iPad, with SRTLA and RIST bonding. It can film with several of the phone's cameras at once, picture-in-picture, and its ingests (RTMP, SRT(LA), RIST and WHIP servers) take streams from other phones and cameras into a scene. Mobcam makes the phone a low-latency webcam over USB, for example as a camera in OBS. On iPad it takes UVC (USB-C) cameras. Its OBS remote control changes scenes, starts and stops the stream and mutes inputs.",
       "platforms": [
         "ios"
       ],
@@ -374,7 +374,7 @@
         "adaptive-bitrate",
         "scene"
       ],
-      "checked_on": "2026-11-16"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "moblink",
@@ -1605,12 +1605,16 @@
         {
           "label": "knowledge base",
           "url": "https://kb.irltoolkit.com/"
+        },
+        {
+          "label": "pricing",
+          "url": "https://irltoolkit.com/pricing"
         }
       ],
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Cloud production with overlays and drop protection; several inputs on the bigger plan.",
+      "description": "Cloud production with overlays and drop protection, with more than one input on request on the Advanced plan ($179/month).",
       "platforms": [
         "service"
       ],
@@ -1643,7 +1647,7 @@
         "cloud-obs",
         "drop-protection"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "noalbs-tool",
