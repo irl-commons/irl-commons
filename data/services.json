@@ -387,14 +387,18 @@
       "url": "https://github.com/eerimoq/moblink",
       "links": [
         {
+          "label": "Google Play",
+          "url": "https://play.google.com/store/apps/details?id=com.eerimoq.moblink"
+        },
+        {
           "label": "moblin.app",
           "url": "https://moblin.app/"
         }
       ],
       "open_source": true,
       "licence": "MIT",
-      "status": "alpha",
-      "description": "Uses spare Android phones as extra bonding connections; the same works from iPhones running Moblin.",
+      "status": null,
+      "description": "Uses spare Android phones as extra SRTLA or RIST bonding connections; the same works from iPhones running Moblin.",
       "platforms": [
         "android"
       ],
@@ -407,7 +411,7 @@
           "label": "GitHub issues",
           "url": "https://github.com/eerimoq/moblink/issues",
           "kind": "github",
-          "checked_on": "2026-11-14",
+          "checked_on": "2026-11-21",
           "source": "https://github.com/eerimoq/moblink/issues"
         },
         {
@@ -422,7 +426,7 @@
       "words": [
         "bonding"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "obs-blade",
@@ -706,7 +710,7 @@
       "open_source": true,
       "licence": "MIT",
       "status": null,
-      "description": "The IRL-focused fork of SRT Live Server, with SRTLA bonding support and a stats page.",
+      "description": "The IRL-focused fork of SRT Live Server, with an HTTP stats API. Pair it with an SRTLA receiver for bonding.",
       "platforms": [
         "linux"
       ],
@@ -720,7 +724,7 @@
           "label": "README and setup",
           "url": "https://github.com/irlserver/irl-srt-server#readme",
           "source": "https://github.com/irlserver/irl-srt-server#readme",
-          "checked_on": "2026-11-16"
+          "checked_on": "2026-11-21"
         }
       ],
       "tags": [],
@@ -729,7 +733,7 @@
         "srtla",
         "relay"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "mediamtx",
@@ -1248,7 +1252,15 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Bonded encoders for creators, on LiveU's LRT bonding, by subscription.",
+      "description": "Bonded encoders for creators, on LiveU's LRT bonding. Bonding is a subscription ($45/month); one connection works without.",
+      "sources": [
+        {
+          "kind": "public primary",
+          "url": "https://solohelp.liveu.tv/hc/en-us/articles/17985402380827-Getting-Started-With-Solo-Stream-Tools",
+          "read_on": "2026-11-21",
+          "note": "Solo Stream Tools is a paid plan that includes LRT bonding. With it switched off, the Solo streams RTMP over a single interface. Prices are on the product page: $45 a month or $450 a year."
+        }
+      ],
       "platforms": [
         "hardware"
       ],
@@ -1262,7 +1274,7 @@
           "label": "LiveU Solo help centre",
           "url": "https://solohelp.liveu.tv/hc/en-us",
           "kind": "help",
-          "checked_on": "2026-11-14",
+          "checked_on": "2026-11-21",
           "source": "https://solohelp.liveu.tv/hc/en-us"
         }
       ],
@@ -1273,7 +1285,7 @@
         "bonding",
         "encoder"
       ],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "starlink",
@@ -1288,7 +1300,15 @@
       "open_source": null,
       "licence": null,
       "status": null,
-      "description": "Satellite internet; joins a backpack as one more link. Best with a clear view of the sky; in motion it needs the right plan and mount.",
+      "description": "Satellite internet; joins a backpack as one more link. Best with a clear view of the sky. Using it while moving needs a Roam or Priority plan, used where Starlink allows it, and a dish made for motion (Mini, Standard or Performance), fixed in place.",
+      "sources": [
+        {
+          "kind": "public primary",
+          "url": "https://starlink.com/us/support/article/50e933eb-54f5-1a77-cc85-c6c8325564cf",
+          "read_on": "2026-11-21",
+          "note": "In-motion use is supported on Roam, Local Priority and Global Priority plans, up to 100 mph in authorized locations, and not on Residential plans. Supported dishes: Mini, Standard 4 (and 4 X), Performance Gen 2 and Gen 3. Actuated dishes are not recommended."
+        }
+      ],
       "platforms": [
         "hardware",
         "service"
@@ -1302,13 +1322,13 @@
           "label": "Starlink support",
           "url": "https://www.starlink.com/support",
           "kind": "help",
-          "checked_on": "2026-11-14",
+          "checked_on": "2026-11-21",
           "source": "https://www.starlink.com/support"
         }
       ],
       "tags": [],
       "words": [],
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "teradek-prism-mobile",
