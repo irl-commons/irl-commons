@@ -587,14 +587,14 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Turning on Twitch's backup screen for a lost connection",
-      "plain": "Twitch keeps your broadcast open for up to 90 seconds when your connection drops, showing its own waiting screen. If you do not return, the broadcast ends.",
+      "plain": "Twitch keeps your broadcast open for up to 90 seconds when your connection drops, showing its own waiting screen. If you do not return, the broadcast ends. Switch it on in Twitch's stream settings. Twitch lists desktop apps and its own app; test it with yours.",
       "related": [
         "drop-protection",
         "brb"
       ],
       "source": "https://help.twitch.tv/s/article/Disconnect-Protection",
       "uncertain": false,
-      "checked_on": "2026-11-16",
+      "checked_on": "2026-11-21",
       "naming": {
         "label": "Disconnect protection",
         "case": "sentence",
