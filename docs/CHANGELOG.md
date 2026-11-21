@@ -7,13 +7,14 @@ has them, with their sources.
 The data is v0. Fields can still change before the first npm release. Ids
 never change.
 
-## Unreleased
+## 0.4.0 (21 November 2026)
 
 - `services.json`: two optional fields. `port_of` marks a port or fork of a
   listed product, with `state` `follows` or `diverged`; the original's entry
   doesn't list its ports, so read them from this field. `wrappers` lists
   Docker images, install scripts and packages that only install the product,
   each with its own maker, page and `checked_on`.
+- `words.json`: a new word, streaming setup.
 
 ## 0.3.0 — 16 November 2026
 
