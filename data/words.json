@@ -466,7 +466,7 @@
       "tier": "more",
       "who": "both",
       "heard_when": "Choosing cloud production or a hosted receiver; NOALBS switching to a BRB scene when the feed drops",
-      "plain": "Your setup switches to your BRB scene when the connection drops, then back when it returns. There is no time limit.",
+      "plain": "Your setup switches to your BRB scene when the connection drops, then back when it returns. Moblin calls this setting Disconnect protection. Twitch uses the same name for its own backup image feature.",
       "related": [
         "brb",
         "cloud-obs",
@@ -475,7 +475,7 @@
       ],
       "source": "https://github.com/NOALBS/nginx-obs-automatic-low-bitrate-switching",
       "uncertain": false,
-      "checked_on": "2026-11-16",
+      "checked_on": "2026-11-21",
       "naming": {
         "label": "Drop protection",
         "case": "sentence",
@@ -531,16 +531,16 @@
             "label": "Drop protection with NOALBS"
           },
           {
-            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
-            "read_on": "2026-11-16",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L19-L36",
+            "read_on": "2026-11-21",
             "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\".",
             "service": "moblin",
             "support": "direct",
             "label": "Disconnect protection"
           },
           {
-            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L37",
-            "read_on": "2026-11-16",
+            "url": "https://github.com/eerimoq/moblin/blob/e8bd765e4ae24aa9ae185be826cad79dc6b05fb9/Moblin/View/Settings/Scenes/DisconnectProtection/DisconnectProtectionSettingsView.swift#L19-L36",
+            "read_on": "2026-11-21",
             "note": "Settings page \"Disconnect protection\" with a picker \"Fallback scene\".",
             "service": "moblin",
             "support": "direct",
@@ -1109,13 +1109,13 @@
       "tier": "more",
       "who": "streamer",
       "heard_when": "iPhone Settings → Personal Hotspot; connecting a camera to a phone's hotspot",
-      "plain": "An iPhone hotspot setting that switches to an older Wi-Fi band, so older devices can join. Apple says it can lower performance.",
+      "plain": "On iPhone 12 and later, this Personal Hotspot setting lets older devices join by using only 2.4 GHz Wi-Fi and requiring WPA2 Personal. Apple says it can reduce Wi-Fi speed and security.",
       "related": [
         "local-ingest"
       ],
-      "source": "https://support.apple.com/guide/platform-support/sup025284ac0/web",
+      "source": "https://support.apple.com/guide/security/secfd166f620/web",
       "uncertain": false,
-      "checked_on": "2026-11-14"
+      "checked_on": "2026-11-21"
     },
     {
       "id": "mic-override",
