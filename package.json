@@ -40,7 +40,8 @@
     "export": "bun scripts/export.ts",
     "titles": "bun scripts/titles.ts",
     "aliases": "bun scripts/aliases.ts",
-    "watch": "bun scripts/catalogue-watch/main.ts"
+    "watch": "bun scripts/catalogue-watch/main.ts",
+    "discover:questions": "bun scripts/discovery/main.ts questions"
   },
   "dependencies": {
     "zod": "4.6.7"

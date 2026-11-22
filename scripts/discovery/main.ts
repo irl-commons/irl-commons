@@ -1,0 +1,130 @@
+// Discovery reports for stewards. Read-only: they never edit data/ and never write to GitHub.
+//
+//   bun scripts/discovery/main.ts questions --out <dir> [--since YYYY-MM-DD] [--offline]
+//
+// `questions` reads public threads (GitHub issues and discussions, Stack Exchange, forum
+// boards), sorts them and maps them to answers.json, words.json and guides.json.
+// The output folder must be outside this repository: reports and caches hold copies of
+// public posts and are not for committing. DISCOVERY_OUT can stand in for --out.
+// GitHub needs a read-only token: GITHUB_TOKEN, or a signed-in gh.
+import { existsSync, lstatSync, readFileSync, realpathSync } from "node:fs";
+import { fileURLToPath } from "node:url";
+import { basename, dirname, join, relative, resolve, isAbsolute, sep } from "node:path";
+import { EXTRA_REPOS, SKIP_REPOS } from "./config.ts";
+import { sortThread, type Thread } from "./classify.ts";
+import { GitHub, githubToken, harvestForums, harvestGitHub, harvestStackExchange, type SourceStat } from "./harvest.ts";
+import { Cache, Fetcher, writeLocalFile } from "./http.ts";
+import { buildIndex, linkedRepos, loadData } from "./project.ts";
+import { withOutputDirectories } from "./output.ts";
+import { questionsReport } from "./report.ts";
+
+export const REPO_ROOT = fileURLToPath(new URL("../../", import.meta.url));
+
+/** Resolve existing ancestors too, since --out may be a directory we create later. */
+function prospectiveRealpath(path: string): string {
+  if (lstatSync(path, { throwIfNoEntry: false })) return realpathSync(path);
+  return join(prospectiveRealpath(dirname(path)), basename(path));
+}
+
+/** The output folder, refused when it sits inside the repository. */
+export function outputDir(arg: string | undefined, repoRoot = REPO_ROOT): string {
+  if (!arg) throw new Error("give an output folder outside the repository: --out <dir> or DISCOVERY_OUT");
+  const out = resolve(arg);
+  const canonical = prospectiveRealpath(out);
+  const rel = relative(realpathSync(repoRoot), canonical);
+  if (!isAbsolute(rel) && rel !== ".." && !rel.startsWith(".." + sep)) throw new Error("the output folder must be outside the repository, so harvested posts are never committed");
+  return canonical;
+}
+
+export function prepareOutput(arg: string | undefined, repoRoot = REPO_ROOT): string {
+  const out = outputDir(arg, repoRoot);
+  for (const path of ["cache", "state", "state/questions-window.json", "questions.json", "questions.md"]) {
+    outputDir(join(out, path), repoRoot);
+  }
+  return out;
+}
+
+function args(argv: string[]) {
+  const flags: Record<string, string | boolean> = {};
+  const rest: string[] = [];
+  for (let i = 0; i < argv.length; i++) {
+    const a = argv[i];
+    if (a.startsWith("--")) { const v = argv[i + 1]; if (v && !v.startsWith("--") && !["--offline"].includes(a)) { flags[a.slice(2)] = v; i++; } else flags[a.slice(2)] = true; }
+    else rest.push(a);
+  }
+  return { command: rest[0] ?? "questions", flags };
+}
+
+function monthsAgo(today: string, months: number): string {
+  const d = new Date(today);
+  d.setUTCMonth(d.getUTCMonth() - months);
+  return d.toISOString().slice(0, 10);
+}
+
+function questionWindowFile(out: string, state = join(out, "state")): string {
+  return join(state, "questions-window.json");
+}
+
+function cachedQuestionWindow(out: string, state?: string): string | undefined {
+  for (const file of [questionWindowFile(out, state), join(out, "questions.json")]) {
+    if (!existsSync(file)) continue;
+    const report = JSON.parse(readFileSync(file, "utf8"));
+    const current = file === questionWindowFile(out, state) || "cacheWindow" in report;
+    const legacyUsable = Array.isArray(report.stats) && report.stats.some((row: SourceStat) =>
+      /^(GitHub |Stack Exchange )/.test(row.source) && !row.note?.startsWith("failed:"));
+    const since = "cacheWindow" in report ? report.cacheWindow : current || legacyUsable ? report.since : undefined;
+    if (typeof since === "string" && /^\d{4}-\d{2}-\d{2}$/.test(since)) return since;
+  }
+}
+
+/** Offline reads use the same default window as the run that filled the cache. */
+export function questionsSince(out: string, today: string, requested: string | undefined, offline: boolean, state?: string): string {
+  return requested ?? (offline ? cachedQuestionWindow(out, state) : undefined) ?? monthsAgo(today, 24);
+}
+
+export function saveQuestionWindow(out: string, since: string, offline: boolean, sources: SourceStat[], state?: string): string | undefined {
+  const file = questionWindowFile(out, state);
+  const usable = !offline && sources.some((source) => !source.note?.startsWith("failed:"));
+  const previous = cachedQuestionWindow(out, state);
+  if (usable || previous && !existsSync(file)) {
+    writeLocalFile(file, JSON.stringify({ since: usable ? since : previous }));
+  }
+  return usable ? since : previous;
+}
+
+async function main() {
+  const { command, flags } = args(process.argv.slice(2));
+  if (command !== "questions") throw new Error(`unknown command ${command}: use questions`);
+  const root = prepareOutput((flags.out as string) ?? process.env.DISCOVERY_OUT);
+  await withOutputDirectories(root, REPO_ROOT, (out, cacheDirectory, state) => runDiscovery(flags, root, out, cacheDirectory, state));
+}
+
+async function runDiscovery(flags: Record<string, string | boolean>, root: string, out: string, cacheDirectory: string, state: string) {
+  const today = (flags.today as string) ?? new Date().toISOString().slice(0, 10);
+  const since = questionsSince(out, today, flags.since as string | undefined, !!flags.offline, state);
+  const cache = new Cache(cacheDirectory, !!flags.offline);
+  const fetcher = new Fetcher({ "api.github.com": 400, "api.stackexchange.com": 1000 }, 1500, undefined, undefined, cache);
+  const data = loadData();
+  const index = buildIndex(data);
+  const gh = new GitHub(fetcher, cache, cache.offline ? null : githubToken());
+
+  const stats: SourceStat[] = [];
+  const repos = [...new Set([...linkedRepos(data), ...EXTRA_REPOS])].filter((r) => !SKIP_REPOS.has(r));
+  const threads: Thread[] = [
+    ...await harvestGitHub(gh, repos, since, stats),
+    ...await harvestStackExchange(fetcher, cache, since, stats),
+  ];
+  const windowSources = [...stats];
+  threads.push(...await harvestForums(fetcher, cache, since, stats));
+  const unique = [...new Map(threads.map((t) => [t.url, t])).values()];
+  const sorted = unique.map((t) => sortThread(t, index)).sort((a, b) => b.created.localeCompare(a.created));
+  const cacheWindow = saveQuestionWindow(out, since, cache.offline, windowSources, state) ?? null;
+  writeLocalFile(join(out, "questions.json"), JSON.stringify({ today, since, cacheWindow, stats, threads: sorted.map((s) => ({ ...s, text: s.text.slice(0, 200) })) }, null, 1));
+  writeLocalFile(join(out, "questions.md"), questionsReport(sorted, stats, { today, since }));
+  console.log(`questions: ${sorted.length} threads from ${stats.length} sources; ${join(root, "questions.md")}`);
+
+  console.log(`requests: ${fetcher.log.requests}; blocked by robots.txt: ${fetcher.log.blocked.length}; failures: ${fetcher.log.failures.length}`);
+  for (const f of fetcher.log.failures.slice(0, 10)) console.log(`  ${f}`);
+}
+
+if (import.meta.main) main().catch((e) => { console.error(e instanceof Error ? e.message : e); process.exit(1); });
