@@ -1,6 +1,7 @@
 // Markdown reports for people. They list titles, links, dates and states; never names of people.
 import { NOT_READ, THEMES } from "./config.ts";
-import { covered, type Sorted } from "./classify.ts";
+import { covered, relevanceHits, type Sorted } from "./classify.ts";
+import type { Draft, Recheck } from "./guides.ts";
 import type { SourceStat } from "./harvest.ts";
 
 const themeLabel = new Map(THEMES.map((t) => [t.id, t.label]));
@@ -118,5 +119,47 @@ export function questionsReport(items: Sorted[], stats: SourceStat[], opts: { to
     "- Coverage: answer when a symptom phrase in config.ts for an answers.json entry matches; guide when a guide covers a named product at the theme's part of the chain and shares a glossary word or check with the thread; related-guide when a guide covers the product but not this topic; word when only a glossary name appears. Generic glossary names never count.",
     "- Threads from large general projects, searches, Stack Exchange and forums are kept only when they show IRL signs (config.ts RELEVANCE_STRONG and RELEVANCE_CONTEXT): a strong one, two in all, one in the title.",
     "- Every thread with its reasons is in questions.json next to this report.");
+  return out.join("\n") + "\n";
+}
+
+/** Not-covered support threads per theme, from a questions run: how much a guide on that theme is wanted. */
+export function themeDemand(items: Sorted[]): Map<string, number> {
+  const m = new Map<string, number>();
+  for (const s of items) if (isSupport(s) && !covered(s)) m.set(s.theme, (m.get(s.theme) ?? 0) + 1);
+  return m;
+}
+
+export function guidesReport(drafts: Draft[], rechecks: Recheck[], stats: SourceStat[], today: string, previousRun: boolean, demand: Map<string, number> | null = null): string {
+  const out: string[] = [
+    "# Guide candidates", "",
+    `Run on ${today}. Pages not yet in guides.json or services.json, from the makers' own docs and wikis. All unverified: read each page, then add it with a checked_on date.`, "",
+    "## Sources", "", ...sourcesTable(stats), "",
+  ];
+  const fresh = drafts.filter((d) => d.review.first_seen === today);
+  out.push("## Summary", "", `- Candidates: ${drafts.length}${previousRun ? `, new since the last run: ${fresh.length}` : " (first run: everything is new)"}.`,
+    `- Listed guides whose page changed after their checked_on date: ${rechecks.length}.`, "");
+  if (rechecks.length) {
+    out.push("## Listed guides to re-read", "", "| Guide | checked_on | Page changed | Source |", "| --- | --- | --- | --- |");
+    for (const r of rechecks) out.push(`| [${r.guide}](${r.url}) | ${r.checked_on} | ${r.lastmod} | ${md(r.found_via)} |`);
+    out.push("");
+  }
+  const want = (d: Draft) => demand?.get(d.review.theme) ?? 0;
+  const top = drafts.filter((d) => !d.review.inside && (d.part.length || relevanceHits(d.title).strong.length))
+    .sort((a, b) => Math.min(b.words.length, 1) - Math.min(a.words.length, 1) || want(b) - want(a) || (b.review.lastmod ?? "").localeCompare(a.review.lastmod ?? ""))
+    .slice(0, 30);
+  out.push("## Top candidates", "",
+    demand ? "Pages outside docs already listed as a whole. Pages that name a glossary word come first, then by how many uncovered public threads share their theme (from questions.json)." : "Pages outside docs already listed as a whole. Run `questions` first to order them by demand.", "",
+    "| Page | Covers | Part | Theme | Uncovered threads in theme |", "| --- | --- | --- | --- | ---: |");
+  for (const d of top) out.push(`| ${link(d)} | ${d.covers.join(", ")} | ${d.part.join(", ") || "?"} | ${themeLabel.get(d.review.theme) ?? d.review.theme} | ${demand ? want(d) : ""} |`);
+  out.push("", "## Candidates", "", "Grouped by source. Part and words are guesses from the title and address. \"Inside\" names a docs entry in guides.json that already links the whole site; such pages matter less.", "");
+  const by = new Map<string, Draft[]>();
+  for (const d of drafts) by.set(d.review.found_via, [...(by.get(d.review.found_via) ?? []), d]);
+  for (const [source, ds] of by) {
+    out.push(`### ${md(source)} (${ds.length})`, "", "| Page | Covers | Part | Words | Inside | Language | First seen |", "| --- | --- | --- | --- | --- | --- | --- |");
+    for (const d of ds.sort((a, b) => (b.review.lastmod ?? "").localeCompare(a.review.lastmod ?? "")))
+      out.push(`| ${link(d)} | ${d.covers.join(", ")} | ${d.part.join(", ") || "?"} | ${d.words.slice(0, 4).join(", ")} | ${d.review.inside ?? ""} | ${d.language} | ${d.review.first_seen} |`);
+    out.push("");
+  }
+  out.push("Draft entries in the guides.json shape are in guide-candidates.json. `title_display` is left out (scripts/titles.ts makes it) and `checked_on` is left for the reviewer.");
   return out.join("\n") + "\n";
 }

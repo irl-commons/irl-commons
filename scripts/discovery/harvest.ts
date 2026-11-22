@@ -135,6 +135,10 @@ export class GitHub {
     return r.data;
   }
 
+  async rest(path: string): Promise<any> {
+    return this.fetcher.json(`https://api.github.com${path}`, { headers: { Accept: "application/vnd.github+json" } });
+  }
+
   private async discussionReplyByMaintainer(comment: any, repo: string): Promise<boolean> {
     let replies = comment.replies;
     while (replies) {

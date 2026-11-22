@@ -3,14 +3,18 @@ import { expect, test } from "bun:test";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, readdirSync, renameSync, rmSync, symlinkSync, writeFileSync } from "node:fs";
 import { tmpdir } from "node:os";
 import { join } from "node:path";
-import { FORUM_FEEDS } from "./config.ts";
+import { DOC_FOLDERS, FORUM_FEEDS, GUIDE_FEEDS, SITES, WIKIS } from "./config.ts";
+import { Guide } from "../../schema/src/schema.ts";
 import { answeredOf, isRelevant, kindOf, sanitize, sortThread, themeOf, type Thread } from "./classify.ts";
+import { cleanTitle, discoverGuides, draftFor, guideTitleKey, irlScore, keepPath, migrateGuideSeen, pageLinks, pageMeta, parseSitemap } from "./guides.ts";
 import { GitHub, fromDiscussion, fromIssue, harvestForums, harvestGitHub, parseFeed, parseRss, type SourceStat } from "./harvest.ts";
 import { Cache, Fetcher, OfflineMiss, RobotsBlocked, parseRobots, robotsAllows, writeLocalFile } from "./http.ts";
 import { outputDir, prepareOutput, questionsSince, saveQuestionWindow, REPO_ROOT } from "./main.ts";
-import { buildIndex, phrase, type Data } from "./project.ts";
+import { buildIndex, normalizeUrl, phrase, type Data } from "./project.ts";
 import { withOutputDirectories } from "./output.ts";
-import { isCheapWin, isOpenGap, isResolvedProblem, questionsReport, themeRows } from "./report.ts";
+import { readSitemap, sitemapXml } from "./sitemap.ts";
+import { listWikiPages, wikiGit } from "./wiki.ts";
+import { guidesReport, isCheapWin, isOpenGap, isResolvedProblem, questionsReport, themeRows } from "./report.ts";
 
 // ---------- synthetic project data ----------
 
@@ -70,6 +74,8 @@ test("the output folder must be outside the repository", () => {
   expect(outputDir(join(tmpdir(), "discovery-out"))).toBe(join(tmpdir(), "discovery-out"));
 });
 
+// ---------- privacy ----------
+
 test("sanitize drops links, addresses, handles, e-mail and keys", () => {
   const text = "Hi @someone, my srt://203.0.113.5:4000?streamid=abc123 and rtmp://example.net/live fail. Mail me at a.person@example.com. key=live_abcdefghijk 2001:db8::1 ```log\nsecret\n```";
   const out = sanitize(text);
@@ -90,6 +96,8 @@ test("GitHub threads keep no people: only association flags", () => {
     repository: { nameWithOwner: "example/sample-app" } }, "github");
   expect(own).toMatchObject({ byMaintainer: true, maintainerReplied: false, type: "discussion" });
 });
+
+// ---------- sorting ----------
 
 test("relevance for general sources needs a strong sign, two in all, one in the title", () => {
   expect(isRelevant("Bonded stream to OBS drops", "")).toBe(true);
@@ -155,6 +163,8 @@ test("products come from the repository and from names in the text", () => {
   expect(s.products.sort()).toEqual(["other-tool", "sample-app"]);
 });
 
+// ---------- reports ----------
+
 test("question report lists themes, cheap wins and open gaps, without people", () => {
   const sorted = [
     sortThread(thread({ id: "a", url: "https://github.com/example/sample-app/issues/2", title: "How do I keep the phone cool?", maintainerReplied: true, open: false, closedAs: "completed" }), index),
@@ -168,6 +178,41 @@ test("question report lists themes, cheap wins and open gaps, without people", (
   expect(md).toContain("## Cheap wins");
   expect(md).toContain("Heat, battery and power");
   expect(md).not.toContain("Add dark mode");
+});
+
+// ---------- guides ----------
+
+test("sitemaps, index pages, RSS and page titles parse", () => {
+  const idx = parseSitemap(`<sitemapindex><sitemap><loc>https://docs.example.org/sitemap-0.xml</loc></sitemap></sitemapindex>`);
+  expect(idx.sitemaps).toEqual(["https://docs.example.org/sitemap-0.xml"]);
+  const set = parseSitemap(`<urlset><url><loc>https://docs.example.org/a/</loc><lastmod>2026-11-01T10:00:00Z</lastmod></url><url><loc>https://docs.example.org/b/</loc></url></urlset>`);
+  expect(set.pages).toEqual([{ url: "https://docs.example.org/a/", lastmod: "2026-11-01" }, { url: "https://docs.example.org/b/", lastmod: null }]);
+  expect(pageLinks(`<a href="/kb/one">1</a><a href="https://elsewhere.example/x">2</a><a href="two.html#top">3</a>`, "https://docs.example.org/kb")).toEqual(["https://docs.example.org/kb/one", "https://docs.example.org/two.html"]);
+  const rss = parseRss(`<rss><channel><item><title>Bonding &amp; OBS</title><link>https://forum.example.org/t/1/</link><pubDate>Mon, 26 Oct 2026 16:43:09 +0000</pubDate><slash:comments>4</slash:comments><dc:creator>someone</dc:creator><content:encoded><![CDATA[<p>Body</p>]]></content:encoded></item></channel></rss>`);
+  expect(rss).toEqual([{ title: "Bonding & OBS", link: "https://forum.example.org/t/1/", date: "2026-10-26", comments: 4, text: " Body " }]);
+  expect(pageMeta(`<html lang="es-419"><head><title>Guía | Docs</title></head></html>`)).toEqual({ title: "Guía | Docs", language: "es" });
+  expect(cleanTitle("Send phone video to OBS with SRT | Sample Docs")).toBe("Send phone video to OBS with SRT");
+  expect(cleanTitle("Enhanced RTMP explained | codecs and more")).toBe("Enhanced RTMP explained | codecs and more");
+});
+
+test("page rules and URL comparison", () => {
+  expect(keepPath("https://docs.example.org/", {})).toBe(false);
+  expect(keepPath("https://docs.example.org/pricing/", {})).toBe(false);
+  expect(keepPath("https://docs.example.org/es/start/", { exclude: "^/es/" })).toBe(false);
+  expect(keepPath("https://docs.example.org/guides/start/", { include: "^/guides/" })).toBe(true);
+  expect(normalizeUrl("https://www.Example.org/a/?utm_source=x#top")).toBe("https://example.org/a");
+  expect(normalizeUrl("https://youtu.be/abc")).toBe(normalizeUrl("https://www.youtube.com/watch?v=abc&t=10"));
+});
+
+test("drafts use only guides.json fields, plus a review block", () => {
+  const d = draftFor({ url: "https://docs.example.org/app/second-phone/", lastmod: "2026-11-01", title: "Add a second phone for bonding", language: null }, ["sample-app"], "Sample App", "Sample docs", index, "2026-11-20");
+  const { review, ...entry } = d;
+  for (const key of Object.keys(entry)) expect(Object.keys(Guide.shape)).toContain(key);
+  expect(entry).toMatchObject({ publisher: "sample-app", covers: ["sample-app"], part: ["connections"], words: ["bonding"], language: "en", published: null });
+  expect(review).toMatchObject({ status: "unverified", inside: "sample-app-docs", theme: "second-connection" });
+  const md = guidesReport([d], [{ guide: "sample-app-bonding", url: "https://docs.example.org/app/bonding/", checked_on: "2026-01-01", lastmod: "2026-06-01", found_via: "Sample docs" }], [], "2026-11-20", false, new Map([["second-connection", 5]]));
+  expect(md).toContain("Listed guides to re-read");
+  expect(md).toContain("Add a second phone for bonding");
 });
 
 test("user questions and problems can name products and platforms", () => {
@@ -215,6 +260,26 @@ test("output folder containment resolves missing descendants and path boundaries
   } finally {
     rmSync(parent, { recursive: true, force: true });
   }
+});
+
+test("URL comparison preserves case-sensitive paths and video IDs", () => {
+  expect(normalizeUrl("https://youtu.be/AbC123?t=2")).toBe(normalizeUrl("https://www.youtube.com/watch?v=AbC123"));
+  expect(normalizeUrl("https://youtube.com/watch?v=AbC123")).not.toBe(normalizeUrl("https://youtube.com/watch?v=abc123"));
+  expect(normalizeUrl("https://example.org/Guide")).not.toBe(normalizeUrl("https://example.org/guide"));
+  expect(normalizeUrl("https://irlhosting.com/index.php?rp=/Guide")).not.toBe(normalizeUrl("https://irlhosting.com/index.php?rp=/guide"));
+});
+
+test("a sibling path does not belong to a listed documentation root", () => {
+  const page = { url: "https://docs.example.org/app-extra/setup", title: "Set up video", lastmod: null };
+  expect(draftFor(page, [], null, "Example docs", index, "2026-11-20").review.inside).toBeNull();
+});
+
+test("guide drafts and relevance count a longer product name once", () => {
+  const products = ["Sample App Cloud", "Sample App"].map((name) => ({ id: name, name, re: phrase(name), generic: false }));
+  const project = { ...index, products };
+  const page = { title: "Sample App Cloud setup", url: "https://example.org/setup", lastmod: null };
+  expect(draftFor(page, [], null, "Example docs", project, "2026-11-20").covers).toEqual(["Sample App Cloud"]);
+  expect(irlScore(page.title, project, ["Sample App Cloud"])).toBe(0);
 });
 
 test("out-of-range feed entities leave other entries readable", () => {
@@ -407,6 +472,220 @@ test("GitHub primary limits wait for reset on both REST and GraphQL", async () =
   for (const delay of delays) expect(delay).toBeGreaterThan(119_000);
 });
 
+function guideFetcher(text: (url: string) => Promise<string>): Fetcher {
+  return { text, document: async (url: string) => ({ text: await text(url), url }),
+    binaryDocument: async (url: string, _init: unknown, _max: unknown, limits?: { chargeWire?: (n: number) => void; chargeDecoded?: (n: number) => void }) => {
+      const bytes = new TextEncoder().encode(await text(url));
+      limits?.chargeWire?.(bytes.length);
+      limits?.chargeDecoded?.(bytes.length);
+      return { bytes, url, wireBytes: bytes.length };
+    } } as Fetcher;
+}
+
+test("guide title budgets only spend on requests and advance past cached or failed pages", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-titles-"));
+  try {
+    const site = SITES[0];
+    const pages = Array.from({ length: 62 }, (_, n) => new URL("/guide-" + n, site.sitemap).href);
+    const requested: string[] = [];
+    const fetcher = guideFetcher(async (url) => {
+      if (url === site.sitemap) return "<urlset>" + pages.map((page) => "<url><loc>" + page + "</loc></url>").join("") + "</urlset>";
+      if (!pages.includes(url)) throw new Error("no fixture");
+      requested.push(url);
+      if (url === pages[0]) throw new Error("unavailable");
+      return "<title>Guide " + url.split("-").at(-1) + "</title>";
+    });
+    const cache = new Cache(dir);
+    const online = () => discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {});
+    const first = await online();
+    expect(first.drafts).toHaveLength(59);
+    expect(first.stats[0]).toMatchObject({ read: 62, kept: 59, note: "59 page titles available; 1 page titles unavailable; 2 title lookups deferred" });
+    const second = await online();
+    expect(second.drafts).toHaveLength(61);
+    expect(requested).toEqual(pages);
+    const offline = new Cache(dir, true);
+    const cached = await discoverGuides(fetcher, offline, new GitHub(fetcher, offline, null), index, "2026-11-21", {}, 0);
+    expect(cached.drafts).toHaveLength(61);
+    expect(requested).toEqual(pages);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("a page title can qualify an opaque path on a general docs site", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-title-filter-"));
+  try {
+    const site = SITES.find((source) => source.name === "OBS knowledge base")!;
+    const page = new URL("/kb/scene-setup", site.index).href;
+    const fetcher = guideFetcher(async (url) => {
+      if (url === site.index) return '<a href="/kb/scene-setup">Read</a>';
+      if (url === page) return "<title>Set up a bonded stream</title>";
+      throw new Error("no fixture");
+    });
+    const cache = new Cache(dir);
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {});
+    expect(run.drafts.map((draft) => draft.url)).toEqual([page]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("guide source totals include entries examined before wiki and feed filters", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-source-counts-"));
+  try {
+    const wiki = WIKIS.find((source) => "include" in source)!;
+    const base = "https://github.com/" + wiki.repo + "/wiki";
+    const feed = GUIDE_FEEDS[0];
+    const online = new Cache(dir);
+    online.set("wiki-tree:" + wiki.repo, [{ url: base + "/Open-Live-setup", title: "Open Live setup" }, { url: base + "/Other-project", title: "Other project" }]);
+    online.set("rss:" + feed.url, [
+      { url: "https://forum.example.org/one", title: "Set up a bonded stream", lastmod: null },
+      { url: "https://forum.example.org/two", title: "Generic setup", lastmod: null },
+    ]);
+    const cache = new Cache(dir, true);
+    const fetcher = new Fetcher({}, 0, async () => { throw new Error("offline fetched"); });
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {});
+    expect(run.stats.find((stat) => stat.source === "GitHub wiki " + wiki.repo)).toMatchObject({ read: 2, kept: 1 });
+    expect(run.stats.find((stat) => stat.source === feed.name)).toMatchObject({ read: 2, kept: 1 });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("sitemap indexes follow more than twenty members and skip cycles", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-index-"));
+  try {
+    const site = SITES[0], root = site.sitemap!;
+    const visited: string[] = [];
+    const members = Array.from({ length: 22 }, (_, n) => new URL("/member-" + n + ".xml", root).href);
+    const fetcher = guideFetcher(async (url) => {
+      if (url === root) {
+        return "<sitemapindex>" + [...members, members[0]].map((m) => "<sitemap><loc>" + m + "</loc></sitemap>").join("") + "</sitemapindex>";
+      }
+      if (!members.includes(url)) throw new Error("no fixture");
+      visited.push(url);
+      if (url === members[0]) return "<sitemapindex><sitemap><loc>" + root + "</loc></sitemap></sitemapindex>";
+      return "<urlset><url><loc>" + url.replace(".xml", "/guide") + "</loc></url></urlset>";
+    });
+    const cache = new Cache(dir);
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {}, 0);
+    expect(visited).toEqual(members);
+    expect(run.stats[0]).toMatchObject({ read: 21, note: "21 title lookups deferred" });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("sitemap discovery reads gzipped XML alongside already decoded XML", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-gzip-"));
+  try {
+    const root = SITES[0].sitemap!;
+    const urlset = (name: string) => "<urlset><url><loc>/" + name + "</loc></url></urlset>";
+    const text = "<sitemapindex><sitemap><loc>/compressed.xml.gz</loc></sitemap><sitemap><loc>/plain.xml.gz</loc></sitemap></sitemapindex>";
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      if (url.endsWith("/robots.txt")) return new Response("", { status: 404 });
+      if (url === root) return new Response(text);
+      if (url.endsWith("/compressed.xml.gz")) return new Response(Bun.gzipSync(urlset("compressed")));
+      if (url.endsWith("/plain.xml.gz")) return new Response(urlset("plain"));
+      return new Response("", { status: 404 });
+    });
+    const cache = new Cache(dir);
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {}, 0);
+    expect(run.stats[0]).toMatchObject({ read: 2, note: "2 title lookups deferred" });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("wiki discovery reads the public Git tree through robots-aware HTTP", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-wiki-fixture-"));
+  const caller = mkdtempSync(join(tmpdir(), "discovery-wiki-caller-"));
+  const inherited = { ...process.env };
+  try {
+    wikiGit(caller, ["init", "--bare", "--quiet", "--template=", "--object-format=sha1"]);
+    const callerHead = "1".repeat(40);
+    writeFileSync(join(caller, "refs", "heads", "caller"), callerHead + "\n");
+    const snapshot = () => [
+      readFileSync(join(caller, "HEAD"), "utf8"),
+      readFileSync(join(caller, "config"), "utf8"),
+      readFileSync(join(caller, "refs", "heads", "caller"), "utf8"),
+      readdirSync(join(caller, "objects"), { recursive: true }).sort(),
+    ];
+    const original = snapshot();
+    process.env.GIT_DIR = caller;
+    process.env.GIT_OBJECT_DIRECTORY = join(caller, "objects");
+    process.env.GIT_DEFAULT_HASH = "sha256";
+    const git = (args: string[], stdin?: string) => wikiGit(dir, args, stdin === undefined ? undefined : Buffer.from(stdin));
+    git(["init", "--bare", "--quiet", "--template=", "--object-format=sha1"]);
+    const blob = git(["hash-object", "-w", "--stdin"], "Fixture").toString().trim();
+    const tree = git(["mktree"], ["Home.md", "Stream setup.md", "Getting-started.rest", "Setup.rst.txt", "Advanced.mdx", "Routing.mdwn", "Video.litcoffee", "_Sidebar.md", "setup.png"]
+      .map((file) => "100644 blob " + blob + "\t" + file + "\n").join("")).toString().trim();
+    const author = "Example <fixture@example.org> 1700000000 +0000";
+    const head = git(["hash-object", "-t", "commit", "-w", "--stdin"],
+      "tree " + tree + "\nauthor " + author + "\ncommitter " + author + "\n\nWiki fixture\n").toString().trim();
+    git(["update-ref", "HEAD", head]);
+    git(["config", "uploadpack.allowFilter", "true"]);
+    const visits: string[] = [];
+    const fetcher = new Fetcher({}, 0, async (url, options) => {
+      visits.push(url);
+      if (url.endsWith("/robots.txt")) return new Response("User-agent: *\nDisallow: /example/sample/wiki/_pages");
+      if (url.endsWith("/info/refs?service=git-upload-pack")) {
+        const refs = git(["upload-pack", "--stateless-rpc", "--advertise-refs", "."]);
+        return new Response(Buffer.concat([Buffer.from("001e# service=git-upload-pack\n0000"), refs]));
+      }
+      if (url.endsWith("/git-upload-pack") && options.method === "POST") {
+        expect(options.body).toContain("filter blob:none");
+        return new Response(git(["upload-pack", "--stateless-rpc", "."], String(options.body)));
+      }
+      throw new Error("unexpected request");
+    });
+    expect(await listWikiPages(fetcher, "example/sample")).toEqual([
+      { url: "https://github.com/example/sample/wiki/Advanced", lastmod: null, title: "Advanced" },
+      { url: "https://github.com/example/sample/wiki/Getting-started", lastmod: null, title: "Getting started" },
+      { url: "https://github.com/example/sample/wiki/Home", lastmod: null, title: "Home" },
+      { url: "https://github.com/example/sample/wiki/Routing", lastmod: null, title: "Routing" },
+      { url: "https://github.com/example/sample/wiki/Setup", lastmod: null, title: "Setup" },
+      { url: "https://github.com/example/sample/wiki/Stream-setup", lastmod: null, title: "Stream setup" },
+      { url: "https://github.com/example/sample/wiki/Video", lastmod: null, title: "Video" },
+    ]);
+    expect(visits).toEqual([
+      "https://github.com/robots.txt",
+      "https://github.com/example/sample.wiki.git/info/refs?service=git-upload-pack",
+      "https://github.com/example/sample.wiki.git/git-upload-pack",
+    ]);
+    expect(snapshot()).toEqual(original);
+  } finally {
+    for (const name of ["GIT_DIR", "GIT_OBJECT_DIRECTORY", "GIT_DEFAULT_HASH"]) {
+      if (inherited[name] === undefined) delete process.env[name];
+      else process.env[name] = inherited[name];
+    }
+    rmSync(caller, { recursive: true, force: true });
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("offline guides can replay legacy sitemap and wiki listings", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-legacy-guides-"));
+  try {
+    const site = SITES[0], wiki = WIKIS[0];
+    const page = new URL("/guides/start", site.sitemap).href;
+    const wikiPage = "https://github.com/" + wiki.repo + "/wiki/Stream-setup";
+    const online = new Cache(dir);
+    online.set("sitemap:" + site.sitemap, [{ url: page, lastmod: null }]);
+    online.set(guideTitleKey(page), { title: "Configure video", language: "en", origin: new URL(page).origin });
+    online.set("wiki:" + wiki.repo, [{ url: wikiPage, lastmod: null }]);
+    const offline = new Cache(dir, true);
+    const fetcher = new Fetcher({}, 0, async () => { throw new Error("offline fetched"); });
+    const run = await discoverGuides(fetcher, offline, new GitHub(fetcher, offline, null), index, "2026-11-20", {});
+    expect(run.drafts.map((draft) => draft.url)).toEqual([page, wikiPage]);
+    expect(run.stats[0].note).toContain("older sitemap cache");
+    expect(run.stats.find((stat) => stat.source === "GitHub wiki " + wiki.repo)?.note).toContain("older wiki index cache");
+    expect(fetcher.log.requests).toBe(0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("authenticated GitHub discovery filters private repositories before caching", async () => {
   const dir = mkdtempSync(join(tmpdir(), "discovery-visibility-"));
   try {
@@ -445,7 +724,7 @@ test("external output aliases work but internal descendant destinations are reje
     mkdirSync(out);
     symlinkSync(out, alias);
     expect(prepareOutput(alias, checkout)).toBe(out);
-    for (const name of ["cache", "state", "questions.json", "questions.md"]) {
+    for (const name of ["cache", "state", "questions.json", "guides.md"]) {
       const link = join(out, name);
       symlinkSync(checkout, link);
       expect(() => prepareOutput(alias, checkout)).toThrow("outside the repository");
@@ -460,6 +739,29 @@ test("external output aliases work but internal descendant destinations are reje
     cache.set(key, { checked: true });
     expect(readFileSync(target, "utf8")).toBe("unchanged");
     expect(cache.get(key, 1)).toEqual({ checked: true });
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("sitemap traversal checkpoints its document budget and caps depth and expansion", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-budget-"));
+  try {
+    const root = "https://docs.example.org/root";
+    const visited: string[] = [];
+    const fetcher = guideFetcher(async (url) => {
+      visited.push(url);
+      const links = url === root ? ["/one", "/two"] : ["/too-deep"];
+      return "<sitemapindex>" + links.map((link) => "<sitemap><loc>" + link + "</loc></sitemap>").join("") + "</sitemapindex>";
+    });
+    const cache = new Cache(dir);
+    const limits = { documents: 2, depth: 1, members: 10, pages: 10, wire: 1024, decoded: 1024, ratio: 100 };
+    expect((await readSitemap(fetcher, cache, root, limits)).note).toContain("1 sitemap members deferred");
+    expect((await readSitemap(fetcher, cache, root, limits)).note).toContain("2 sitemap entries omitted");
+    expect(visited).toEqual([root, "https://docs.example.org/one", "https://docs.example.org/two"]);
+    await expect(sitemapXml(Bun.gzipSync("x".repeat(30_000)), 1024, 10)).rejects.toThrow("exceeds");
+    const oversized = new Fetcher({}, 0, async (url) => new Response(url.endsWith("/robots.txt") ? "" : "x".repeat(2048)));
+    await expect(oversized.bytes(root, {}, 1024)).rejects.toThrow("exceeds");
   } finally {
     rmSync(dir, { recursive: true, force: true });
   }
@@ -505,6 +807,98 @@ test("the first page after robots honors the newly learned crawl delay", async (
   expect(await fetcher.text("https://example.org/start")).toBe("ok");
   expect(sleeps).toHaveLength(2);
   for (const ms of sleeps) expect(ms).toBeGreaterThan(9900);
+});
+
+test("sitemap pages and member redirects cannot leave configured origins", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-origin-"));
+  try {
+    const root = "https://docs.example.org/root";
+    const visited: string[] = [];
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      visited.push(url);
+      if (url.endsWith("/robots.txt")) return new Response("");
+      if (url.endsWith("/redirect")) return new Response(null, { status: 302, headers: { location: "https://other.example/forged" } });
+      return new Response(url === root
+        ? '<sitemapindex><sitemap><loc>https://other.example/wrong.xml</loc></sitemap><sitemap><loc>/child</loc></sitemap></sitemapindex>'
+        : '<urlset><url><loc>https://other.example/wrong</loc></url><url><loc>/valid</loc></url></urlset>');
+    });
+    const result = await readSitemap(fetcher, new Cache(dir), root);
+    expect(result.pages.map((page) => page.url)).toEqual(["https://docs.example.org/valid"]);
+    expect(result.note).toContain("2 off-origin");
+    await expect(fetcher.bytes("https://docs.example.org/redirect", { allowedOrigins: [new URL(root).origin] })).rejects.toThrow("outside configured source");
+    expect(visited.every((url) => new URL(url).origin === new URL(root).origin)).toBe(true);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("bad sitemap locations and unavailable members preserve good pages", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-partial-"));
+  try {
+    let broken = true;
+    const root = "https://docs.example.org/root";
+    const fetcher = guideFetcher(async (url) => {
+      if (url === root) return "<sitemapindex><sitemap><loc>/good</loc></sitemap><sitemap><loc>/later</loc></sitemap></sitemapindex>";
+      if (url.endsWith("/later") && broken) throw new Error("unavailable");
+      return url.endsWith("/good")
+        ? "<urlset><url><loc>/valid</loc></url><url><loc>/bad%</loc></url></urlset>"
+        : "<urlset><url><loc>/recovered</loc></url></urlset>";
+    });
+    const cache = new Cache(dir);
+    const first = await readSitemap(fetcher, cache, root);
+    expect(first.pages.map((page) => page.url)).toEqual(["https://docs.example.org/valid"]);
+    expect(first.note).toContain("1 sitemap members unavailable");
+    expect(first.note).toContain("1 malformed sitemap locations");
+    broken = false;
+    const second = await readSitemap(fetcher, cache, root);
+    expect(second.pages.map((page) => page.url)).toEqual(["https://docs.example.org/valid", "https://docs.example.org/recovered"]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("repeated sitemap locations share one title lookup and retain the latest date", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-duplicates-"));
+  try {
+    const root = SITES[0].sitemap!;
+    const requested: string[] = [];
+    const fetcher = guideFetcher(async (url) => {
+      if (url === root) return "<urlset>" + "<url><loc>/one</loc><lastmod>2026-01-01</lastmod></url>".repeat(59)
+        + "<url><loc>/one</loc><lastmod>2026-11-01</lastmod></url><url><loc>/two</loc></url></urlset>";
+      if (new URL(url).origin !== new URL(root).origin) throw new Error("no fixture");
+      requested.push(url);
+      return "<title>Guide</title>";
+    });
+    const cache = new Cache(dir);
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {}, 2);
+    expect(requested).toEqual([new URL("/one", root).href, new URL("/two", root).href]);
+    expect(run.stats[0]).toMatchObject({ read: 61, kept: 2 });
+    expect(run.drafts[0].review.lastmod).toBe("2026-11-01");
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("failed refresh keeps the last successful title for online and offline runs", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-stale-title-"));
+  const now = Date.now;
+  try {
+    const root = SITES[0].sitemap!, page = new URL("/fixture", root).href;
+    Date.now = () => now() - 8 * 86400_000;
+    const cache = new Cache(dir);
+    cache.set(guideTitleKey(page), { title: "Known guide", language: "en", origin: new URL(page).origin });
+    Date.now = now;
+    const fetcher = guideFetcher(async (url) => {
+      if (url === root) return "<urlset><url><loc>/fixture</loc></url></urlset>";
+      throw new Error("unavailable");
+    });
+    const run = (store: Cache) => discoverGuides(fetcher, store, new GitHub(fetcher, store, null), index, "2026-11-20", {});
+    expect((await run(cache)).stats[0].note).toContain("1 stale page titles reused");
+    expect((await run(new Cache(dir, true))).drafts[0].title).toBe("Known guide");
+  } finally {
+    Date.now = now;
+    rmSync(dir, { recursive: true, force: true });
+  }
 });
 
 test("only a usable online question window advances the offline default", () => {
@@ -594,6 +988,28 @@ test("support and engineering titles keep their distinct intent", () => {
   expect(kind("How do I run `srtla_rec`?")).toBe("question");
 });
 
+test("wiki fallback packs are bounded and both endpoints honor robots", async () => {
+  const packet = (value: string) => (value.length + 4).toString(16).padStart(4, "0") + value;
+  const refs = packet("# service=git-upload-pack\n") + "0000" + packet("1".repeat(40) + " HEAD\0shallow\n") + "0000";
+  for (const disallow of ["/info/refs", "/git-upload-pack", ""]) {
+    const visited: string[] = [];
+    let cancelled = false;
+    const fetcher = new Fetcher({}, 0, async (url, init) => {
+      visited.push(new URL(url).pathname);
+      if (url.endsWith("/robots.txt")) return new Response(disallow ? "User-agent: *\nDisallow: /*" + disallow : "");
+      if (url.includes("/info/refs")) return new Response(refs);
+      expect(init.body).not.toContain("filter blob:none");
+      return new Response(new ReadableStream({
+        pull(controller) { controller.enqueue(new Uint8Array(1024 ** 2)); },
+        cancel() { cancelled = true; },
+      }));
+    });
+    await expect(listWikiPages(fetcher, "example/sample")).rejects.toThrow(disallow ? "disallows" : "response exceeds");
+    expect(visited).toHaveLength(disallow === "/info/refs" ? 1 : disallow ? 2 : 3);
+    if (!disallow) expect(cancelled).toBe(true);
+  }
+});
+
 test.skipIf(process.platform !== "linux")("discovery CLI runs from a checkout path containing spaces", () => {
   const fixture = mkdtempSync(join(tmpdir(), "discovery-path-"));
   try {
@@ -601,12 +1017,157 @@ test.skipIf(process.platform !== "linux")("discovery CLI runs from a checkout pa
     mkdirSync(join(repo, "scripts"), { recursive: true });
     for (const path of ["scripts/discovery", "scripts/lib", "data"]) cpSync(join(REPO_ROOT, path), join(repo, path), { recursive: true });
     const out = join(fixture, "output");
-    const result = Bun.spawnSync([process.execPath, "scripts/discovery/main.ts", "questions", "--offline", "--out", out], { cwd: repo });
+    const result = Bun.spawnSync([process.execPath, "scripts/discovery/main.ts", "guides", "--offline", "--out", out], { cwd: repo });
     expect(result.stderr.toString()).toBe("");
     expect(result.exitCode).toBe(0);
-    expect(JSON.parse(readFileSync(join(out, "questions.json"), "utf8")).threads).toEqual([]);
+    expect(JSON.parse(readFileSync(join(out, "guide-candidates.json"), "utf8")).candidates).toEqual([]);
   } finally {
     rmSync(fixture, { recursive: true, force: true });
+  }
+});
+
+test("redirected indexes, sitemaps and Atom feeds use the final document base", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-bases-"));
+  try {
+    const site = SITES.find((source) => source.name === "OBS knowledge base")!;
+    const root = SITES[0].sitemap!, feed = GUIDE_FEEDS[0];
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      if (url.endsWith("/robots.txt")) return new Response("");
+      const redirect = (location: string) => new Response(null, { status: 302, headers: { location } });
+      if (url === site.index) return redirect("/kb/");
+      if (url === site.index + "/") return new Response('<a href="audio-setup">Read</a>');
+      if (url.endsWith("/kb/audio-setup")) return new Response("<title>Set up a bonded stream</title>");
+      if (url === root) return redirect("/maps/index.xml");
+      if (url.endsWith("/maps/index.xml")) return new Response("<sitemapindex><sitemap><loc>child.xml</loc></sitemap></sitemapindex>");
+      if (url.endsWith("/maps/child.xml")) return new Response("<urlset><url><loc>guide</loc></url></urlset>");
+      if (url.endsWith("/maps/guide")) return new Response("<title>Configure video</title>");
+      if (url === feed.url) return redirect("/boards/atom");
+      if (url.endsWith("/boards/atom")) return new Response('<feed xmlns="http://www.w3.org/2005/Atom"><entry><title>Set up a bonded stream</title><link href="post"/></entry></feed>');
+      return new Response("", { status: 404 });
+    });
+    const cache = new Cache(dir);
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {});
+    expect(run.drafts.map((draft) => draft.url)).toEqual([
+      new URL("/maps/guide", root).href, site.index + "/audio-setup", new URL("/boards/post", feed.url).href,
+    ]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("legacy first-seen dates migrate only when the original URL is unambiguous", () => {
+  const upper = "https://example.org/Guide-Start", lower = upper.toLowerCase();
+  const candidate = (url: string, date: string) => draftFor({ url, lastmod: null, title: "Guide" }, [], null, "Example", index, date);
+  const seen = { [lower]: "2025-01-01" };
+  expect(migrateGuideSeen(seen, [candidate(upper, "2025-01-01")])).toEqual({ [upper]: "2025-01-01" });
+  expect(migrateGuideSeen(seen, [candidate(upper, "2025-01-01"), candidate(lower, "2025-01-01")])).toEqual(seen);
+  expect(migrateGuideSeen(seen, [candidate(upper, "2026-01-01")])).toEqual(seen);
+});
+
+test("YouTube watch forms identify a video independent of playlist context", () => {
+  const same = [
+    "https://youtu.be/AbC123?list=PL1",
+    "https://m.youtube.com/watch?list=PL1&v=AbC123",
+    "https://www.youtube.com/watch?v=AbC123&list=PL2",
+  ].map(normalizeUrl);
+  expect(new Set(same)).toEqual(new Set(["https://youtube.com/watch?v=AbC123"]));
+  expect(normalizeUrl("https://m.youtube.com/playlist?feature=share&list=PL1")).toBe("https://youtube.com/playlist?list=PL1");
+  expect(normalizeUrl("https://youtube.com/watch?v=abc123")).not.toBe(same[0]);
+});
+
+test("online guide feeds refresh old parser results and offline replay labels them", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-feed-version-"));
+  try {
+    const feed = GUIDE_FEEDS[0], title = "Set up a bonded stream";
+    const cache = new Cache(dir);
+    cache.set("rss:" + feed.url, []);
+    const fetcher = guideFetcher(async (url) => {
+      if (url !== feed.url) throw new Error("no fixture");
+      return '<feed><entry><title>' + title + '</title><link href="https://example.org/guide"/></entry></feed>';
+    });
+    const run = (store: Cache) => discoverGuides(fetcher, store, new GitHub(fetcher, store, null), index, "2026-11-20", {});
+    expect((await run(new Cache(dir, true))).stats.find((row) => row.source === feed.name)?.note).toBe("older guide-feed cache");
+    expect((await run(cache)).drafts.map((draft) => draft.title)).toEqual([title]);
+    expect((await run(new Cache(dir, true))).drafts.map((draft) => draft.title)).toEqual([title]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("private or unverified GitHub docs never produce cached drafts", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-docs-visibility-"));
+  try {
+    const folder = DOC_FOLDERS[0], api = "/repos/" + folder.repo;
+    const cache = new Cache(dir);
+    cache.set("docs-tree:" + folder.repo, { branch: "main", paths: ["docs/HELP.md"] });
+    let isPublic = false;
+    const fetcher = new Fetcher({}, 0, async (url, init) => {
+      const path = new URL(url).pathname;
+      if (path === "/robots.txt") return new Response("");
+      if (path === api) {
+        expect(new Headers(init.headers).get("authorization")).toBeNull();
+        return Response.json({ private: !isPublic, visibility: isPublic ? "public" : "private", default_branch: "main" });
+      }
+      if (path === api + "/git/trees/main") {
+        expect(isPublic).toBe(true);
+        return Response.json({ tree: [{ path: "docs/HELP.md", type: "blob" }] });
+      }
+      return new Response("", { status: 404 });
+    });
+    const run = (store: Cache) => discoverGuides(fetcher, store, new GitHub(fetcher, store, "fixture"), index, "2026-11-20", {});
+    expect((await run(new Cache(dir, true))).drafts).toEqual([]);
+    expect((await run(cache)).drafts).toEqual([]);
+    isPublic = true;
+    expect((await run(cache)).drafts.map((draft) => draft.url)).toEqual(["https://github.com/" + folder.repo + "/blob/main/docs/HELP.md"]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("offline guides label an older HTML index listing without fetching", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-index-legacy-"));
+  try {
+    const site = SITES.find((source) => source.name === "OBS knowledge base")!;
+    const page = new URL("/kb/fixture", site.index).href;
+    const online = new Cache(dir);
+    online.set("index:" + site.index, [{ url: page, lastmod: null }]);
+    online.set(guideTitleKey(page), { title: "Set up a bonded stream", language: null, origin: new URL(page).origin });
+    const cache = new Cache(dir, true), fetcher = new Fetcher({}, 0, async () => { throw new Error("offline fetched"); });
+    const run = await discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {});
+    expect(run.drafts.map((draft) => draft.url)).toEqual([page]);
+    expect(run.stats.find((row) => row.source === site.name)?.note).toContain("older HTML index cache");
+    expect(fetcher.log.requests).toBe(0);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("expired titles rotate by the oldest attempt across runs", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-title-rotation-"));
+  const now = Date.now;
+  try {
+    const root = SITES[0].sitemap!, first = new URL("/first", root).href, second = new URL("/second", root).href;
+    const request: string[] = [];
+    const fetcher = guideFetcher(async (url) => {
+      if (url === root) return "<urlset><url><loc>/first</loc></url><url><loc>/second</loc></url></urlset>";
+      if (url !== first && url !== second) throw new Error("no fixture");
+      request.push(url);
+      return "<title>Refreshed</title>";
+    });
+    const cache = new Cache(dir);
+    Date.now = () => now() - 8 * 86400_000;
+    cache.set(guideTitleKey(first), { title: "Newer", language: "en", origin: new URL(first).origin });
+    Date.now = () => now() - 9 * 86400_000;
+    cache.set(guideTitleKey(second), { title: "Older", language: "en", origin: new URL(second).origin });
+    Date.now = now;
+    const run = () => discoverGuides(fetcher, cache, new GitHub(fetcher, cache, null), index, "2026-11-20", {}, 1);
+    await run();
+    expect(request).toEqual([second]);
+    await run();
+    expect(request).toEqual([second, first]);
+  } finally {
+    Date.now = now;
+    rmSync(dir, { recursive: true, force: true });
   }
 });
 
@@ -633,6 +1194,86 @@ test.skipIf(process.platform !== "linux")("replacing an output parent during dis
   }
 });
 
+test("interrupted sitemap transfers charge the aggregate wire budget", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-interrupted-body-"));
+  try {
+    const root = "https://docs.example.org/root";
+    let members = 0;
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      if (url.endsWith("/robots.txt")) return new Response("");
+      if (url === root) return new Response("<sitemapindex>" + Array.from({ length: 6 }, (_, n) => "<sitemap><loc>/m" + n + "</loc></sitemap>").join("") + "</sitemapindex>");
+      members++;
+      let first = true;
+      return new Response(new ReadableStream({
+        pull(controller) {
+          if (first) { first = false; controller.enqueue(new Uint8Array(1000)); }
+          else controller.error(new Error("interrupted"));
+        },
+      }));
+    });
+    await readSitemap(fetcher, new Cache(dir), root, { documents: 20, depth: 2, members: 20, pages: 20, wire: 1024, decoded: 2048, ratio: 150 });
+    expect(members).toBe(4);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("sitemap limits apply to gzip delivered as HTTP content encoding", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-http-gzip-"));
+  try {
+    const visits: boolean[] = [];
+    const xml = "<urlset>" + "<url><loc>/sample</loc></url>".repeat(40) + "</urlset>";
+    const fetcher = new Fetcher({}, 0, async (url, init) => {
+      if (url.endsWith("/robots.txt")) return new Response("");
+      visits.push(init.decompress === false);
+      return new Response(Bun.gzipSync(xml), { headers: { "content-encoding": "gzip" } });
+    });
+    const limits = { documents: 2, depth: 2, members: 5, pages: 100, wire: 1024, decoded: 2048, ratio: 2 };
+    const root = "https://docs.example.org/root";
+    const cache = new Cache(dir);
+    expect((await readSitemap(fetcher, cache, root, limits)).pages).toEqual([]);
+    expect((await readSitemap(fetcher, cache, root, { ...limits, ratio: 150 })).pages).toHaveLength(40);
+    expect(visits).toEqual([true, true]);
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("stuck sitemap checkpoints rediscover membership and failed root refreshes retain offline pages", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-lifecycle-"));
+  const realNow = Date.now;
+  let now = Date.UTC(2026, 10, 20);
+  Date.now = () => now;
+  try {
+    const root = "https://docs.example.org/root", cache = new Cache(dir);
+    let revision = 0;
+    const fetcher = guideFetcher(async (url) => {
+      if (url.endsWith("/retired") || (url === root && revision === 2)) throw new Error("unavailable");
+      if (url === root) return revision === 0
+        ? "<sitemapindex><sitemap><loc>/live</loc></sitemap><sitemap><loc>/retired</loc></sitemap></sitemapindex>"
+        : revision === 1 ? "<urlset><url><loc>/new</loc></url></urlset>" : "<urlset/>";
+      return "<urlset><url><loc>/old</loc></url></urlset>";
+    });
+    const urls = (result: Awaited<ReturnType<typeof readSitemap>>) => result.pages.map((page) => new URL(page.url).pathname);
+    expect(urls(await readSitemap(fetcher, cache, root))).toEqual(["/old"]);
+    revision = 1;
+    now += 86400_000;
+    expect(urls(await readSitemap(fetcher, cache, root))).toEqual(["/new"]);
+    revision = 2;
+    now += 86400_000;
+    const stale = await readSitemap(fetcher, cache, root);
+    expect(urls(stale)).toEqual(["/new"]);
+    expect(stale.note).toContain("stale sitemap listing");
+    expect(urls(await readSitemap(fetcher, new Cache(dir, true), root))).toEqual(["/new"]);
+    revision = 3;
+    expect(urls(await readSitemap(fetcher, cache, root))).toEqual([]);
+    expect(urls(await readSitemap(fetcher, new Cache(dir, true), root))).toEqual([]);
+  } finally {
+    Date.now = realNow;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
 test("a confirmed visibility withdrawal invalidates older repo and search snapshots", async () => {
   const dir = mkdtempSync(join(tmpdir(), "discovery-visibility-withdrawal-"));
   const realNow = Date.now;
@@ -652,6 +1293,61 @@ test("a confirmed visibility withdrawal invalidates older repo and search snapsh
     expect(await offline.search("sample", since, 5)).toEqual([]);
     online.observeVisibility(repo, "PUBLIC");
     expect(await online.search("sample", since, 5)).toEqual([]);
+  } finally {
+    Date.now = realNow;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("guide title provenance excludes historical and newly redirected foreign titles", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-title-origin-"));
+  const realNow = Date.now;
+  try {
+    const root = SITES[0].sitemap!, page = new URL("/provenance", root).href;
+    const cache = new Cache(dir);
+    cache.set("meta:" + page, { title: "Unverified", language: "en" });
+    cache.set("sitemap-tree:" + root, [{ url: page, lastmod: null }]);
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      if (url.endsWith("/robots.txt")) return new Response("");
+      if (url === root) return new Response("<urlset><url><loc>/provenance</loc></url></urlset>");
+      if (url === page) return new Response(null, { status: 302, headers: { location: "https://other.example/page" } });
+      return new Response("", { status: 404 });
+    });
+    const run = (store: Cache) => discoverGuides(fetcher, store, new GitHub(fetcher, store, null), index, "2026-11-20", {});
+    expect((await run(new Cache(dir, true))).drafts).toEqual([]);
+    Date.now = () => realNow() - 8 * 86400_000;
+    cache.set(guideTitleKey(page), { title: "Former title", language: "en", origin: new URL(page).origin });
+    Date.now = realNow;
+    expect((await run(cache)).drafts).toEqual([]);
+    expect((await run(new Cache(dir, true))).drafts).toEqual([]);
+  } finally {
+    Date.now = realNow;
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("an empty HTML title keeps usable stale metadata and does not get the success TTL", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-empty-title-"));
+  const realNow = Date.now;
+  let now = Date.UTC(2026, 10, 20);
+  Date.now = () => now;
+  try {
+    const root = SITES[0].sitemap!, page = new URL("/title", root).href;
+    const cache = new Cache(dir);
+    cache.set(guideTitleKey(page), { title: "Old guide", language: "en", origin: new URL(root).origin });
+    now += 8 * 86400_000;
+    let usable = false;
+    const fetcher = guideFetcher(async (url) => {
+      if (url === root) return "<urlset><url><loc>/title</loc></url></urlset>";
+      if (url === page) return usable ? "<title>New guide</title>" : "<title>   </title>";
+      throw new Error("no fixture");
+    });
+    const run = (store: Cache) => discoverGuides(fetcher, store, new GitHub(fetcher, store, null), index, "2026-11-20", {});
+    expect((await run(cache)).drafts[0].title).toBe("Old guide");
+    expect((await run(new Cache(dir, true))).drafts[0].language).toBe("en");
+    now += 2 * 3600_000;
+    usable = true;
+    expect((await run(cache)).drafts[0].title).toBe("New guide");
   } finally {
     Date.now = realNow;
     rmSync(dir, { recursive: true, force: true });
@@ -786,13 +1482,22 @@ test("legacy question reports need a successful date-window source before migrat
   }
 });
 
+test("old mobile YouTube keys migrate with or without case preservation", () => {
+  const url = "https://m.youtube.com/watch?list=SomeList&v=AbC123";
+  const date = "2025-01-01";
+  const candidate = draftFor({ url, lastmod: null, title: "Guide" }, [], null, "Example", index, date);
+  for (const legacy of [url, url.toLowerCase()]) {
+    expect(migrateGuideSeen({ [legacy]: date }, [candidate])).toEqual({ "https://youtube.com/watch?v=AbC123": date });
+  }
+});
+
 test("question feeds refresh old parser snapshots online and identify them offline", async () => {
   const dir = mkdtempSync(join(tmpdir(), "discovery-forum-version-"));
   try {
     const feed = FORUM_FEEDS[0];
     const online = new Cache(dir);
     online.set("threads-v2:rss:" + feed.url, []);
-    const fetcher = fixtureFetcher(async (url) => {
+    const fetcher = guideFetcher(async (url) => {
       if (url !== feed.url) throw new Error("no fixture");
       return "<rss><channel><item><title>Set up a bonded stream in OBS</title><link>https://example.org/post</link>"
         + "<pubDate>Fri, 20 Nov 2026 12:00:00 GMT</pubDate><description><![CDATA[Example <feed>]]></description></item></channel></rss>";
@@ -819,6 +1524,34 @@ test.skipIf(process.platform !== "linux")("a swapped ancestor cannot redirect in
     await expect(withOutputDirectories(out, repo, async () => null)).rejects.toThrow();
     expect(readdirSync(repo)).toEqual([]);
   } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test("a repeated incomplete sitemap refresh retains both complete and partial coverage", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-partial-coverage-"));
+  const realNow = Date.now;
+  let now = Date.UTC(2026, 10, 20);
+  Date.now = () => now;
+  try {
+    const root = "https://docs.example.org/root", cache = new Cache(dir);
+    let phase = 0;
+    const fetcher = guideFetcher(async (url) => {
+      if (url.endsWith("/failed") || phase === 2) throw new Error("unavailable");
+      if (url === root && phase === 1) return "<sitemapindex><sitemap><loc>/fresh</loc></sitemap><sitemap><loc>/failed</loc></sitemap></sitemapindex>";
+      return "<urlset><url><loc>" + (phase === 0 ? "/old" : "/new") + "</loc></url></urlset>";
+    });
+    const paths = (result: Awaited<ReturnType<typeof readSitemap>>) => result.pages.map((page) => new URL(page.url).pathname).sort();
+    expect(paths(await readSitemap(fetcher, cache, root))).toEqual(["/old"]);
+    phase = 1;
+    now += 86400_000;
+    expect(paths(await readSitemap(fetcher, cache, root))).toEqual(["/new", "/old"]);
+    phase = 2;
+    now += 86400_000;
+    expect(paths(await readSitemap(fetcher, cache, root))).toEqual(["/new", "/old"]);
+    expect(paths(await readSitemap(fetcher, new Cache(dir, true), root))).toEqual(["/new", "/old"]);
+  } finally {
+    Date.now = realNow;
     rmSync(dir, { recursive: true, force: true });
   }
 });
@@ -888,6 +1621,33 @@ test("a search row keeps its observation and cannot outlive a later withdrawal i
   } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
+test("daily sitemap runs give a budget-deferred member a fresh allowance", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-daily-budget-"));
+  const realNow = Date.now;
+  let now = Date.UTC(2026, 10, 20);
+  Date.now = () => now;
+  try {
+    const root = "https://docs.example.org/root", requests: string[] = [];
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      if (url.endsWith("/robots.txt")) return new Response("");
+      const path = new URL(url).pathname;
+      requests.push(path);
+      if (url === root) return new Response("<sitemapindex>" + [1, 2, 3, 4].map((n) => "<sitemap><loc>/m" + n + "</loc></sitemap>").join("") + "</sitemapindex>");
+      const xml = "<urlset><url><loc>/guide-" + path.slice(-1) + "</loc></url></urlset>";
+      return new Response(xml.padEnd(1000, " "), { headers: { "Content-Length": "1000" } });
+    });
+    const limits = { documents: 20, depth: 2, members: 20, pages: 20, wire: 1024, decoded: 1024, ratio: 150 };
+    const cache = new Cache(dir);
+    const first = await readSitemap(fetcher, cache, root, limits);
+    expect(first.pages).toHaveLength(3);
+    expect(first.note).not.toContain("unavailable");
+    now += 86400_000;
+    requests.length = 0;
+    expect((await readSitemap(fetcher, cache, root, limits)).pages).toHaveLength(4);
+    expect(requests).toEqual(["/m4"]);
+  } finally { Date.now = realNow; rmSync(dir, { recursive: true, force: true }); }
+});
+
 test("identity responses enforce the remaining decoded allowance as they arrive", async () => {
   let wire = 0, decoded = 0;
   const fetcher = new Fetcher({}, 0, async (url) => url.endsWith("/robots.txt") ? new Response("") : new Response(new ReadableStream({
@@ -898,6 +1658,98 @@ test("identity responses enforce the remaining decoded allowance as they arrive"
     decoded: 27, chargeWire: (n) => { wire += n; }, chargeDecoded: (n) => { decoded += n; },
   })).rejects.toThrow("decoded response exceeds 27 bytes");
   expect([wire, decoded]).toEqual([28, 28]);
+});
+
+test("incomplete sitemap XML cannot replace a usable offline listing", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-incomplete-xml-"));
+  const realNow = Date.now;
+  let now = Date.UTC(2026, 10, 20);
+  Date.now = () => now;
+  try {
+    const root = "https://docs.example.org/root", cache = new Cache(dir);
+    let xml = "<urlset><url><loc>/previous</loc></url></urlset>";
+    const fetcher = guideFetcher(async () => xml);
+    const list = (store: Cache) => readSitemap(fetcher, store, root);
+    expect((await list(cache)).pages.map((page) => page.url)).toEqual(["https://docs.example.org/previous"]);
+    now += 86400_000;
+    xml = "<urlset><url><loc>/truncated";
+    expect((await list(cache)).note).toContain("unavailable");
+    expect((await list(new Cache(dir, true))).pages.map((page) => page.url)).toEqual(["https://docs.example.org/previous"]);
+    xml = '<?xml version="1.0"?><s:urlset xmlns:s="http://www.sitemaps.org/schemas/sitemap/0.9"><s:url>'
+      + '<s:loc><![CDATA[/new?one=1&two=2]]></s:loc></s:url></s:urlset><!-- end -->';
+    expect((await list(cache)).pages.map((page) => page.url)).toEqual(["https://docs.example.org/new?one=1&two=2"]);
+    expect(() => parseSitemap('<urlset><url><loc>/incomplete</loc></url>')).toThrow("sitemap XML");
+    expect(() => parseSitemap('<urlset/><urlset/>')).toThrow("sitemap XML");
+    expect(parseSitemap("<urlset/>").pages).toEqual([]);
+  } finally { Date.now = realNow; rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("legacy sitemap listings survive a failed upgrade and scoped work resumes", async () => {
+  for (const format of ["sitemap", "sitemap-tree", "sitemap-scoped"]) {
+    const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-upgrade-"));
+    try {
+      const root = "https://docs.example.org/root", member = "https://docs.example.org/member";
+      const cache = new Cache(dir), requests: string[] = [];
+      const pages = [{ url: "https://docs.example.org/old", lastmod: "2026-11-20" }, { url: "https://foreign.example/untrusted", lastmod: null }];
+      const scoped = format === "sitemap-scoped";
+      if (scoped) cache.set(format + ":" + root + ":https://docs.example.org",
+        { pages, pending: [{ url: member, depth: 1 }], seen: [root, member], omitted: 0, outside: 0, malformed: 0, failed: [] });
+      else cache.set(format + ":" + root, pages);
+      const fetcher = guideFetcher(async (url) => {
+        requests.push(url);
+        if (url === member) return "<urlset><url><loc>/new</loc></url></urlset>";
+        throw new Error("unavailable");
+      });
+      const before = await readSitemap(fetcher, new Cache(dir, true), root);
+      expect(before.pages).toEqual([pages[0]]);
+      const after = await readSitemap(fetcher, cache, root);
+      expect(requests).toEqual([scoped ? member : root]);
+      expect(after.pages).toHaveLength(scoped ? 2 : 1);
+      if (!scoped) expect(after.note).toContain("older sitemap cache");
+      expect((await readSitemap(fetcher, new Cache(dir, true), root)).pages).toEqual(after.pages);
+    } finally { rmSync(dir, { recursive: true, force: true }); }
+  }
+});
+
+test("a concurrent failed sitemap refresh cannot replace the successful generation", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-overlap-"));
+  try {
+    const root = "https://docs.example.org/root", cache = new Cache(dir);
+    let release!: () => void, started!: () => void;
+    const atRequest = new Promise<void>((resolve) => { started = resolve; });
+    const wait = new Promise<void>((resolve) => { release = resolve; });
+    const slower = guideFetcher(async () => { started(); await wait; throw new Error("late failure"); });
+    const faster = guideFetcher(async () => "<urlset><url><loc>/good</loc></url></urlset>");
+    const pending = readSitemap(slower, cache, root);
+    await atRequest;
+    expect((await readSitemap(faster, new Cache(dir), root)).pages).toHaveLength(1);
+    release();
+    expect((await pending).pages).toHaveLength(1);
+    expect((await readSitemap(faster, new Cache(dir, true), root)).pages).toEqual([{ url: "https://docs.example.org/good", lastmod: null }]);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
+test("both legacy and current wiki listings respect repository withdrawals", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-wiki-visibility-"));
+  try {
+    const cache = new Cache(dir);
+    const run = () => {
+      const offline = new Cache(dir, true);
+      const fetcher = new Fetcher({}, 0, async () => { throw new Error("offline fetched"); });
+      return discoverGuides(fetcher, offline, new GitHub(fetcher, offline, null), index, "2026-11-20", {});
+    };
+    WIKIS.slice(0, 2).forEach((w, i) => {
+      cache.set((i ? "wiki:" : "wiki-tree:") + w.repo, [{ url: "https://github.com/" + w.repo + "/wiki/Moblin-bonded-stream", title: "Moblin bonded stream" }]);
+    });
+    const first = await run();
+    const wikiStats = (stats: SourceStat[]) => stats.filter((row) => WIKIS.slice(0, 2).some((w) => row.source === "GitHub wiki " + w.repo));
+    expect(wikiStats(first.stats).every((row) => row.read === 1 && row.note?.includes("public wiki snapshot from"))).toBe(true);
+    const github = new GitHub(new Fetcher(), cache, null);
+    for (const wiki of WIKIS.slice(0, 2)) github.observeVisibility(wiki.repo, "PRIVATE");
+    const withdrawn = await run();
+    expect(withdrawn.drafts).toEqual([]);
+    expect(wikiStats(withdrawn.stats).every((row) => row.read === 0 && row.kept === 0)).toBe(true);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
 });
 
 test("a long crawl delay leaves an eligible slot for a later invocation", async () => {
@@ -976,6 +1828,25 @@ test("unsupported platforms refuse discovery before creating output", async () =
   }
 });
 
+test("redirect aliases cannot grow the sitemap location budget", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-alias-bound-"));
+  try {
+    const root = "https://docs.example.org/root";
+    const fetcher = new Fetcher({}, 0, async (url) => {
+      if (url.endsWith("/robots.txt")) return new Response("");
+      if (url === root) return new Response("<sitemapindex><sitemap><loc>/one</loc></sitemap><sitemap><loc>/two</loc></sitemap></sitemapindex>");
+      if (url.endsWith("/one") || url.endsWith("/two")) return new Response(null, { status: 302, headers: { location: "/alias-" + url.split("/").at(-1) } });
+      return new Response("<urlset><url><loc>/" + url.split("/").at(-1) + "-guide</loc></url></urlset>");
+    });
+    const cache = new Cache(dir);
+    const result = await readSitemap(fetcher, cache, root, { documents: 10, depth: 4, members: 3, pages: 10, wire: 1024, decoded: 1024, ratio: 150 });
+    expect(result.pages).toHaveLength(2);
+    expect(result.note).toContain("2 sitemap entries omitted by limits");
+    const stored = cache.get<{ listing: { snapshot: { seen: string[] } } }>("sitemap-listing:" + root + ":https://docs.example.org", 24)!;
+    expect(stored.listing.snapshot.seen).toHaveLength(3);
+  } finally { rmSync(dir, { recursive: true, force: true }); }
+});
+
 test("GitHub rows share the page observation time even when comment requests take time", async () => {
   const dir = mkdtempSync(join(tmpdir(), "discovery-observation-time-"));
   const realNow = Date.now;
@@ -1005,7 +1876,3 @@ test("GitHub rows share the page observation time even when comment requests tak
       .toEqual(Array(2).fill(new Date(epoch).toISOString()));
   } finally { Date.now = realNow; rmSync(dir, { recursive: true, force: true }); }
 });
-
-function fixtureFetcher(read: (url: string) => Promise<string>): Fetcher {
-  return { document: async (url: string) => ({ text: await read(url), url }) } as Fetcher;
-}

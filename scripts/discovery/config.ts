@@ -196,3 +196,52 @@ export const THEMES: { id: string; label: string; part: Part; patterns: string[]
     "\\blogin\\b", "sign.?in", "\\baccount\\b",
   ]},
 ];
+
+// ---------- Guides: sources ----------
+
+export type Site = {
+  name: string;
+  sitemapOrigins?: string[]; // additional trusted origins for sitemap members and pages
+  sitemap?: string;        // a sitemap or sitemap index
+  index?: string;          // last resort: an HTML page whose same-site links are the pages, for a site with no sitemap or feed
+  covers: string[];        // service ids the site documents
+  include?: string;        // keep paths that match
+  exclude?: string;        // drop paths that match
+  terms?: boolean;         // general sites: keep only pages whose path or title mentions an IRL or glossary term
+};
+
+export const SITES: Site[] = [
+  { name: "CeraLive docs", sitemap: "https://docs.ceralive.tv/sitemap-index.xml", covers: ["ceralive"], exclude: "^/(es|de|pt|fr)/|/reference/(community|status-labels)/" },
+  { name: "NOALBS Cloud docs", sitemap: "https://docs.noalbs.com/sitemap-index.xml", covers: ["noalbs-cloud"], exclude: "^/contributing/" },
+  { name: "IRLToolkit knowledge base", sitemap: "https://kb.irltoolkit.com/sitemap.xml", covers: ["irltoolkit"], exclude: "/WIP$|/1-billing$" },
+  { name: "IRLhosting guides", sitemap: "https://irlhosting.com/sitemap.xml", covers: ["irlhosting"], include: "^/guides/." },
+  { name: "OpenRTMP guides", sitemap: "https://openrtmp.org/sitemap.xml", covers: ["librtmp2-server"], include: "^/(guides/.|quickstart/)", exclude: "^/de/|-vs-|alternatives|rust|cluster" },
+  { name: "Larix docs", sitemap: "https://softvelum.com/sitemap.xml", covers: ["larix-broadcaster"], include: "^/(larix|mobile)/(docs|faq|help|usb|grove|talkback)/" },
+  { name: "VDO.Ninja docs", sitemap: "https://docs.vdo.ninja/sitemap.xml", covers: ["vdo-ninja"], include: "^/guides/|^/getting-started/", terms: true },
+  { name: "Streamer.bot docs", sitemap: "https://docs.streamer.bot/sitemap.xml", covers: ["streamer-bot"], include: "^/guide/", terms: true },
+  { name: "OBS knowledge base", index: "https://obsproject.com/kb", covers: ["obs-studio"], include: "^/kb/[a-z0-9-]+$", terms: true },
+  { name: "BELABOX site", index: "https://belabox.net/", covers: ["belabox"], include: "\\.html$" },
+];
+
+/** GitHub wiki page names from their public Git repositories over smart HTTP. */
+export const WIKIS = [
+  { repo: "BELABOX/tutorial", covers: ["belabox"], terms: false },
+  { repo: "steveseguin/vdo.ninja", covers: ["vdo-ninja"], terms: true },
+  { repo: "EyevinnOSC/community", covers: ["open-live"], include: "open.?live", terms: false },
+];
+
+/** Docs folders in product repositories; developer notes are left out by `DEV_DOC`. */
+export const DOC_FOLDERS = [
+  { repo: "eerimoq/moblin", covers: ["moblin"], include: "^docs/(HELP|README)\\.md$" },
+  { repo: "IRLtools/IRLbox", covers: ["irlbox"], include: "^docs/.*\\.md$", exclude: "^docs/(developers/|_)" },
+  { repo: "halveknots-llc/openirl", covers: ["openirl-halveknots"], include: "^docs/.*\\.md$" },
+];
+export const DEV_DOC = "contributing|runbooks?|security|incident|evidence|validation|inventory|statistics|plugin.api|migration|compatibility|architecture|(^|/)ci[-_.]|e2e|maintainer|smoke|internal|research|protocol|privacy|terms|changelog|roadmap|release|test|pitfall|plan\\b|_sidebar";
+
+/** Forum boards for guides (RSS). */
+export const GUIDE_FEEDS = [
+  { name: "OBS forum: Guides", url: "https://obsproject.com/forum/list/guides.18/index.rss", covers: ["obs-studio"] },
+];
+
+/** Paths that are never tutorials. */
+export const NOT_A_GUIDE = "/(tags?|categor(y|ies)|author|search|login|signup|register|cart|pricing|plans|legal|privacy|terms|imprint|impressum|download|releases?|changelogs?|showcase|benchmarks)(/|$)";

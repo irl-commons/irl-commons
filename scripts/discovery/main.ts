@@ -1,9 +1,12 @@
 // Discovery reports for stewards. Read-only: they never edit data/ and never write to GitHub.
 //
 //   bun scripts/discovery/main.ts questions --out <dir> [--since YYYY-MM-DD] [--offline]
+//   bun scripts/discovery/main.ts guides --out <dir> [--offline]
+//   bun scripts/discovery/main.ts all --out <dir>
 //
 // `questions` reads public threads (GitHub issues and discussions, Stack Exchange, forum
 // boards), sorts them and maps them to answers.json, words.json and guides.json.
+// `guides` lists public tutorials that guides.json doesn't have yet.
 // The output folder must be outside this repository: reports and caches hold copies of
 // public posts and are not for committing. DISCOVERY_OUT can stand in for --out.
 // GitHub needs a read-only token: GITHUB_TOKEN, or a signed-in gh.
@@ -12,11 +15,12 @@ import { fileURLToPath } from "node:url";
 import { basename, dirname, join, relative, resolve, isAbsolute, sep } from "node:path";
 import { EXTRA_REPOS, SKIP_REPOS } from "./config.ts";
 import { sortThread, type Thread } from "./classify.ts";
+import { discoverGuides, migrateGuideSeen } from "./guides.ts";
 import { GitHub, githubToken, harvestForums, harvestGitHub, harvestStackExchange, type SourceStat } from "./harvest.ts";
 import { Cache, Fetcher, writeLocalFile } from "./http.ts";
 import { buildIndex, linkedRepos, loadData } from "./project.ts";
 import { withOutputDirectories } from "./output.ts";
-import { questionsReport } from "./report.ts";
+import { guidesReport, questionsReport, themeDemand } from "./report.ts";
 
 export const REPO_ROOT = fileURLToPath(new URL("../../", import.meta.url));
 
@@ -38,7 +42,8 @@ export function outputDir(arg: string | undefined, repoRoot = REPO_ROOT): string
 
 export function prepareOutput(arg: string | undefined, repoRoot = REPO_ROOT): string {
   const out = outputDir(arg, repoRoot);
-  for (const path of ["cache", "state", "state/questions-window.json", "questions.json", "questions.md"]) {
+  for (const path of ["cache", "state", "state/questions-window.json", "state/guides-seen.json",
+    "questions.json", "questions.md", "guide-candidates.json", "guides.md"]) {
     outputDir(join(out, path), repoRoot);
   }
   return out;
@@ -52,7 +57,7 @@ function args(argv: string[]) {
     if (a.startsWith("--")) { const v = argv[i + 1]; if (v && !v.startsWith("--") && !["--offline"].includes(a)) { flags[a.slice(2)] = v; i++; } else flags[a.slice(2)] = true; }
     else rest.push(a);
   }
-  return { command: rest[0] ?? "questions", flags };
+  return { command: rest[0] ?? "all", flags };
 }
 
 function monthsAgo(today: string, months: number): string {
@@ -94,35 +99,51 @@ export function saveQuestionWindow(out: string, since: string, offline: boolean,
 
 async function main() {
   const { command, flags } = args(process.argv.slice(2));
-  if (command !== "questions") throw new Error(`unknown command ${command}: use questions`);
+  if (!["questions", "guides", "all"].includes(command)) throw new Error(`unknown command ${command}: use questions, guides or all`);
   const root = prepareOutput((flags.out as string) ?? process.env.DISCOVERY_OUT);
-  await withOutputDirectories(root, REPO_ROOT, (out, cacheDirectory, state) => runDiscovery(flags, root, out, cacheDirectory, state));
+  await withOutputDirectories(root, REPO_ROOT, (out, cacheDirectory, state) => runDiscovery(command, flags, root, out, cacheDirectory, state));
 }
 
-async function runDiscovery(flags: Record<string, string | boolean>, root: string, out: string, cacheDirectory: string, state: string) {
+async function runDiscovery(command: string, flags: Record<string, string | boolean>, root: string, out: string, cacheDirectory: string, state: string) {
   const today = (flags.today as string) ?? new Date().toISOString().slice(0, 10);
-  const since = questionsSince(out, today, flags.since as string | undefined, !!flags.offline, state);
+  const since = command === "guides" ? "" : questionsSince(out, today, flags.since as string | undefined, !!flags.offline, state);
   const cache = new Cache(cacheDirectory, !!flags.offline);
   const fetcher = new Fetcher({ "api.github.com": 400, "api.stackexchange.com": 1000 }, 1500, undefined, undefined, cache);
   const data = loadData();
   const index = buildIndex(data);
   const gh = new GitHub(fetcher, cache, cache.offline ? null : githubToken());
 
-  const stats: SourceStat[] = [];
-  const repos = [...new Set([...linkedRepos(data), ...EXTRA_REPOS])].filter((r) => !SKIP_REPOS.has(r));
-  const threads: Thread[] = [
-    ...await harvestGitHub(gh, repos, since, stats),
-    ...await harvestStackExchange(fetcher, cache, since, stats),
-  ];
-  const windowSources = [...stats];
-  threads.push(...await harvestForums(fetcher, cache, since, stats));
-  const unique = [...new Map(threads.map((t) => [t.url, t])).values()];
-  const sorted = unique.map((t) => sortThread(t, index)).sort((a, b) => b.created.localeCompare(a.created));
-  const cacheWindow = saveQuestionWindow(out, since, cache.offline, windowSources, state) ?? null;
-  writeLocalFile(join(out, "questions.json"), JSON.stringify({ today, since, cacheWindow, stats, threads: sorted.map((s) => ({ ...s, text: s.text.slice(0, 200) })) }, null, 1));
-  writeLocalFile(join(out, "questions.md"), questionsReport(sorted, stats, { today, since }));
-  console.log(`questions: ${sorted.length} threads from ${stats.length} sources; ${join(root, "questions.md")}`);
+  if (command === "questions" || command === "all") {
+    const stats: SourceStat[] = [];
+    const repos = [...new Set([...linkedRepos(data), ...EXTRA_REPOS])].filter((r) => !SKIP_REPOS.has(r));
+    const threads: Thread[] = [
+      ...await harvestGitHub(gh, repos, since, stats),
+      ...await harvestStackExchange(fetcher, cache, since, stats),
+    ];
+    const windowSources = [...stats];
+    threads.push(...await harvestForums(fetcher, cache, since, stats));
+    const unique = [...new Map(threads.map((t) => [t.url, t])).values()];
+    const sorted = unique.map((t) => sortThread(t, index)).sort((a, b) => b.created.localeCompare(a.created));
+    const cacheWindow = saveQuestionWindow(out, since, cache.offline, windowSources, state) ?? null;
+    writeLocalFile(join(out, "questions.json"), JSON.stringify({ today, since, cacheWindow, stats, threads: sorted.map((s) => ({ ...s, text: s.text.slice(0, 200) })) }, null, 1));
+    writeLocalFile(join(out, "questions.md"), questionsReport(sorted, stats, { today, since }));
+    console.log(`questions: ${sorted.length} threads from ${stats.length} sources; ${join(root, "questions.md")}`);
+  }
 
+  if (command === "guides" || command === "all") {
+    const seenFile = join(state, "guides-seen.json");
+    const previous = existsSync(seenFile) ? JSON.parse(readFileSync(seenFile, "utf8")) : null;
+    const candidatesFile = join(out, "guide-candidates.json");
+    const lastCandidates = previous && existsSync(candidatesFile) ? JSON.parse(readFileSync(candidatesFile, "utf8")).candidates : [];
+    const seen = migrateGuideSeen(previous ?? {}, lastCandidates ?? []);
+    const run = await discoverGuides(fetcher, cache, gh, index, today, seen);
+    writeLocalFile(seenFile, JSON.stringify(run.seen, null, 1));
+    writeLocalFile(candidatesFile, JSON.stringify({ today, stats: run.stats, rechecks: run.rechecks, candidates: run.drafts }, null, 1));
+    const questionsFile = join(out, "questions.json");
+    const demand = existsSync(questionsFile) ? themeDemand(JSON.parse(readFileSync(questionsFile, "utf8")).threads) : null;
+    writeLocalFile(join(out, "guides.md"), guidesReport(run.drafts, run.rechecks, run.stats, today, previous !== null, demand));
+    console.log(`guides: ${run.drafts.length} candidates, ${run.rechecks.length} to re-read; ${join(root, "guides.md")}`);
+  }
   console.log(`requests: ${fetcher.log.requests}; blocked by robots.txt: ${fetcher.log.blocked.length}; failures: ${fetcher.log.failures.length}`);
   for (const f of fetcher.log.failures.slice(0, 10)) console.log(`  ${f}`);
 }

@@ -24,6 +24,8 @@ export type Index = {
   answers: { id: string; question: string; words: string[]; services: string[]; hints: RegExp[]; tokens: Set<string> }[];
   guides: { id: string; url: string; covers: string[]; part: Part[]; kind: string; words: string[]; answers: string[]; checked_on: string }[];
   repoProduct: Map<string, string>;
+  knownUrls: Map<string, string>;
+  serviceName: Map<string, string>;
 };
 
 const STOP = new Set(("a an and are as at be but by can do does for from get got has have how i if in into is it its just my no not of on or " +
@@ -37,6 +39,45 @@ export function tokens(text: string): Set<string> {
     out.add(raw.replace(/(ies)$/, "y").replace(/(?<![s])s$/, ""));
   }
   return out;
+}
+
+/** Strip query noise and trailing slashes so the same page compares equal. */
+export function normalizeUrl(url: string): string {
+  try {
+    const u = new URL(url);
+    u.hash = "";
+    u.hostname = u.hostname.replace(/^www\./, "");
+    const longYouTube = ["youtube.com", "m.youtube.com"].includes(u.hostname);
+    const shortYouTube = u.hostname === "youtu.be";
+    if (longYouTube || shortYouTube) {
+      const video = shortYouTube
+        ? u.pathname.match(/^\/([A-Za-z0-9_-]+)\/?$/)?.[1]
+        : /^\/watch\/?$/.test(u.pathname) ? u.searchParams.get("v") : null;
+      if (video) return "https://youtube.com/watch?" + new URLSearchParams({ v: video });
+      const list = u.searchParams.get("list");
+      if (longYouTube && list && /^\/(?:playlist|watch)\/?$/.test(u.pathname)) {
+        return "https://youtube.com/playlist?" + new URLSearchParams({ list });
+      }
+    }
+    for (const key of [...u.searchParams.keys()]) {
+      if (!(u.hostname === "irlhosting.com" && key === "rp")) u.searchParams.delete(key);
+    }
+    return u.origin + u.pathname.replace(/\/+$/, "") + u.search;
+  } catch { return url; }
+}
+
+/** Keys produced before case preservation and before YouTube canonicalization. */
+export function earlierGuideUrlKeys(url: string): string[] {
+  try {
+    const u = new URL(url);
+    u.hostname = u.hostname.replace(/^www\./, "");
+    u.hash = "";
+    if (u.hostname === "youtu.be") return ["https://youtube.com/watch?v=" + u.pathname.slice(1)];
+    const keep = u.hostname.endsWith("youtube.com") ? ["v", "list"] : u.hostname === "irlhosting.com" ? ["rp"] : [];
+    for (const key of [...u.searchParams.keys()]) if (!keep.includes(key)) u.searchParams.delete(key);
+    const key = u.origin + u.pathname.replace(/\/+$/, "") + u.search;
+    return [...new Set([key, key.toLowerCase()])];
+  } catch { return []; }
 }
 
 /** Match longer names first, consuming each phrase before trying shorter names. */
@@ -58,7 +99,9 @@ export function buildIndex(d: Data): Index {
     for (const name of names) words.push({ id: w.id, name, re: phrase(name), generic: GENERIC_NAMES.has(name.toLowerCase()) });
   }
   const products: NameMatcher[] = [];
+  const serviceName = new Map<string, string>();
   for (const s of d.services.services) {
+    serviceName.set(s.id, s.name);
     if (s.class === "docs") continue;
     for (const name of new Set([s.name, ...(PRODUCT_ALIASES[s.id] ?? [])])) {
       if (PRODUCT_NAME_SKIP.has(name.toLowerCase())) continue;
@@ -74,13 +117,16 @@ export function buildIndex(d: Data): Index {
   }));
   const guides = d.guides.guides.map((g: any) => ({ id: g.id, url: g.url, covers: g.covers, part: g.part, kind: g.kind, words: g.words, answers: g.answers, checked_on: g.checked_on }));
   const repoProduct = new Map<string, string>();
+  const knownUrls = new Map<string, string>();
+  for (const g of d.guides.guides) knownUrls.set(normalizeUrl(g.url), `guides/${g.id}`);
   for (const s of d.services.services) {
     for (const url of [s.url, ...s.links.map((l: any) => l.url), ...s.support.map((l: any) => l.url)]) {
       const m = url.match(/^https:\/\/github\.com\/([^/#?]+)\/([^/#?]+)/);
       if (m && s.class !== "docs" && !repoProduct.has(`${m[1]}/${m[2]}`.toLowerCase())) repoProduct.set(`${m[1]}/${m[2]}`.toLowerCase(), s.id);
+      if (!knownUrls.has(normalizeUrl(url))) knownUrls.set(normalizeUrl(url), `services/${s.id}`);
     }
   }
-  return { words, products, answers, guides, repoProduct };
+  return { words, products, answers, guides, repoProduct, knownUrls, serviceName };
 }
 
 /** GitHub repositories linked from services.json, as owner/name. */

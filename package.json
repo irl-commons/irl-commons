@@ -41,7 +41,8 @@
     "titles": "bun scripts/titles.ts",
     "aliases": "bun scripts/aliases.ts",
     "watch": "bun scripts/catalogue-watch/main.ts",
-    "discover:questions": "bun scripts/discovery/main.ts questions"
+    "discover:questions": "bun scripts/discovery/main.ts questions",
+    "discover:guides": "bun scripts/discovery/main.ts guides"
   },
   "dependencies": {
     "zod": "4.6.7"
