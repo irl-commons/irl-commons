@@ -1876,3 +1876,39 @@ test("GitHub rows share the page observation time even when comment requests tak
       .toEqual(Array(2).fill(new Date(epoch).toISOString()));
   } finally { Date.now = realNow; rmSync(dir, { recursive: true, force: true }); }
 });
+
+test("sitemap namespaces, malformed attributes, and empty replacements preserve coverage correctly", async () => {
+  const dir = mkdtempSync(join(tmpdir(), "discovery-sitemap-namespace-"));
+  const realNow = Date.now;
+  let now = Date.UTC(2026, 10, 20);
+  Date.now = () => now;
+  try {
+    const root = "https://example.org/sitemap.xml", cache = new Cache(dir);
+    const namespace = "http://www.sitemaps.org/schemas/sitemap/0.9";
+    let xml = "<urlset><url><loc>/previous</loc></url></urlset>";
+    const fetcher = guideFetcher(async () => xml);
+    const read = () => readSitemap(fetcher, cache, root);
+    const offline = () => readSitemap(fetcher, new Cache(dir, true), root);
+    expect((await read()).pages.map((page) => page.url)).toEqual(["https://example.org/previous"]);
+
+    now += 86400_000;
+    xml = '<urlset xmlns="' + namespace + '" xmlns:s="' + namespace + '"><s:url><s:loc>https://example.org/current</s:loc></s:url></urlset>';
+    expect((await read()).pages.map((page) => page.url)).toEqual(["https://example.org/current"]);
+    expect((await offline()).pages.map((page) => page.url)).toEqual(["https://example.org/current"]);
+
+    now += 86400_000;
+    xml = '<urlset xmlns="' + namespace + '" xmlns="' + namespace + '"/>';
+    expect((await read()).note).toContain("unavailable");
+    expect((await offline()).pages.map((page) => page.url)).toEqual(["https://example.org/current"]);
+
+    xml = '<urlset xmlns="' + namespace + '"/>';
+    expect(await read()).toMatchObject({ pages: [], note: "empty sitemap replaced previous coverage" });
+    expect(await offline()).toMatchObject({ pages: [], note: "empty sitemap replaced previous coverage" });
+
+    const index = '<s:sitemapindex xmlns:s="' + namespace + '"><a:sitemap xmlns:a="' + namespace + '">'
+      + '<s:loc>/member.xml</s:loc></a:sitemap></s:sitemapindex>';
+    expect(parseSitemap(index).sitemaps).toEqual(["/member.xml"]);
+    expect(() => parseSitemap('<urlset><unbound:url/></urlset>')).toThrow("sitemap XML");
+    expect(() => parseSitemap('<urlset xmlns:x="urn:fixture" xmlns:y="urn:fixture" x:id="1" y:id="2"/>')).toThrow("sitemap XML");
+  } finally { Date.now = realNow; rmSync(dir, { recursive: true, force: true }); }
+});

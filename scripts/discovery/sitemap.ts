@@ -11,7 +11,7 @@ type Member = { url: string; depth: number };
 const REFRESH_MS = 24 * 3600_000;
 type Snapshot = { pending: Member[]; seen: string[]; pages: Page[]; omitted: number; outside: number; malformed: number; failed: string[] };
 type Work = Snapshot & { started: number };
-type Listing = { saved: number; snapshot: Snapshot; legacy?: boolean };
+type Listing = { saved: number; snapshot: Snapshot; legacy?: boolean; replacedWithEmpty?: boolean };
 type SitemapCache = { revision?: string; listing?: Listing; work?: Work };
 
 export async function sitemapXml(bytes: Uint8Array, decoded: number, ratio: number, charge?: (size: number) => void, wireBytes = bytes.length): Promise<string> {
@@ -108,13 +108,15 @@ export async function readSitemap(fetcher: Fetcher, cache: Cache, root: string, 
     snapshot.failed = [...failed];
     snapshot.seen = [...seen];
     if (!snapshot.pending.length) {
-      state.listing = { saved: Date.now(), snapshot };
+      const replacedWithEmpty = snapshot.pages.length === 0 && !!state.listing?.snapshot.pages.length;
+      state.listing = { saved: Date.now(), snapshot, ...(replacedWithEmpty ? { replacedWithEmpty } : {}) };
       delete state.work;
     }
     state = publishSitemap(cache, key, stored, state);
     snapshot = state.work ?? state.listing!.snapshot;
   }
   const note = [
+    state.listing?.replacedWithEmpty ? "empty sitemap replaced previous coverage" : "",
     state.listing?.legacy ? "older sitemap cache may omit index members" : "",
     state.work && state.listing ? "stale sitemap listing retained during refresh" : "",
     snapshot.pending.length ? snapshot.pending.length + " sitemap members deferred" : "",
@@ -192,17 +194,65 @@ function sitemapLocation(location: string, base: string): URL | undefined {
   } catch { return undefined; }
 }
 
+const SITEMAP_NAMESPACE = "http://www.sitemaps.org/schemas/sitemap/0.9";
+const XML_NAMESPACE = "http://www.w3.org/XML/1998/namespace";
+const XMLNS_NAMESPACE = "http://www.w3.org/2000/xmlns/";
+
 /** Read sitemap records only after validating that the entire XML document closed. */
 export function parseSitemap(xml: string, maxEntries = Infinity): { pages: Page[]; sitemaps: string[]; omitted: number } {
   const pages: Page[] = [], sitemaps: string[] = [];
   type Field = "loc" | "lastmod";
-  type Element = { name: string; field?: Field; text?: string[] };
+  type Element = { name: string; namespaces: ReadonlyMap<string, string>; isRecord: boolean; field?: Field; text?: string[] };
   const stack: Element[] = [];
   const tag = /<(\/?)([A-Za-z_][\w.:-]*)((?:\s+[A-Za-z_][\w.:-]*\s*=\s*(?:"[^"<]*"|'[^'<]*'))*)\s*(\/?)>/y;
   const invalid = () => new Error("incomplete or unsupported sitemap XML");
-  let root: string | undefined, recordName = "", prefix = "", index = false;
+  const initialNamespaces = new Map([["xml", XML_NAMESPACE]]);
+  let rootNamespace: string | undefined, recordName = "", index = false;
   let record: Partial<Record<Field, string>> | undefined;
   let omitted = 0;
+
+  const decoded = (value: string) => {
+    if (/&(?!amp;|lt;|gt;|apos;|quot;|#\d+;|#x[0-9a-fA-F]+;)/.test(value)) throw invalid();
+    return decodeEntities(value);
+  };
+
+  const resolveName = (name: string, namespaces: ReadonlyMap<string, string>, attribute = false) => {
+    const parts = name.split(":");
+    if (parts.length > 2 || parts.some((part) => !/^[A-Za-z_][\w.-]*$/.test(part))) throw invalid();
+    const prefix = parts.length === 2 ? parts[0] : "";
+    const namespace = prefix || !attribute ? namespaces.get(prefix) : undefined;
+    if (prefix && !namespace) throw invalid();
+    return { namespace: namespace ?? "", local: parts.at(-1)! };
+  };
+
+  const elementNamespaces = (attrs: string): ReadonlyMap<string, string> => {
+    const parent = stack.at(-1)?.namespaces ?? initialNamespaces;
+    let declarations: Map<string, string> | undefined;
+    const attributeNames = new Set<string>();
+    const ordinary: string[] = [];
+    for (const [, name, doubleQuoted, singleQuoted] of attrs.matchAll(/\s+([A-Za-z_][\w.:-]*)\s*=\s*(?:"([^"]*)"|'([^']*)')/g)) {
+      if (attributeNames.has(name)) throw invalid();
+      attributeNames.add(name);
+      const value = decoded(doubleQuoted ?? singleQuoted);
+      if (name !== "xmlns" && !name.startsWith("xmlns:")) {
+        ordinary.push(name);
+        continue;
+      }
+      const prefix = name === "xmlns" ? "" : name.slice(6);
+      if ((name !== "xmlns" && (!/^[A-Za-z_][\w.-]*$/.test(prefix) || !value))
+        || prefix === "xmlns" || value === XMLNS_NAMESPACE || (prefix === "xml") !== (value === XML_NAMESPACE)) throw invalid();
+      (declarations ??= new Map(parent)).set(prefix, value);
+    }
+    const namespaces = declarations ?? parent;
+    const expanded = new Set<string>();
+    for (const name of ordinary) {
+      const { namespace, local } = resolveName(name, namespaces, true);
+      const key = namespace + "\0" + local;
+      if (expanded.has(key)) throw invalid();
+      expanded.add(key);
+    }
+    return namespaces;
+  };
 
   const collect = (value: string, literal = false) => {
     const element = stack.at(-1);
@@ -211,15 +261,14 @@ export function parseSitemap(xml: string, maxEntries = Infinity): { pages: Page[
       return;
     }
     if (!element.text) return;
-    if (!literal && /&(?!amp;|lt;|gt;|apos;|quot;|#\d+;|#x[0-9a-fA-F]+;)/.test(value)) throw invalid();
-    element.text.push(literal ? value : decodeEntities(value));
+    element.text.push(literal ? value : decoded(value));
   };
 
   const close = (name: string) => {
     const element = stack.pop();
     if (element?.name !== name) throw invalid();
     if (element.field && record) record[element.field] = element.text!.join("").trim();
-    if (stack.length !== 1 || element.name !== recordName || !record) return;
+    if (!element.isRecord || !record) return;
     if (!record.loc) throw invalid();
     if (pages.length + sitemaps.length >= maxEntries) omitted++;
     else if (index) sitemaps.push(record.loc);
@@ -254,27 +303,30 @@ export function parseSitemap(xml: string, maxEntries = Infinity): { pages: Page[
       if (attrs || selfClosing) throw invalid();
       close(name);
     } else {
+      const namespaces = elementNamespaces(attrs);
+      const { namespace, local } = resolveName(name, namespaces);
+      const isRecord = stack.length === 1 && namespace === rootNamespace && local === recordName;
       if (!stack.length) {
-        if (root || !/^(?:[A-Za-z_][\w.-]*:)?(?:urlset|sitemapindex)$/.test(name)) throw invalid();
-        root = name;
-        prefix = name.includes(":") ? name.slice(0, name.indexOf(":") + 1) : "";
-        index = name.slice(prefix.length) === "sitemapindex";
-        recordName = prefix + (index ? "sitemap" : "url");
+        if (rootNamespace !== undefined || (namespace && namespace !== SITEMAP_NAMESPACE)
+          || (local !== "urlset" && local !== "sitemapindex")) throw invalid();
+        rootNamespace = namespace;
+        index = local === "sitemapindex";
+        recordName = index ? "sitemap" : "url";
       } else if (stack.length === 1) {
-        if (name === recordName) record = {};
-        else if (!name.includes(":") || name.startsWith(prefix) && prefix) throw invalid();
+        if (isRecord) record = {};
+        else if (!namespace || namespace === rootNamespace) throw invalid();
       } else if (stack.at(-1)?.field) {
         throw invalid();
       }
       if (stack.length >= 64) throw invalid();
-      const field = record && stack.length === 2 && (name === prefix + "loc" || name === prefix + "lastmod")
-        ? name.slice(prefix.length) as Field : undefined;
+      const field = record && stack.length === 2 && namespace === rootNamespace && (local === "loc" || local === "lastmod")
+        ? local : undefined;
       if (field && record?.[field] !== undefined) throw invalid();
-      stack.push({ name, field, text: field ? [] : undefined });
+      stack.push({ name, namespaces, isRecord, field, text: field ? [] : undefined });
       if (selfClosing) close(name);
     }
     position = tag.lastIndex;
   }
-  if (!root || stack.length) throw invalid();
+  if (rootNamespace === undefined || stack.length) throw invalid();
   return { pages, sitemaps, omitted };
 }
